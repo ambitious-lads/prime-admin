@@ -43,15 +43,6 @@ export default function Navbar() {
                   className="object-contain"
                 />
               </div>
-              <Image
-                src="/images/prime.png"
-                alt="Prime UAT"
-                width={1174}
-                height={217}
-                priority
-                quality={100}
-                className="h-8 w-auto object-contain"
-              />
             </Link>
           </div>
 

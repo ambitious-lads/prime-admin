@@ -112,7 +112,7 @@ export default function Home() {
           <div className="lg:col-span-6 relative flex justify-center lg:justify-end animate-fade-in-up" style={{ animationDelay: "150ms" }}>
 
             {/* Main Hero Illustration (Enlarged further, non-movable, unselectable, white-bg blended via mix-blend-multiply) */}
-            <div className="relative w-full max-w-[1000px] lg:max-w-none aspect-[1/1] lg:scale-125 lg:origin-right select-none pointer-events-none">
+            <div className="relative w-full max-w-[1000px] lg:max-w-none aspect-[1/1] lg:scale-125 lg:origin-right lg:translate-x-12 select-none pointer-events-none">
               <Image
                 src="/images/hero.png"
                 alt="Student Smart Preparation Illustration"
