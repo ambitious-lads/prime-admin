@@ -21,9 +21,9 @@ const accent = Archivo_Black({
 });
 
 export const metadata: Metadata = {
-  title: "Primely — Your complete exam prep companion",
+  title: "Prime — Ace the University Entrance Exam, study smarter",
   description:
-    "Practice sets, full-length mock tests, courses, and progress analytics in one focused app. Built for students preparing for competitive exams.",
+    "Prime is the all-in-one study companion for Ethiopian students preparing for the University Entrance Exam. Curated practice, realistic mock exams, premium courses, analytics, and an AI tutor — on web and mobile.",
 };
 
 export default function RootLayout({
