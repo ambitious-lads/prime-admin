@@ -111,6 +111,16 @@ export default function Home() {
           {/* Right Column: Hero Illustration (no background design) */}
           <div className="lg:col-span-6 relative flex justify-center lg:justify-end animate-fade-in-up" style={{ animationDelay: "150ms" }}>
 
+            {/* Solid primary-color organic blob — anchored across the bottom */}
+            <svg
+              viewBox="0 0 500 200"
+              preserveAspectRatio="none"
+              aria-hidden="true"
+              className="absolute z-10 -bottom-28 left-0 w-[160%] h-[75%] fill-brand select-none pointer-events-none"
+            >
+              <path d="M0,198 C60,160 120,170 180,150 C250,128 290,150 350,100 C400,60 450,72 500,14 L500,200 L0,200 Z" />
+            </svg>
+
             {/* Main Hero Illustration (Enlarged further, non-movable, unselectable, white-bg blended via mix-blend-multiply) */}
             <div className="relative w-full max-w-[1000px] lg:max-w-none aspect-[1/1] lg:scale-125 lg:origin-right lg:translate-x-12 select-none pointer-events-none">
               <Image

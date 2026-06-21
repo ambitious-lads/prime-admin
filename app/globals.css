@@ -5,10 +5,10 @@
   --foreground: #0b1220;
 
   /* Brand */
-  --brand: #2d5bff;
-  --brand-600: #2148e0;
-  --brand-50: #eef2ff;
-  --brand-100: #e0e8ff;
+  --brand: #0c5bfe;
+  --brand-600: #0a49cb;
+  --brand-50: #e7eeff;
+  --brand-100: #cdddff;
 
   /* Neutrals */
   --ink: #0b1220;
@@ -53,10 +53,10 @@
 
   @keyframes pulse-glow {
     0%, 100% {
-      box-shadow: 0 0 0 0 rgba(45, 91, 255, 0.45);
+      box-shadow: 0 0 0 0 rgba(12, 91, 254, 0.45);
     }
     50% {
-      box-shadow: 0 0 0 16px rgba(45, 91, 255, 0);
+      box-shadow: 0 0 0 16px rgba(12, 91, 254, 0);
     }
   }
 
