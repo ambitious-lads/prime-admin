@@ -59,6 +59,7 @@ function deviceHeaders() {
   const headers: Record<string, string> = {};
   if (id) headers["X-Device-Id"] = id;
   if (name) headers["X-Device-Name"] = name;
+  headers["X-Device-Type"] = "web";
   return headers;
 }
 
