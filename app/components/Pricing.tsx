@@ -19,9 +19,8 @@ const plans: Plan[] = [
     period: "birr",
     tagline: "Everything you need to get started, zero risk.",
     features: [
-      "Core practice questions",
-      "A limited set of mock exams",
-      "Basic progress tracking",
+      "1 free practice set",
+      "1 free course resource: note, PDF, or video",
       "Web & mobile access",
     ],
     cta: "Start for free",
@@ -29,14 +28,12 @@ const plans: Plan[] = [
   },
   {
     name: "Pro",
-    price: "300",
+    price: "299",
     period: "birr",
-    tagline: "The everyday student's plan — practice without limits.",
+    tagline: "Practice and mock exams without limits.",
     features: [
-      "Everything in Free",
-      "Unlimited mock exams",
-      "Full detailed analytics suite",
-      "Estimated net score & weak-spot insights",
+      "All practice sets",
+      "All mock exams",
       "Leaderboards & exam reports",
     ],
     cta: "Get Pro",
@@ -50,10 +47,9 @@ const plans: Plan[] = [
     tagline: "The complete premium experience.",
     features: [
       "Everything in Pro",
-      "Full library of premium courses",
-      "Detailed explanations",
-      "AI tutor on any material",
-      "Priority support",
+      "All courses: notes, PDFs, and videos",
+      "AI tutor and smart features",
+      "Advanced analytics and UAT calculator",
     ],
     cta: "Get Pro Plus",
     href: "/register",
@@ -181,8 +177,8 @@ export default function Pricing() {
             />
           </svg>
           <p className="text-sm font-medium text-muted">
-            Pay with mobile money or bank transfer — just submit your payment
-            proof and we&apos;ll activate your plan.
+            Pay with mobile money or bank transfer. Verified receipts activate
+            instantly when supported; otherwise an admin reviews your proof.
           </p>
         </div>
       </div>

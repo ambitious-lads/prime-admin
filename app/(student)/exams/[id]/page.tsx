@@ -40,6 +40,7 @@ import { examsApi } from "@/lib/api/endpoints";
 import { qk } from "@/lib/query/keys";
 import { usePlan } from "@/hooks/use-plan";
 import { toastApiError } from "@/hooks/use-api-error";
+import { EXAM_UNLOCK_PLAN, planLabel } from "@/lib/utils/plans";
 import type { ExamAttempt } from "@/lib/api/types";
 
 const PAGE_SIZE = 50;
@@ -94,7 +95,7 @@ export default function ExamDetailPage() {
   });
 
   const exam = examQuery.data;
-  const locked = Boolean(exam?.isPremium) && !can("pro");
+  const locked = Boolean(exam?.isPremium) && !can(EXAM_UNLOCK_PLAN);
 
   const leaderboard = leaderboardQuery.data;
   const entries = leaderboard?.entries ?? [];
@@ -225,15 +226,15 @@ export default function ExamDetailPage() {
                     </div>
                     <div className="space-y-1">
                       <p className="font-display font-bold text-ink">
-                        Pro exam
+                        {planLabel(EXAM_UNLOCK_PLAN)} exam
                       </p>
                       <p className="text-sm text-muted">
-                        Upgrade to Pro to unlock this exam and the full mock
-                        library.
+                        Upgrade to {planLabel(EXAM_UNLOCK_PLAN)} to unlock this
+                        exam and the full mock library.
                       </p>
                     </div>
                     <Button asChild className="w-full">
-                      <Link href="/plans">Upgrade to Pro</Link>
+                      <Link href="/plans">Upgrade to {planLabel(EXAM_UNLOCK_PLAN)}</Link>
                     </Button>
                   </CardContent>
                 </Card>

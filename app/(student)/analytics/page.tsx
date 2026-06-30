@@ -47,6 +47,7 @@ import { analyticsApi } from "@/lib/api/endpoints";
 import { qk } from "@/lib/query/keys";
 import { usePlan } from "@/hooks/use-plan";
 import { toastApiError } from "@/hooks/use-api-error";
+import { ANALYTICS_UNLOCK_PLAN, planLabel } from "@/lib/utils/plans";
 import {
   formatDate,
   formatDuration,
@@ -59,7 +60,7 @@ const GRID = "#e8ebf3";
 
 export default function AnalyticsPage() {
   const { can } = usePlan();
-  if (!can("pro")) return <AnalyticsLocked />;
+  if (!can(ANALYTICS_UNLOCK_PLAN)) return <AnalyticsLocked />;
   return <AnalyticsDashboard />;
 }
 
@@ -92,14 +93,14 @@ function AnalyticsLocked() {
                 <Lock className="h-7 w-7" />
               </span>
               <h2 className="font-display text-xl font-bold text-ink">
-                Analytics is a Pro feature
+                Analytics is a {planLabel(ANALYTICS_UNLOCK_PLAN)} feature
               </h2>
               <p className="text-sm text-muted">
-                Upgrade to Pro to unlock detailed performance analytics and your
-                score calculator.
+                Upgrade to {planLabel(ANALYTICS_UNLOCK_PLAN)} to unlock advanced
+                performance analytics and your UAT score calculator.
               </p>
               <Button asChild>
-                <Link href="/plans">Upgrade to Pro</Link>
+                <Link href="/plans">Upgrade to {planLabel(ANALYTICS_UNLOCK_PLAN)}</Link>
               </Button>
             </CardContent>
           </Card>

@@ -28,6 +28,7 @@ type AuthState = {
     refreshToken: string;
   }) => void;
   logout: () => Promise<void>;
+  deleteAccount: () => Promise<void>;
   refreshUser: () => void;
 };
 
@@ -73,6 +74,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, [router]);
 
+  const deleteAccount = useCallback(async () => {
+    await authApi.deleteAccount();
+    clearSession();
+    setUser(null);
+    router.push("/");
+  }, [router]);
+
   const refreshUser = useCallback(() => {
     setUser(getStoredUser());
   }, []);
@@ -85,9 +93,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       login,
       setSession,
       logout,
+      deleteAccount,
       refreshUser,
     }),
-    [user, ready, login, setSession, logout, refreshUser],
+    [user, ready, login, setSession, logout, deleteAccount, refreshUser],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

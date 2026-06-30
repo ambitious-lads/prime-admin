@@ -6,17 +6,21 @@ export const PLANS = {
     label: "Free",
     price: 0,
     rank: 0,
-    features: ["Access to core practice", "Limited mock exams", "Web & mobile access"],
+    features: [
+      "1 free practice set",
+      "1 free course resource: note, PDF, or video",
+      "Web & mobile access",
+    ],
   },
   pro: {
     key: "pro",
     label: "Pro",
-    price: 300,
+    price: 299,
     rank: 1,
     features: [
-      "Everything in Free",
-      "Unlimited mock exams",
-      "Full detailed analytics",
+      "All practice sets",
+      "All mock exams",
+      "Leaderboards and exam reports",
     ],
   },
   pro_plus: {
@@ -26,8 +30,9 @@ export const PLANS = {
     rank: 2,
     features: [
       "Everything in Pro",
-      "Premium courses & explanations",
-      "AI tutor & priority support",
+      "All courses and resources",
+      "AI tutor and smart features",
+      "Advanced analytics and UAT calculator",
     ],
   },
 } as const satisfies Record<
@@ -36,7 +41,7 @@ export const PLANS = {
 >;
 
 export const EXAM_UNLOCK_PLAN: PlanKey = "pro";
-export const ANALYTICS_UNLOCK_PLAN: PlanKey = "pro";
+export const ANALYTICS_UNLOCK_PLAN: PlanKey = "pro_plus";
 export const COURSE_UNLOCK_PLAN: PlanKey = "pro_plus";
 export const TUTOR_UNLOCK_PLAN: PlanKey = "pro_plus";
 

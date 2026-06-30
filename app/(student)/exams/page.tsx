@@ -28,6 +28,7 @@ import { examsApi } from "@/lib/api/endpoints";
 import { qk } from "@/lib/query/keys";
 import { usePlan } from "@/hooks/use-plan";
 import { toastApiError } from "@/hooks/use-api-error";
+import { EXAM_UNLOCK_PLAN } from "@/lib/utils/plans";
 import type { Exam } from "@/lib/api/types";
 
 const TABS = [
@@ -83,7 +84,7 @@ function ExamCard({
                   {difficulty}
                 </Badge>
               ) : null}
-              {locked ? <LockBadge plan="pro" /> : null}
+              {locked ? <LockBadge plan={EXAM_UNLOCK_PLAN} /> : null}
             </div>
           </div>
           <div className="space-y-1.5">
@@ -218,7 +219,7 @@ export default function ExamsPage() {
             <ExamCard
               key={exam.id}
               exam={exam}
-              locked={exam.isPremium && !can("pro")}
+              locked={exam.isPremium && !can(EXAM_UNLOCK_PLAN)}
               saving={
                 saveMutation.isPending &&
                 saveMutation.variables?.id === exam.id

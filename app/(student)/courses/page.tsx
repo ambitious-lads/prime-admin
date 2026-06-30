@@ -21,7 +21,7 @@ import type { Course } from "@/lib/api/types";
 export default function CoursesPage() {
   const router = useRouter();
   const { can } = usePlan();
-  const isPro = can("pro_plus");
+  const hasCourseAccess = can(COURSE_UNLOCK_PLAN);
 
   const courses = useQuery({ queryKey: qk.courses, queryFn: coursesApi.list });
 
@@ -52,7 +52,7 @@ export default function CoursesPage() {
             <CourseCard
               key={course.id}
               course={course}
-              locked={course.isLocked || !isPro}
+              locked={course.isLocked || !hasCourseAccess}
               onLockedClick={() => router.push("/plans")}
             />
           ))}

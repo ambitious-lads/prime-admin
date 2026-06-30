@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Smartphone, LogOut } from "lucide-react";
+import { FileText, Smartphone, LogOut, Trash2 } from "lucide-react";
 import { profileApi } from "@/lib/api/endpoints";
 import { qk } from "@/lib/query/keys";
 import { useAuth } from "@/hooks/use-auth";
@@ -16,12 +16,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 
 type ToggleKey = "notificationsEnabled" | "emailUpdates";
 
 export default function SettingsPage() {
   const qc = useQueryClient();
-  const { logout } = useAuth();
+  const { logout, deleteAccount } = useAuth();
   const { data, isLoading } = useQuery({
     queryKey: qk.settings,
     queryFn: profileApi.settings,
@@ -98,6 +99,11 @@ export default function SettingsPage() {
               <Smartphone /> Manage device
             </Link>
           </Button>
+          <Button asChild variant="outline" className="w-full justify-start">
+            <Link href="/privacy-policy">
+              <FileText /> Privacy policy
+            </Link>
+          </Button>
           <Button
             variant="outline"
             className="w-full justify-start text-red-600 hover:bg-red-50 [&_svg]:text-red-500"
@@ -105,6 +111,27 @@ export default function SettingsPage() {
           >
             <LogOut /> Log out
           </Button>
+          <ConfirmDialog
+            destructive
+            title="Delete your account?"
+            description="This permanently deletes your account and associated learning data. Some limited payment or fraud-prevention records may be retained where required."
+            confirmLabel="Delete account"
+            onConfirm={() => {
+              void deleteAccount()
+                .then(() => {
+                  toast.success("Account deleted.");
+                })
+                .catch(toastApiError);
+            }}
+            trigger={
+              <Button
+                variant="outline"
+                className="w-full justify-start text-red-600 hover:bg-red-50 [&_svg]:text-red-500"
+              >
+                <Trash2 /> Delete account
+              </Button>
+            }
+          />
         </CardContent>
       </Card>
     </div>

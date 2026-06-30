@@ -7,7 +7,7 @@ const faqs = [
   },
   {
     q: "What does the Free plan include?",
-    a: "Free gives you access to core practice questions and a limited set of mock exams, plus basic progress tracking — enough to feel the value before upgrading.",
+    a: "Free includes 1 practice set and 1 course resource, either a note, PDF, or video. Pro unlocks all practice and mocks. Pro Plus unlocks courses, AI features, advanced analytics, and the UAT calculator.",
   },
   {
     q: "How do I pay for Pro or Pro Plus?",

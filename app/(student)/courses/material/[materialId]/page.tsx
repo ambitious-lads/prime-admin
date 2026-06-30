@@ -16,13 +16,14 @@ import { TutorPanel } from "@/components/depth/tutor-panel";
 import { coursesApi } from "@/lib/api/endpoints";
 import { qk } from "@/lib/query/keys";
 import { usePlan } from "@/hooks/use-plan";
-import { COURSE_UNLOCK_PLAN, TUTOR_UNLOCK_PLAN } from "@/lib/utils/plans";
+import { COURSE_UNLOCK_PLAN, TUTOR_UNLOCK_PLAN, planLabel } from "@/lib/utils/plans";
 
 export default function MaterialPage() {
   const params = useParams<{ materialId: string }>();
   const materialId = params.materialId;
   const { can } = usePlan();
-  const isProPlus = can("pro_plus");
+  const hasCourseAccess = can(COURSE_UNLOCK_PLAN);
+  const hasTutorAccess = can(TUTOR_UNLOCK_PLAN);
   const [readProgress, setReadProgress] = useState(0);
 
   const material = useQuery({
@@ -49,7 +50,7 @@ export default function MaterialPage() {
   }
 
   const data = material.data;
-  const locked = data.isLocked || !isProPlus;
+  const locked = data.isLocked || !hasCourseAccess;
 
   if (locked) {
     return (
@@ -61,14 +62,14 @@ export default function MaterialPage() {
             </span>
             <LockBadge plan={COURSE_UNLOCK_PLAN} />
             <h2 className="font-display text-xl font-bold text-ink">
-              This material is Pro Plus
+              This material requires {planLabel(COURSE_UNLOCK_PLAN)}
             </h2>
             <p className="max-w-sm text-sm text-muted">
-              Upgrade to Pro Plus to unlock premium courses, full reading
-              material and the AI tutor.
+              Upgrade to {planLabel(COURSE_UNLOCK_PLAN)} to unlock premium
+              courses, full reading material and the AI tutor.
             </p>
             <Button asChild>
-              <Link href="/plans">Upgrade to Pro Plus</Link>
+              <Link href="/plans">Upgrade to {planLabel(COURSE_UNLOCK_PLAN)}</Link>
             </Button>
             <Link
               href="/courses"
@@ -98,7 +99,7 @@ export default function MaterialPage() {
           <MaterialReader material={data} onProgress={setReadProgress} />
         </div>
         <aside className="hidden h-[calc(100vh-9.5rem)] border-l border-line bg-white lg:block">
-          {can("pro_plus") ? (
+          {hasTutorAccess ? (
             <TutorPanel materialId={materialId} />
           ) : (
             <TutorLockedPanel />

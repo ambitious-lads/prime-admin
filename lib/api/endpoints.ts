@@ -43,6 +43,8 @@ export const authApi = {
     api.public.post<{ message: string }>("/auth/resend-otp", b),
   me: () => api.get<AuthMe>("/auth/me"),
   logout: () => api.post<null>("/auth/logout"),
+  deleteAccount: () =>
+    api.del<{ id: string; message: string }>("/auth/account"),
   users: () => api.get<AdminUser[]>("/auth/users"),
   resetDevice: (id: string) =>
     api.post<{ id: string; message: string }>(`/auth/users/${id}/reset-device`),
