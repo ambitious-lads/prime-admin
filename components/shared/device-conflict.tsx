@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Phone, ShieldAlert, ArrowLeftRight } from "lucide-react";
+import { MessageCircle, ShieldAlert, ArrowLeftRight } from "lucide-react";
 import { site } from "@/config/site";
 import { useDevice } from "@/hooks/use-device";
 import { Button } from "@/components/ui/button";
@@ -57,8 +57,8 @@ export function DeviceConflict() {
           {showTransfer ? "Hide transfer code" : "Transfer to this device"}
         </Button>
         <Button asChild variant="outline" className="flex-1">
-          <a href={`tel:${site.supportPhone}`}>
-            <Phone className="h-4 w-4" />
+          <a href={site.supportTelegramUrl} target="_blank" rel="noreferrer">
+            <MessageCircle className="h-4 w-4" />
             Contact support
           </a>
         </Button>

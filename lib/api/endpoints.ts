@@ -61,8 +61,8 @@ export const authApi = {
 export const plansApi = {
   catalog: () => api.get<PlanCatalogItem[]>("/plans"),
   me: () => api.get<PlanMe>("/plans/me"),
-  subscribe: (form: FormData) =>
-    api.upload<{ status: string }>("/plans/subscribe", form),
+  subscribe: (body: { plan: string; receiptUrl?: string; note?: string }) =>
+    api.post<{ status: string; message?: string }>("/plans/subscribe", body),
   payments: (status?: string) =>
     api.get<PlanPayment[]>("/plans/payments", status ? { status } : undefined),
   approve: (id: string) =>

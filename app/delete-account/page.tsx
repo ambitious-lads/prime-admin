@@ -12,12 +12,6 @@ export const metadata: Metadata = {
 };
 
 export default function DeleteAccountPage() {
-  const mailto = `mailto:${site.supportEmail}?subject=${encodeURIComponent(
-    "Prime UAT account deletion request",
-  )}&body=${encodeURIComponent(
-    "Please delete my Prime UAT account and associated personal data.\n\nRegistered phone number:\nReason (optional):",
-  )}`;
-
   return (
     <main className="min-h-screen bg-white">
       <header className="border-b border-line bg-white">
@@ -65,10 +59,10 @@ export default function DeleteAccountPage() {
           </div>
           <div className="rounded-2xl border border-line bg-surface p-5">
             <h2 className="font-display text-lg font-bold text-ink">
-              Email request
+              Telegram request
             </h2>
             <p className="mt-3 text-sm leading-6 text-muted">
-              Email us with your registered phone number. We may verify account
+              Message us with your registered phone number. We may verify account
               ownership before deleting data.
             </p>
           </div>
@@ -93,7 +87,9 @@ export default function DeleteAccountPage() {
           </p>
           <div className="mt-6 flex flex-col gap-3 sm:flex-row">
             <Button asChild>
-              <a href={mailto}>Email deletion request</a>
+              <a href={site.supportTelegramUrl} target="_blank" rel="noreferrer">
+                Telegram deletion request
+              </a>
             </Button>
             <Button asChild variant="outline">
               <Link href="/login">Sign in to delete</Link>
@@ -103,10 +99,14 @@ export default function DeleteAccountPage() {
 
         <p className="mt-8 text-sm text-muted">
           Contact:{" "}
-          <a className="font-semibold text-brand" href={`mailto:${site.supportEmail}`}>
-            {site.supportEmail}
-          </a>{" "}
-          or {site.supportPhone}.
+          <a
+            className="font-semibold text-brand"
+            href={site.supportTelegramUrl}
+            target="_blank"
+            rel="noreferrer"
+          >
+            Telegram {site.supportTelegram}
+          </a>
         </p>
       </section>
     </main>

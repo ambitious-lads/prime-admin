@@ -55,6 +55,11 @@ export type PlanPayment = {
   status: PaymentStatus;
   proofUrl: string | null;
   transactionRef: string | null;
+  transactionRefKey?: string | null;
+  receiptReference?: string | null;
+  receiptProvider?: string | null;
+  verificationMethod?: string | null;
+  verifiedAt?: string | null;
   note: string | null;
   reviewedBy: string | null;
   reviewNote: string | null;

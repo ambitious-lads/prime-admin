@@ -28,7 +28,7 @@ const collectedData = [
   },
   {
     title: "Payment verification data",
-    body: "Paid-plan selections, payment proof images, receipt links, transaction references, payment status, review notes, and receipt verification details.",
+    body: "Paid-plan selections, receipt links or references, transaction references, payment status, review notes for historical payments, and receipt verification details.",
   },
   {
     title: "AI tutor content",
@@ -59,17 +59,17 @@ const providers = [
   },
   {
     name: "Cloudinary or file storage",
-    purpose: "Hosting profile images and uploaded payment proof files.",
-    data: "Uploaded images and related file metadata.",
+    purpose: "Hosting profile images and uploaded learning files.",
+    data: "Uploaded profile or learning files and related metadata.",
   },
   {
-    name: "Receipt verification providers",
+    name: "Odit Verify and receipt verification providers",
     purpose: "Verifying mobile-money or bank receipts and preventing duplicate receipts.",
-    data: "Receipt link, proof image, transaction reference, amount, and provider response.",
+    data: "Receipt link or reference, transaction reference, amount, receiver details, and provider response.",
   },
   {
     name: "Google Gemini or AI provider",
-    purpose: "AI tutor responses, receipt text extraction, and smart learning features.",
+    purpose: "AI tutor responses and smart learning features.",
     data: "Tutor messages, relevant course context, and images only when needed for a selected AI feature.",
   },
   {
@@ -174,9 +174,9 @@ export default function PrivacyPolicyPage() {
           <Section title="2. App Permissions">
             <p>
               Prime UAT requests device permissions only when needed for a
-              feature. Camera and photo access are used to upload or capture a
-              payment receipt or profile image. Microphone access is used only
-              if a voice-based learning feature is enabled. Notifications may be
+              feature. Camera and photo access are used for optional profile
+              images or learning files, not for new payment verification.
+              Microphone access is used only if a voice-based learning feature is enabled. Notifications may be
               used for reminders, study alerts, and account messages. You can
               control optional permissions in your device settings.
             </p>
@@ -283,12 +283,14 @@ export default function PrivacyPolicyPage() {
               <Link href="/delete-account" className="font-semibold text-brand">
                 /delete-account
               </Link>{" "}
-              or contact{" "}
+              or contact us on Telegram at{" "}
               <a
                 className="font-semibold text-brand"
-                href={`mailto:${site.supportEmail}`}
+                href={site.supportTelegramUrl}
+                target="_blank"
+                rel="noreferrer"
               >
-                {site.supportEmail}
+                {site.supportTelegram}
               </a>{" "}
               with your registered phone number. We may need to verify account
               ownership before deleting data.
@@ -342,15 +344,16 @@ export default function PrivacyPolicyPage() {
             <div className="rounded-2xl border border-line bg-surface p-5">
               <p className="font-semibold text-ink">Prime UAT</p>
               <p>
-                Email:{" "}
+                Telegram:{" "}
                 <a
                   className="font-semibold text-brand"
-                  href={`mailto:${site.supportEmail}`}
+                  href={site.supportTelegramUrl}
+                  target="_blank"
+                  rel="noreferrer"
                 >
-                  {site.supportEmail}
+                  {site.supportTelegram}
                 </a>
               </p>
-              <p>Phone: {site.supportPhone}</p>
               <p>App package: com.primely.app</p>
             </div>
           </Section>

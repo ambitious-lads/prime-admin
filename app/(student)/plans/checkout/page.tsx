@@ -1,16 +1,20 @@
 "use client";
 
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   ArrowLeft,
   Banknote,
   CheckCircle2,
+  Flashlight,
+  Link2,
   Phone,
+  ShieldCheck,
+  Smartphone,
 } from "lucide-react";
 import { plansApi } from "@/lib/api/endpoints";
 import { qk } from "@/lib/query/keys";
@@ -19,10 +23,8 @@ import { PLANS } from "@/lib/utils/plans";
 import { formatMoney } from "@/lib/utils/format";
 import { subscribeSchema, type SubscribeInput } from "@/lib/validation/plans";
 import { toastApiError } from "@/hooks/use-api-error";
-import { ApiError } from "@/lib/api/client";
 import type { PlanKey } from "@/lib/api/types";
 import { PageHeader } from "@/components/shared/page-header";
-import { Dropzone } from "@/components/shared/dropzone";
 import { FullPageSpinner, Spinner } from "@/components/shared/loading";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -37,54 +39,53 @@ function isPaidPlan(value: string | null): value is PaidPlan {
 }
 
 function CheckoutInner() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const queryClient = useQueryClient();
   const planParam = searchParams.get("plan");
   const plan: PaidPlan = isPaidPlan(planParam) ? planParam : "pro";
   const planInfo = PLANS[plan];
-
-  const [file, setFile] = useState<File | null>(null);
   const [submitting, setSubmitting] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-  const [pendingBlocked, setPendingBlocked] = useState(false);
+  const [verified, setVerified] = useState(false);
+  const [verbIndex, setVerbIndex] = useState(0);
 
-  const me = useQuery({
-    queryKey: qk.plan,
-    queryFn: plansApi.me,
-    refetchInterval: submitted ? 8000 : false,
-  });
-
-  const status = me.data?.latestPayment?.status;
-
+  const verbs = ["checking", "matching", "locking", "activating"];
   const form = useForm<SubscribeInput>({
     resolver: zodResolver(subscribeSchema),
-    defaultValues: { plan, transactionRef: "", note: "" },
+    defaultValues: { plan, receiptUrl: "", note: "" },
   });
+  const receiptValue = form.watch("receiptUrl");
+  const receiptReady = receiptValue.trim().length >= 4;
+
+  useEffect(() => {
+    if (!submitting) return;
+    const timer = window.setInterval(() => {
+      setVerbIndex((value) => (value + 1) % verbs.length);
+    }, 900);
+    return () => window.clearInterval(timer);
+  }, [submitting, verbs.length]);
 
   async function onSubmit(values: SubscribeInput) {
     setSubmitting(true);
     try {
-      const fd = new FormData();
-      fd.append("plan", values.plan);
-      if (values.transactionRef) fd.append("transactionRef", values.transactionRef);
-      if (values.note) fd.append("note", values.note);
-      if (file) fd.append("proof", file);
-      await plansApi.subscribe(fd);
-      setSubmitted(true);
+      const result = await plansApi.subscribe({
+        plan: values.plan,
+        receiptUrl: values.receiptUrl.trim(),
+        note: values.note?.trim() || undefined,
+      });
+      setVerified(true);
       await queryClient.invalidateQueries({ queryKey: qk.plan });
-    } catch (e) {
-      if (e instanceof ApiError && (e.status === 409 || e.status === 400)) {
-        setPendingBlocked(true);
+      if (result.status === "active") {
+        window.setTimeout(() => router.push("/dashboard"), 1100);
       }
+    } catch (e) {
       toastApiError(e);
     } finally {
       setSubmitting(false);
     }
   }
 
-  const showPendingBanner = pendingBlocked || status === "pending";
-
-  if (submitted && status !== "rejected") {
+  if (verified) {
     return (
       <div className="mx-auto max-w-lg space-y-6">
         <Card>
@@ -93,16 +94,16 @@ function CheckoutInner() {
               <CheckCircle2 className="h-8 w-8" />
             </div>
             <div className="space-y-1">
-              <h2 className="text-xl font-bold font-display text-ink">
-                Submitted!
+              <h2 className="font-display text-xl font-bold text-ink">
+                Payment verified
               </h2>
               <p className="text-sm text-muted">
-                An admin will verify your payment soon. Your{" "}
-                {planInfo.label} plan activates as soon as it&apos;s approved.
+                Your {planInfo.label} plan is active. Taking you back to your
+                dashboard.
               </p>
             </div>
             <Button asChild variant="outline" className="w-full">
-              <Link href="/plans">Back to plans</Link>
+              <Link href="/dashboard">Go to dashboard</Link>
             </Button>
           </CardContent>
         </Card>
@@ -113,7 +114,7 @@ function CheckoutInner() {
   return (
     <div className="mx-auto max-w-2xl space-y-6">
       <PageHeader
-        title="Checkout"
+        title="Secure checkout"
         subtitle={`Subscribe to ${planInfo.label}`}
         action={
           <Button asChild variant="ghost" size="sm">
@@ -123,13 +124,6 @@ function CheckoutInner() {
           </Button>
         }
       />
-
-      {showPendingBanner ? (
-        <div className="rounded-2xl border border-amber-200 bg-amber-50 px-5 py-4 text-sm text-amber-800">
-          You already have a payment under review. Please wait for an admin to
-          verify it before submitting another.
-        </div>
-      ) : null}
 
       <Card>
         <CardHeader>
@@ -143,67 +137,134 @@ function CheckoutInner() {
             </span>
           </div>
           <div className="space-y-3 rounded-xl border border-line p-4">
-            <p className="text-sm font-semibold text-ink">Payment instructions</p>
-            <p className="flex items-start gap-2 text-sm text-muted">
-              <Banknote className="mt-0.5 h-4 w-4 shrink-0 text-brand" />
-              {site.paymentAccount}
-            </p>
+            <p className="text-sm font-semibold text-ink">Payment accounts</p>
+            <div className="grid gap-3">
+              {site.paymentAccounts.map((account) => {
+                const Icon = account.method === "Telebirr" ? Smartphone : Banknote;
+                return (
+                  <div
+                    key={account.method}
+                    className="flex items-start gap-3 rounded-xl bg-surface px-4 py-3"
+                  >
+                    <Icon className="mt-0.5 h-4 w-4 shrink-0 text-brand" />
+                    <div className="min-w-0 space-y-1">
+                      <p className="text-sm font-semibold text-ink">
+                        {account.method}
+                      </p>
+                      <p className="break-all text-sm text-muted">
+                        Account:{" "}
+                        <span className="font-semibold text-ink">
+                          {account.account}
+                        </span>
+                      </p>
+                      <p className="text-sm text-muted">
+                        Name:{" "}
+                        <span className="font-semibold text-ink">
+                          {account.name}
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
             <p className="flex items-center gap-2 text-sm text-muted">
               <Phone className="h-4 w-4 shrink-0 text-brand" />
-              Questions? Call support at {site.supportPhone}
-            </p>
-            <p className="text-xs text-muted">
-              Send the exact amount, then upload your payment screenshot below.
+              Questions? Message us on Telegram at {site.supportTelegram}
             </p>
           </div>
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Submit payment proof</CardTitle>
-        </CardHeader>
-        <CardContent>
+      <Card className="overflow-hidden">
+        <div className="bg-ink px-6 py-5 text-white">
+          <div className="flex items-start gap-3">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand text-white">
+              <ShieldCheck className="h-5 w-5" />
+            </span>
+            <div>
+              <p className="font-display text-lg font-bold">
+                Live Odit verification
+              </p>
+              <p className="mt-1 text-sm leading-6 text-white/75">
+                We verify the receipt with the provider, match the Prime account,
+                confirm the amount, and block reused receipt references.
+              </p>
+            </div>
+          </div>
+        </div>
+        <CardContent className="pt-6">
           <form
             onSubmit={form.handleSubmit(onSubmit)}
             className="space-y-5"
           >
             <div className="space-y-2">
-              <Label>Payment screenshot</Label>
-              <Dropzone
-                accept="image/*"
-                maxSizeMb={5}
-                onFile={setFile}
-                label="Upload payment proof"
-                hint="Screenshot of your transfer · up to 5MB"
-              />
+              <Label htmlFor="receiptUrl">Receipt link or Telebirr reference</Label>
+              <div className="relative">
+                <Link2 className="pointer-events-none absolute left-3 top-3.5 h-4 w-4 text-muted" />
+                <Input
+                  id="receiptUrl"
+                  className="h-12 pl-10"
+                  placeholder="https://transactioninfo.ethiotelecom.et/receipt/... or ABCD1234EF"
+                  autoComplete="off"
+                  {...form.register("receiptUrl")}
+                />
+              </div>
+              {form.formState.errors.receiptUrl ? (
+                <p className="text-xs font-medium text-red-600">
+                  {form.formState.errors.receiptUrl.message}
+                </p>
+              ) : (
+                <p className="text-xs text-muted">
+                  Use the receipt URL from your bank or SMS. Telebirr references
+                  can be pasted directly.
+                </p>
+              )}
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="transactionRef">Transaction reference (optional)</Label>
-              <Input
-                id="transactionRef"
-                placeholder="e.g. FT2406221234"
-                {...form.register("transactionRef")}
-              />
+            <div className="grid gap-2 rounded-xl bg-surface p-4 text-sm text-muted sm:grid-cols-3">
+              <span className="inline-flex items-center gap-2">
+                <CheckCircle2 className="h-4 w-4 text-emerald-600" /> Provider check
+              </span>
+              <span className="inline-flex items-center gap-2">
+                <CheckCircle2 className="h-4 w-4 text-emerald-600" /> Duplicate lock
+              </span>
+              <span className="inline-flex items-center gap-2">
+                <CheckCircle2 className="h-4 w-4 text-emerald-600" /> Instant unlock
+              </span>
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="note">Note (optional)</Label>
               <Textarea
                 id="note"
-                placeholder="Anything we should know about your payment"
+                placeholder="Example: paid from another phone"
                 {...form.register("note")}
               />
             </div>
 
+            {submitting ? (
+              <div className="flex items-center gap-3 rounded-xl border border-brand/20 bg-brand-50 px-4 py-3">
+                <Spinner />
+                <div>
+                  <p className="text-sm font-semibold text-ink">
+                    We are {verbs[verbIndex]} your receipt live
+                  </p>
+                  <p className="text-xs text-muted">
+                    Secure checks prevent fake, incomplete, or already-used
+                    receipts from unlocking a plan.
+                  </p>
+                </div>
+              </div>
+            ) : null}
+
             <Button
               type="submit"
               className="w-full"
-              disabled={submitting || showPendingBanner}
+              disabled={submitting || !receiptReady}
             >
-              {submitting ? <Spinner /> : null}
-              Submit for review
+              {submitting ? <Spinner /> : <Flashlight className="h-4 w-4" />}
+              Verify & activate
             </Button>
           </form>
         </CardContent>

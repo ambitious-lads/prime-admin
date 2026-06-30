@@ -2,7 +2,7 @@
 
 import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import { Smartphone, ShieldCheck, Phone } from "lucide-react";
+import { MessageCircle, Smartphone, ShieldCheck } from "lucide-react";
 import { site } from "@/config/site";
 import { useDevice } from "@/hooks/use-device";
 import { PageHeader } from "@/components/shared/page-header";
@@ -54,8 +54,8 @@ function DeviceInner() {
           </div>
 
           <Button asChild variant="outline" className="w-full">
-            <a href={`tel:${site.supportPhone}`}>
-              <Phone /> Contact support
+            <a href={site.supportTelegramUrl} target="_blank" rel="noreferrer">
+              <MessageCircle /> Contact support
             </a>
           </Button>
         </CardContent>

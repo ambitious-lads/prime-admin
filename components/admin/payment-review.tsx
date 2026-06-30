@@ -10,6 +10,7 @@ import {
   Maximize2,
   Hash,
   StickyNote,
+  ShieldCheck,
 } from "lucide-react";
 import { plansApi } from "@/lib/api/endpoints";
 import { qk } from "@/lib/query/keys";
@@ -85,6 +86,7 @@ export function PaymentReview({
 
   const isPending = payment.status === "pending";
   const busy = approve.isPending || reject.isPending;
+  const isOditVerified = payment.verificationMethod === "odit";
 
   return (
     <div className="flex h-full flex-col gap-4 overflow-auto rounded-2xl border border-line bg-white p-5">
@@ -135,8 +137,24 @@ export function PaymentReview({
         </div>
       </div>
 
+      <div className="rounded-xl border border-line bg-surface/50 p-3">
+        <p className="flex items-center gap-1.5 text-xs font-semibold text-muted">
+          <ShieldCheck className="size-3.5" /> Verification
+        </p>
+        <p className="mt-1 text-sm font-semibold text-ink">
+          {isOditVerified ? "Verified by Odit" : "Legacy manual review"}
+        </p>
+        <p className="mt-1 text-xs text-muted">
+          {payment.receiptProvider ? `Provider: ${payment.receiptProvider}` : null}
+          {payment.receiptReference ? ` · Receipt: ${payment.receiptReference}` : null}
+          {!payment.receiptProvider && !payment.receiptReference ? "No verifier metadata." : null}
+        </p>
+      </div>
+
       <div>
-        <p className="mb-2 text-xs font-semibold text-muted">Payment proof</p>
+        <p className="mb-2 text-xs font-semibold text-muted">
+          {isOditVerified ? "Receipt proof" : "Legacy payment proof"}
+        </p>
         {payment.proofUrl ? (
           <button
             onClick={() => setLightbox(true)}
@@ -156,8 +174,16 @@ export function PaymentReview({
           </button>
         ) : (
           <div className="flex flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-line bg-surface/50 py-10 text-muted">
-            <ImageOff className="size-6" />
-            <p className="text-sm">No proof image attached.</p>
+            {isOditVerified ? (
+              <ShieldCheck className="size-6 text-emerald-600" />
+            ) : (
+              <ImageOff className="size-6" />
+            )}
+            <p className="text-sm">
+              {isOditVerified
+                ? "Verified from receipt link/reference. No screenshot needed."
+                : "No proof image attached."}
+            </p>
           </div>
         )}
       </div>

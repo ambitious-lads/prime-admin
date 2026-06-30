@@ -32,8 +32,9 @@ export default function PlansPage() {
 
       {showPending ? (
         <div className="rounded-2xl border border-amber-200 bg-amber-50 px-5 py-4 text-sm text-amber-800">
-          Your {latest?.plan === "pro_plus" ? "Pro Plus" : "Pro"} payment is under
-          review. We&apos;ll activate your plan as soon as an admin verifies it.
+          Your {latest?.plan === "pro_plus" ? "Pro Plus" : "Pro"} payment is still
+          awaiting verification. New payments now verify live from the receipt
+          link or reference.
         </div>
       ) : null}
 
@@ -84,7 +85,9 @@ export default function PlansPage() {
                   <p className="font-accent text-3xl font-black text-ink">
                     {p.price === 0 ? "Free" : formatMoney(p.price)}
                     {p.price > 0 ? (
-                      <span className="text-sm font-medium text-muted">/mo</span>
+                      <span className="text-sm font-medium text-muted">
+                        {" "}one-time
+                      </span>
                     ) : null}
                   </p>
                 </CardHeader>
