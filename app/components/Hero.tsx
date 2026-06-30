@@ -33,7 +33,7 @@ export default function Hero() {
           <div className="lg:col-span-6 flex flex-col justify-center space-y-8 animate-fade-in-up">
             <div className="space-y-5">
               <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight font-accent text-ink leading-[1.1]">
-                Practice Smarter
+                <span className="whitespace-nowrap">Practice Smarter</span>
                 <br />
                 to Ace UAT
               </h1>
@@ -49,7 +49,7 @@ export default function Hero() {
             {/* CTAs */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
               <Link
-                href="/signup"
+                href="/register"
                 className="inline-flex items-center justify-center gap-2 px-7 py-4 text-base font-semibold text-white bg-brand rounded-2xl hover:bg-brand-600 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 animate-pulse-glow hover:shadow-xl hover:shadow-brand/20 group"
               >
                 Start Preparing Free

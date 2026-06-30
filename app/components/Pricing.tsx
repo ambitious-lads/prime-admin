@@ -25,7 +25,7 @@ const plans: Plan[] = [
       "Web & mobile access",
     ],
     cta: "Start for free",
-    href: "/signup",
+    href: "/register",
   },
   {
     name: "Pro",
@@ -40,7 +40,7 @@ const plans: Plan[] = [
       "Leaderboards & exam reports",
     ],
     cta: "Get Pro",
-    href: "/signup?plan=pro",
+    href: "/register",
     featured: true,
   },
   {
@@ -56,7 +56,7 @@ const plans: Plan[] = [
       "Priority support",
     ],
     cta: "Get Pro Plus",
-    href: "/signup?plan=pro-plus",
+    href: "/register",
   },
 ];
 

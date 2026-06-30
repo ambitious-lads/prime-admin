@@ -87,7 +87,7 @@ export default function Navbar() {
               Log in
             </Link>
             <Link
-              href="/signup"
+              href="/register"
               className="relative inline-flex items-center justify-center px-5 py-2.5 text-sm font-semibold text-white bg-brand rounded-xl hover:bg-brand-600 transition-all duration-200 shadow-md shadow-brand/10 hover:shadow-lg hover:shadow-brand/20 active:scale-[0.98] group overflow-hidden"
             >
               {/* Button Shimmer Effect */}
@@ -191,7 +191,7 @@ export default function Navbar() {
               Log in
             </Link>
             <Link
-              href="/signup"
+              href="/register"
               onClick={() => setIsOpen(false)}
               className="text-center py-2.5 rounded-lg text-base font-semibold text-white bg-brand hover:bg-brand-600 transition-all shadow-md shadow-brand/10"
             >

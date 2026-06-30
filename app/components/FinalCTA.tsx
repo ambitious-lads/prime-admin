@@ -28,7 +28,7 @@ export default function FinalCTA() {
 
             <div className="mt-9 flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link
-                href="/signup"
+                href="/register"
                 className="inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-8 py-4 text-base font-semibold text-brand shadow-lg transition-all duration-200 hover:scale-[1.03] active:scale-[0.98] group"
               >
                 Start Preparing Free
