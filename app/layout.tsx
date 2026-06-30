@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Sora, Plus_Jakarta_Sans, Archivo_Black } from "next/font/google";
 import "./globals.css";
+import { Providers } from "@/components/providers";
 
 const display = Sora({
   variable: "--font-display",
@@ -21,9 +22,9 @@ const accent = Archivo_Black({
 });
 
 export const metadata: Metadata = {
-  title: "Prime — Ace the University Entrance Exam, study smarter",
+  title: "Prime UAT — Ace the University Entrance Exam, study smarter",
   description:
-    "Prime is the all-in-one study companion for Ethiopian students preparing for the University Entrance Exam. Curated practice, realistic mock exams, premium courses, analytics, and an AI tutor — on web and mobile.",
+    "Prime UAT is the all-in-one study companion for Ethiopian students preparing for the University Entrance Exam. Curated practice, realistic mock exams, premium courses, analytics, and an AI tutor — on web and mobile.",
 };
 
 export default function RootLayout({
@@ -36,7 +37,9 @@ export default function RootLayout({
       lang="en"
       className={`${display.variable} ${body.variable} ${accent.variable} h-full antialiased`}
     >
-      <body className="min-h-full bg-background text-ink">{children}</body>
+      <body className="min-h-full bg-background text-ink">
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }
