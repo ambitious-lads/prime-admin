@@ -125,6 +125,8 @@ export const api = {
     raw<T>(path, { method: "GET", query }),
   post: <T>(path: string, body?: unknown) =>
     raw<T>(path, { method: "POST", body }),
+  patch: <T>(path: string, body?: unknown) =>
+    raw<T>(path, { method: "PATCH", body }),
   put: <T>(path: string, body?: unknown) =>
     raw<T>(path, { method: "PUT", body }),
   del: <T>(path: string) => raw<T>(path, { method: "DELETE" }),

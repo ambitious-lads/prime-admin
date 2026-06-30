@@ -14,6 +14,7 @@ import { PlanBadge } from "@/components/shared/plan-badge";
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import { DateText } from "@/components/shared/formatting";
 import { UserCell } from "@/components/admin/user-cell";
+import { UserPlanActions } from "@/components/admin/user-plan-actions";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -147,6 +148,7 @@ export default function UsersPage() {
               <Eye className="size-4" /> View
             </Button>
             <ResetDeviceAction user={row.original} />
+            <UserPlanActions user={row.original} compact />
           </div>
         ),
       },

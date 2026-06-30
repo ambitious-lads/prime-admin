@@ -14,6 +14,7 @@ import type {
   Leaderboard,
   Note,
   PlanCatalogItem,
+  PlanKey,
   PlanMe,
   PlanPayment,
   PracticeSet,
@@ -46,6 +47,13 @@ export const authApi = {
   deleteAccount: () =>
     api.del<{ id: string; message: string }>("/auth/account"),
   users: () => api.get<AdminUser[]>("/auth/users"),
+  updateUserPlan: (id: string, plan: PlanKey) =>
+    api.patch<{ user: Pick<AdminUser, "id" | "plan">; message: string }>(
+      `/auth/users/${id}/plan`,
+      { plan },
+    ),
+  removeUser: (id: string) =>
+    api.del<{ id: string; message: string }>(`/auth/users/${id}`),
   resetDevice: (id: string) =>
     api.post<{ id: string; message: string }>(`/auth/users/${id}/reset-device`),
 };

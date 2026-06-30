@@ -2,6 +2,7 @@
 
 import { use } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   ArrowLeft,
@@ -20,6 +21,7 @@ import { FullPageSpinner } from "@/components/shared/loading";
 import { PlanBadge } from "@/components/shared/plan-badge";
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import { DateText, MoneyText } from "@/components/shared/formatting";
+import { UserPlanActions } from "@/components/admin/user-plan-actions";
 import {
   Card,
   CardContent,
@@ -44,6 +46,7 @@ export default function UserDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = use(params);
+  const router = useRouter();
   const qc = useQueryClient();
 
   const { data: users = [], isLoading } = useQuery({
@@ -108,7 +111,16 @@ export default function UserDetailPage({
         </Link>
       </Button>
 
-      <PageHeader title={user.fullName} subtitle={user.phone} />
+      <PageHeader
+        title={user.fullName}
+        subtitle={user.phone}
+        action={
+          <UserPlanActions
+            user={user}
+            afterRemove={() => router.push("/admin/users")}
+          />
+        }
+      />
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <Card className="lg:col-span-1">
