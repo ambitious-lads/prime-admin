@@ -50,6 +50,7 @@ export default function MaterialPage() {
   }
 
   const data = material.data;
+  const courseId = data.courseId;
   const locked = data.isLocked || !hasCourseAccess;
 
   if (locked) {
@@ -88,7 +89,7 @@ export default function MaterialPage() {
       <ReadingProgressBar value={readProgress} />
       <div className="flex items-center gap-3 border-b border-line bg-white px-4 py-3 sm:px-6">
         <Button asChild variant="ghost" size="sm">
-          <Link href={`/courses/${data.courseId}`}>
+          <Link href={`/courses/${courseId}`}>
             <ArrowLeft className="h-4 w-4" /> Course
           </Link>
         </Button>

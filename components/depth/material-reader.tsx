@@ -17,6 +17,10 @@ function isUrl(value: string) {
   return /^https?:\/\//i.test(value.trim());
 }
 
+function isDirectVideoUrl(value: string) {
+  return /\.(mp4|webm|ogg)(?:[?#].*)?$/i.test(value.trim());
+}
+
 function paragraphsFrom(content: string) {
   return content
     .split(/\n{2,}/)
@@ -32,8 +36,10 @@ type MaterialReaderProps = {
 export const MaterialReader = forwardRef<HTMLDivElement, MaterialReaderProps>(
   function MaterialReader({ material, onProgress }, ref) {
     const innerRef = useRef<HTMLDivElement>(null);
+    const videoRef = useRef<HTMLVideoElement>(null);
     useImperativeHandle(ref, () => innerRef.current as HTMLDivElement);
     const lastReported = useRef(0);
+    const lastVideoReported = useRef(0);
     const [embedFailed, setEmbedFailed] = useState(false);
 
     useEffect(() => {
@@ -61,12 +67,70 @@ export const MaterialReader = forwardRef<HTMLDivElement, MaterialReaderProps>(
       };
     }, [material.id, onProgress]);
 
-    const source = material.url ?? material.content ?? "";
+    const materialType = material.type.toLowerCase();
+    const source =
+      material.url ??
+      material.remoteUrl ??
+      material.content ??
+      material.htmlContent ??
+      "";
     const sourceIsUrl = Boolean(source) && isUrl(source);
-    const isVideo = material.type === "video";
-    const isPdf = material.type === "pdf";
+    const isVideo = materialType === "video";
+    const isPdf = materialType === "pdf";
+
+    useEffect(() => {
+      const video = videoRef.current;
+      if (!video || !isVideo) return;
+
+      const reportProgress = () => {
+        const duration =
+          video.duration || material.durationSeconds || material.videoDurationSeconds || 0;
+        if (!duration) return;
+        const pct = Math.min(100, Math.round((video.currentTime / duration) * 100));
+        onProgress(pct);
+        if (pct - lastVideoReported.current >= 10) {
+          lastVideoReported.current = pct;
+          coursesApi
+            .progress(material.id, {
+              watchedSeconds: Math.floor(video.currentTime),
+              timeSpentSeconds: 10,
+            })
+            .catch(() => {});
+        }
+      };
+
+      video.addEventListener("timeupdate", reportProgress);
+      video.addEventListener("ended", reportProgress);
+
+      return () => {
+        video.removeEventListener("timeupdate", reportProgress);
+        video.removeEventListener("ended", reportProgress);
+      };
+    }, [
+      isVideo,
+      material.durationSeconds,
+      material.id,
+      material.videoDurationSeconds,
+      onProgress,
+    ]);
 
     const renderBody = () => {
+      if (isVideo && sourceIsUrl && isDirectVideoUrl(source)) {
+        return (
+          <div className="overflow-hidden rounded-2xl border border-line bg-black">
+            <video
+              ref={videoRef}
+              src={source}
+              title={material.title}
+              className="aspect-video h-full w-full bg-black"
+              controls
+              playsInline
+              preload="metadata"
+            />
+          </div>
+        );
+      }
+
       if (isVideo && sourceIsUrl) {
         return (
           <div className="aspect-video w-full overflow-hidden rounded-2xl border border-line bg-black">

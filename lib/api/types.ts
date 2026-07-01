@@ -96,6 +96,7 @@ export type Topic = {
   accentColor: string | null;
   displayOrder: number | null;
   setCount?: number;
+  totalSets?: number;
 };
 
 export type TopicStats = {
@@ -207,24 +208,33 @@ export type ExamReport = {
 
 export type Course = {
   id: string;
+  courseId?: string;
   title: string;
   description: string | null;
   coverUrl: string | null;
   materialCount: number;
+  materialsCount?: number;
   isLocked: boolean;
   progressPercentage?: number;
+  materials?: CourseMaterial[];
 };
 
 export type CourseMaterial = {
   id: string;
   courseId: string;
   title: string;
-  type: "video" | "pdf" | "reading";
+  description?: string | null;
+  type: "video" | "pdf" | "reading" | "Video" | "PDF" | "Notes";
   content: string | null;
   url: string | null;
+  remoteUrl?: string | null;
+  htmlContent?: string | null;
+  duration?: string | null;
   durationSeconds: number | null;
+  videoDurationSeconds?: number | null;
   isLocked: boolean;
   progressPercentage?: number;
+  progress?: number;
   orderIndex?: number;
 };
 

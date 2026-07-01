@@ -50,7 +50,7 @@ export default function CoursesPage() {
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {(courses.data ?? []).map((course) => (
             <CourseCard
-              key={course.id}
+              key={course.id ?? course.courseId}
               course={course}
               locked={course.isLocked || !hasCourseAccess}
               onLockedClick={() => router.push("/plans")}
@@ -72,6 +72,8 @@ function CourseCard({
   onLockedClick: () => void;
 }) {
   const progress = Math.min(100, Math.max(0, course.progressPercentage ?? 0));
+  const courseId = course.id ?? course.courseId;
+  const materialCount = course.materialCount ?? course.materialsCount ?? 0;
 
   const inner = (
     <Card className="group h-full overflow-hidden transition-shadow hover:shadow-md">
@@ -104,7 +106,7 @@ function CourseCard({
         )}
         <div className="flex items-center gap-1.5 text-xs text-muted">
           <Layers className="h-3.5 w-3.5" />
-          {formatNumber(course.materialCount)} materials
+          {formatNumber(materialCount)} materials
         </div>
         <div className="space-y-1">
           <div className="flex items-center justify-between text-xs">
@@ -125,5 +127,5 @@ function CourseCard({
     );
   }
 
-  return <Link href={`/courses/${course.id}`}>{inner}</Link>;
+  return <Link href={`/courses/${courseId}`}>{inner}</Link>;
 }

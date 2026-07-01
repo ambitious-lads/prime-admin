@@ -60,6 +60,7 @@ export default function CourseDetailPage() {
     .slice()
     .sort((a, b) => (a.orderIndex ?? 0) - (b.orderIndex ?? 0));
   const progress = Math.min(100, Math.max(0, data.progressPercentage ?? 0));
+  const materialCount = data.materialCount ?? data.materialsCount ?? materials.length;
 
   return (
     <div className="space-y-6">
@@ -75,7 +76,7 @@ export default function CourseDetailPage() {
       <Card>
         <CardContent className="flex flex-col gap-3 p-5 sm:flex-row sm:items-center sm:justify-between">
           <div className="text-sm text-muted">
-            {formatNumber(data.materialCount)} materials
+            {formatNumber(materialCount)} materials
           </div>
           <div className="w-full max-w-xs space-y-1">
             <div className="flex items-center justify-between text-xs">
@@ -111,8 +112,19 @@ function MaterialRow({
   index: number;
   material: CourseMaterial;
 }) {
-  const Icon = TYPE_ICON[material.type] ?? BookOpen;
-  const progress = Math.min(100, Math.max(0, material.progressPercentage ?? 0));
+  const materialType =
+    material.type === "Video"
+      ? "video"
+      : material.type === "PDF"
+        ? "pdf"
+        : material.type === "Notes"
+          ? "reading"
+          : material.type;
+  const Icon = TYPE_ICON[materialType] ?? BookOpen;
+  const progress = Math.min(
+    100,
+    Math.max(0, material.progressPercentage ?? material.progress ?? 0),
+  );
 
   return (
     <li>

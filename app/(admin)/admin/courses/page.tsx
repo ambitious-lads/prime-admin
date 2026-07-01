@@ -39,7 +39,7 @@ export default function AdminCoursesPage() {
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {courses.map((course) => (
-            <Card key={course.id}>
+            <Card key={course.id ?? course.courseId}>
               <CardHeader>
                 <CardTitle className="flex items-center justify-between gap-2">
                   <span className="line-clamp-1">{course.title}</span>
@@ -54,7 +54,7 @@ export default function AdminCoursesPage() {
                 </p>
                 <div className="flex items-center gap-1.5 text-sm text-muted">
                   <Layers className="h-4 w-4" />
-                  {course.materialCount ?? 0} materials
+                  {course.materialCount ?? course.materialsCount ?? 0} materials
                 </div>
               </CardContent>
             </Card>
