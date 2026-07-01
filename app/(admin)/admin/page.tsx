@@ -58,7 +58,7 @@ export default function AdminOverviewPage() {
     <div className="space-y-6">
       <PageHeader
         title="Overview"
-        subtitle="The business at a glance — revenue queue, users, and devices."
+        subtitle="The business at a glance — verified revenue, users, and devices."
         action={
           <Button asChild>
             <Link href="/admin/payments">
@@ -114,7 +114,7 @@ export default function AdminOverviewPage() {
               <EmptyState
                 icon={<CreditCard />}
                 title="No pending payments"
-                message="New subscription proofs will appear here for review."
+                message="Live Odit payments approve automatically. Legacy pending rows appear here."
               />
             ) : (
               <div className="divide-y divide-line">
