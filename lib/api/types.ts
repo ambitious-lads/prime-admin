@@ -275,6 +275,19 @@ export type AnalyticsDashboard = {
   topicMastery: { topic: string; mastery: number }[];
 };
 
+export type MarketingSlice = {
+  label: string;
+  count: number;
+};
+
+export type AdminMarketingAnalytics = {
+  totalProfiles: number;
+  sources: MarketingSlice[];
+  regions: MarketingSlice[];
+  towns: MarketingSlice[];
+  schools: MarketingSlice[];
+};
+
 export type ScoreCalculatorResult = {
   netScore: number;
   esslceScore?: number;
