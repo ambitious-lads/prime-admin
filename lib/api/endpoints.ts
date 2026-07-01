@@ -1,6 +1,7 @@
 import { api } from "./client";
 import type {
   AdminUser,
+  AdminMarketingAnalytics,
   AnalyticsDashboard,
   AnalyticsOverview,
   AuthMe,
@@ -128,6 +129,8 @@ export const coursesApi = {
 
 export const analyticsApi = {
   dashboard: () => api.get<AnalyticsDashboard>("/analytics/dashboard"),
+  adminMarketing: () =>
+    api.get<AdminMarketingAnalytics>("/analytics/admin/marketing"),
   overview: () => api.get<AnalyticsOverview>("/analytics/overview"),
   scoreCalculator: (b: { esslceScore?: number; uatScore?: number }) =>
     api.post<ScoreCalculatorResult>("/analytics/score-calculator", b),
