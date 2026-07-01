@@ -11,7 +11,7 @@ const faqs = [
   },
   {
     q: "How do I pay for Pro or Pro Plus?",
-    a: "Prime is built for how Ethiopians pay. Subscribe by submitting a payment proof — a screenshot of a mobile-money or bank transfer — and an admin verifies and activates your subscription.",
+    a: "Prime is built for how Ethiopians pay. Send the exact amount by mobile money or bank transfer, paste the receipt link or Telebirr reference, and Odit Verify checks the receipt before unlocking your plan.",
   },
   {
     q: "What is the single-device lock?",
