@@ -42,7 +42,7 @@ const plans: Plan[] = [
   },
   {
     name: "Pro Plus",
-    price: "500",
+    price: "499",
     period: "birr",
     tagline: "The complete premium experience.",
     features: [
@@ -127,7 +127,7 @@ export default function Pricing() {
                 >
                   {plan.period}
                   {plan.price !== "0" && (
-                    <span className="font-medium"> / month</span>
+                    <span className="font-medium"> one-time</span>
                   )}
                 </span>
               </div>
@@ -178,7 +178,7 @@ export default function Pricing() {
           </svg>
           <p className="text-sm font-medium text-muted">
             Pay with mobile money or bank transfer. Verified receipts activate
-            instantly when supported; otherwise an admin reviews your proof.
+            instantly through Odit Verify with duplicate receipt protection.
           </p>
         </div>
       </div>
