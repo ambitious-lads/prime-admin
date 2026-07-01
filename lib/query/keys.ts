@@ -22,6 +22,7 @@ export const qk = {
   notes: ["notes"] as const,
   analyticsDashboard: ["analytics", "dashboard"] as const,
   analyticsOverview: ["analytics", "overview"] as const,
+  adminMarketingAnalytics: ["admin", "analytics", "marketing"] as const,
   streak: ["streak", "me"] as const,
   weekly: ["streak", "weekly"] as const,
   profile: ["profile", "me"] as const,
