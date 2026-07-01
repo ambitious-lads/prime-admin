@@ -26,7 +26,7 @@ export const PLANS = {
   pro_plus: {
     key: "pro_plus",
     label: "Pro Plus",
-    price: 500,
+    price: 499,
     rank: 2,
     features: [
       "Everything in Pro",
