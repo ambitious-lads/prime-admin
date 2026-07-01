@@ -3,13 +3,16 @@
 import {
   Area,
   AreaChart,
+  Bar,
+  BarChart,
   CartesianGrid,
   ResponsiveContainer,
   Tooltip,
   XAxis,
   YAxis,
 } from "recharts";
-import { Wallet, Users, TrendingUp, ShieldCheck, Clock } from "lucide-react";
+import { Wallet, Users, TrendingUp, ShieldCheck, Clock, Megaphone, MapPin } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 import { useAdminMetrics } from "@/components/admin/use-admin-metrics";
 import { PageHeader } from "@/components/shared/page-header";
 import { StatCard } from "@/components/shared/stat-card";
@@ -26,10 +29,17 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { analyticsApi } from "@/lib/api/endpoints";
+import type { MarketingSlice } from "@/lib/api/types";
+import { qk } from "@/lib/query/keys";
 import { formatMoney, formatDate } from "@/lib/utils/format";
 
 export default function AdminAnalyticsPage() {
   const m = useAdminMetrics();
+  const marketing = useQuery({
+    queryKey: qk.adminMarketingAnalytics,
+    queryFn: analyticsApi.adminMarketing,
+  });
 
   if (m.loading) {
     return (
@@ -49,6 +59,7 @@ export default function AdminAnalyticsPage() {
     date: formatDate(s.date, "MMM d"),
     count: s.count,
   }));
+  const marketingData = marketing.data;
 
   return (
     <div className="space-y-6">
@@ -84,9 +95,9 @@ export default function AdminAnalyticsPage() {
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         <StatCard
-          label="Pending revenue"
+          label="Legacy pending"
           value={formatMoney(m.pendingRevenue)}
-          delta={`${m.pendingCount} awaiting review`}
+          delta={`${m.pendingCount} awaiting manual review`}
           icon={<Clock />}
         />
         <StatCard label="Total users" value={`${m.total}`} icon={<Users />} />
@@ -134,6 +145,88 @@ export default function AdminAnalyticsPage() {
         </CardContent>
       </Card>
 
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
+        <Card className="xl:col-span-2">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Megaphone className="size-5 text-primary" />
+              Marketing source
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {marketing.isLoading ? (
+              <Skeleton className="h-72" />
+            ) : !marketingData || marketingData.sources.length === 0 ? (
+              <EmptyState
+                title="No source data yet"
+                message="Completed profiles will show where students heard about Prime UAT."
+              />
+            ) : (
+              <div className="h-72">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={marketingData.sources}
+                    layout="vertical"
+                    margin={{ top: 8, right: 16, bottom: 8, left: 16 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" stroke="#e8ebf3" horizontal={false} />
+                    <XAxis type="number" allowDecimals={false} tickLine={false} axisLine={false} fontSize={12} stroke="#5a647a" />
+                    <YAxis
+                      type="category"
+                      dataKey="label"
+                      tickLine={false}
+                      axisLine={false}
+                      fontSize={12}
+                      stroke="#5a647a"
+                      width={120}
+                    />
+                    <Tooltip />
+                    <Bar dataKey="count" fill="#0c5bfe" radius={[0, 8, 8, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <MapPin className="size-5 text-primary" />
+              Profile map
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-5">
+            {marketing.isLoading ? (
+              <>
+                <Skeleton className="h-24" />
+                <Skeleton className="h-24" />
+              </>
+            ) : !marketingData ? (
+              <EmptyState title="No profile data yet" />
+            ) : (
+              <>
+                <MarketingList
+                  title="Top towns"
+                  total={marketingData.totalProfiles}
+                  items={marketingData.towns}
+                />
+                <MarketingList
+                  title="Top regions"
+                  total={marketingData.totalProfiles}
+                  items={marketingData.regions}
+                />
+                <MarketingList
+                  title="Top schools"
+                  total={marketingData.totalProfiles}
+                  items={marketingData.schools}
+                />
+              </>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+
       <Card>
         <CardHeader>
           <CardTitle>Recent approvals</CardTitle>
@@ -169,6 +262,56 @@ export default function AdminAnalyticsPage() {
           )}
         </CardContent>
       </Card>
+    </div>
+  );
+}
+
+function MarketingList({
+  title,
+  total,
+  items,
+}: {
+  title: string;
+  total: number;
+  items: MarketingSlice[];
+}) {
+  const visible = items.slice(0, 4);
+
+  return (
+    <div>
+      <div className="mb-2 flex items-center justify-between">
+        <p className="text-sm font-semibold text-foreground">{title}</p>
+        <p className="text-xs text-muted">{total.toLocaleString()} profiles</p>
+      </div>
+      {visible.length === 0 ? (
+        <p className="rounded-md border border-border bg-muted/20 px-3 py-2 text-sm text-muted">
+          No data yet.
+        </p>
+      ) : (
+        <div className="space-y-2">
+          {visible.map((item) => {
+            const pct = total > 0 ? Math.round((item.count / total) * 100) : 0;
+            return (
+              <div key={`${title}-${item.label}`} className="space-y-1">
+                <div className="flex items-center justify-between gap-3 text-sm">
+                  <span className="min-w-0 truncate font-medium text-foreground">
+                    {item.label}
+                  </span>
+                  <span className="shrink-0 text-muted">
+                    {item.count.toLocaleString()}
+                  </span>
+                </div>
+                <div className="h-2 overflow-hidden rounded-full bg-muted/30">
+                  <div
+                    className="h-full rounded-full bg-primary"
+                    style={{ width: `${Math.max(pct, 3)}%` }}
+                  />
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }
