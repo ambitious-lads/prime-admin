@@ -30,6 +30,7 @@ import type {
   TutorSession,
   WeeklyStreak,
 } from "./types";
+import type { PracticeGrouping } from "@/lib/practice-groups";
 
 export const authApi = {
   register: (b: { phone: string; password: string; fullName: string }) =>
@@ -96,6 +97,8 @@ export const practiceApi = {
   categories: () => api.get<Category[]>("/practice/categories"),
   topics: (categoryId: string) =>
     api.get<Topic[]>(`/practice/categories/${categoryId}/topics`),
+  topicsByGrouping: (grouping?: PracticeGrouping) =>
+    api.get<Topic[]>("/practice/topics", grouping ? { grouping } : undefined),
   sets: (topicId: string) =>
     api.get<PracticeSet[]>(`/practice/topics/${topicId}/sets`),
   questions: (setId: string) =>

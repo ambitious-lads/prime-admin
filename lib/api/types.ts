@@ -89,6 +89,7 @@ export type Category = {
 export type Topic = {
   id: string;
   categoryId: string;
+  grouping: "verbal" | "quantitative" | "analytical";
   name: string;
   description: string | null;
   imageUrl: string | null;
