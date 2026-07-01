@@ -64,7 +64,7 @@ export default function PaymentsPage() {
     <div className="flex h-[calc(100vh-9rem)] flex-col gap-5">
       <PageHeader
         title="Payment verification"
-        subtitle="Approve or reject subscription proofs. Pending shown oldest-first."
+        subtitle="Live Odit payments approve automatically. Review only legacy pending rows here."
       />
 
       <Tabs
@@ -103,7 +103,7 @@ export default function PaymentsPage() {
           <EmptyState
             icon={<Inbox />}
             title="No payment selected"
-            message="Pick a payment from the queue to review its proof."
+            message="Pick a legacy pending payment from the queue to review it."
             className="h-full"
           />
         )}
