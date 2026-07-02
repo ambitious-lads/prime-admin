@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { LogOut } from "lucide-react";
 import { Brand } from "@/components/shared/brand";
 import { adminNav } from "@/config/nav";
-import { plansApi } from "@/lib/api/endpoints";
+import { practiceApi } from "@/lib/api/endpoints";
 import { qk } from "@/lib/query/keys";
 import { useAuth } from "@/hooks/use-auth";
 import { cn } from "@/lib/utils/cn";
@@ -36,13 +36,13 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { user, logout } = useAuth();
 
-  const { data: pending = [] } = useQuery({
-    queryKey: qk.payments("pending"),
-    queryFn: () => plansApi.payments("pending"),
-    refetchInterval: 20_000,
+  const { data: openReports = [] } = useQuery({
+    queryKey: qk.questionReports("open"),
+    queryFn: () => practiceApi.questionReports("open"),
+    refetchInterval: 30_000,
   });
 
-  const pendingCount = pending.length;
+  const openReportCount = openReports.length;
 
   return (
     <div className="flex min-h-screen bg-surface">
@@ -57,7 +57,8 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
                 ? pathname === "/admin"
                 : pathname.startsWith(item.href);
             const Icon = item.icon;
-            const showBadge = item.href === "/admin/payments" && pendingCount > 0;
+            const showBadge =
+              item.href === "/admin/content/reports" && openReportCount > 0;
             return (
               <Link
                 key={item.href}
@@ -75,7 +76,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
                 </span>
                 {showBadge ? (
                   <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-brand px-1.5 text-xs font-bold text-white tabular-nums">
-                    {pendingCount}
+                    {openReportCount}
                   </span>
                 ) : null}
               </Link>
@@ -84,9 +85,9 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
         </nav>
         <div className="border-t border-line p-3">
           <div className="rounded-xl bg-surface px-3 py-2.5">
-            <p className="text-xs font-medium text-muted">Pending payments</p>
+            <p className="text-xs font-medium text-muted">Open question reports</p>
             <p className="font-display text-lg font-bold tabular-nums text-ink">
-              {pendingCount}
+              {openReportCount}
             </p>
           </div>
         </div>

@@ -16,7 +16,7 @@ export function PaymentQueue({
   selectedId,
   onSelect,
   userById,
-  emptyMessage = "Nothing to review here.",
+  emptyMessage = "No payment records for this status.",
 }: {
   payments: PlanPayment[];
   loading?: boolean;
@@ -37,7 +37,7 @@ export function PaymentQueue({
     return (
       <EmptyState
         icon={<Inbox />}
-        title="Queue is empty"
+        title="No payment records"
         message={emptyMessage}
         className="h-full"
       />

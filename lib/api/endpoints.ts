@@ -21,6 +21,8 @@ import type {
   PracticeSet,
   Profile,
   Question,
+  QuestionReport,
+  QuestionReportStatus,
   ScoreCalculatorResult,
   Settings,
   StreakSummary,
@@ -31,6 +33,22 @@ import type {
   WeeklyStreak,
 } from "./types";
 import type { PracticeGrouping } from "@/lib/practice-groups";
+
+function normalizeTutorSession(data: TutorSession): TutorSession {
+  if (Array.isArray(data.messages)) return data;
+
+  const rows = data.chatHistory ?? [];
+  return {
+    ...data,
+    messages: rows.map((message, index) => ({
+      id: `${message.role}-${index}`,
+      role: message.role,
+      content: message.text,
+      text: message.text,
+      createdAt: new Date(0).toISOString(),
+    })),
+  };
+}
 
 export const authApi = {
   register: (b: { phone: string; password: string; fullName: string }) =>
@@ -116,6 +134,13 @@ export const practiceApi = {
   updateQuestion: (id: string, b: unknown) =>
     api.put<Question>(`/practice/questions/${id}`, b),
   deleteQuestion: (id: string) => api.del(`/practice/questions/${id}`),
+  questionReports: (status?: QuestionReportStatus) =>
+    api.get<QuestionReport[]>(
+      "/practice/reports",
+      status ? { status } : undefined,
+    ),
+  updateQuestionReportStatus: (id: string, status: QuestionReportStatus) =>
+    api.patch<QuestionReport>(`/practice/reports/${id}/status`, { status }),
 };
 
 export const coursesApi = {
@@ -124,9 +149,16 @@ export const coursesApi = {
   material: (id: string) => api.get<CourseMaterial>(`/courses/materials/${id}`),
   progress: (id: string, b: unknown) =>
     api.post(`/courses/materials/${id}/progress`, b),
-  tutorGet: (id: string) => api.get<TutorSession>(`/courses/materials/${id}/tutor`),
-  tutorSend: (id: string, message: string) =>
-    api.post<TutorSession>(`/courses/materials/${id}/tutor`, { message }),
+  tutorGet: async (id: string) =>
+    normalizeTutorSession(
+      await api.get<TutorSession>(`/courses/materials/${id}/tutor`),
+    ),
+  tutorSend: async (id: string, message: string) =>
+    normalizeTutorSession(
+      await api.post<TutorSession>(`/courses/materials/${id}/tutor`, {
+        message,
+      }),
+    ),
   tutorClear: (id: string) => api.del(`/courses/materials/${id}/tutor`),
 };
 

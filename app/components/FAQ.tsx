@@ -2,7 +2,7 @@ import SectionHeading from "./SectionHeading";
 
 const faqs = [
   {
-    q: "Do I need to install the app to use Prime?",
+    q: "Do I need to install the app to use Prime UAT?",
     a: "No. The web version is fully featured — just sign up and start studying in your browser. The mobile app is there if you prefer studying on your phone, and both share the same account.",
   },
   {
@@ -11,15 +11,15 @@ const faqs = [
   },
   {
     q: "How do I pay for Pro or Pro Plus?",
-    a: "Prime is built for how Ethiopians pay. Send the exact amount by mobile money or bank transfer, paste the receipt link or Telebirr reference, and Odit Verify checks the receipt before unlocking your plan.",
+    a: "Prime UAT is built for how Ethiopians pay. Send the exact amount by mobile money or bank transfer, paste the receipt link or Telebirr reference, and Odit Verify checks the receipt before unlocking your plan.",
   },
   {
     q: "What is the single-device lock?",
     a: "To keep your subscription secure, a paid account binds to one device. Logging in on a second device is rejected. If you change phones or move to the web, a secure transfer flow moves your account with you.",
   },
   {
-    q: "Which exam does Prime prepare me for?",
-    a: "Prime is built specifically for the Ethiopian University Entrance Exam, with curated questions, mock exams, and courses aligned to the curriculum.",
+    q: "Which exam does Prime UAT prepare me for?",
+    a: "Prime UAT is built specifically for the Ethiopian University Entrance Exam, with curated questions, mock exams, and courses aligned to the curriculum.",
   },
 ];
 

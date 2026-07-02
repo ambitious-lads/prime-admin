@@ -9,8 +9,9 @@ import {
   Smartphone,
   ArrowRight,
   FolderTree,
+  Flag,
 } from "lucide-react";
-import { plansApi, authApi } from "@/lib/api/endpoints";
+import { plansApi, authApi, practiceApi } from "@/lib/api/endpoints";
 import { qk } from "@/lib/query/keys";
 import { PageHeader } from "@/components/shared/page-header";
 import { StatCard } from "@/components/shared/stat-card";
@@ -26,7 +27,7 @@ import { Button } from "@/components/ui/button";
 import { PlanBadge } from "@/components/shared/plan-badge";
 import { MoneyText, RelativeTime } from "@/components/shared/formatting";
 import { UserCell } from "@/components/admin/user-cell";
-import { formatMoney, formatNumber } from "@/lib/utils/format";
+import { formatNumber } from "@/lib/utils/format";
 import type { AdminUser } from "@/lib/api/types";
 
 export default function AdminOverviewPage() {
@@ -40,10 +41,14 @@ export default function AdminOverviewPage() {
     queryKey: qk.users,
     queryFn: authApi.users,
   });
+  const { data: reports = [], isLoading: loadingReports } = useQuery({
+    queryKey: qk.questionReports("open"),
+    queryFn: () => practiceApi.questionReports("open"),
+    refetchInterval: 30_000,
+  });
 
   const userById = new Map<string, AdminUser>(users.map((u) => [u.id, u]));
 
-  const pendingRevenue = pending.reduce((sum, p) => sum + (p.amount ?? 0), 0);
   const subscribers = users.filter((u) => u.plan && u.plan !== "free").length;
   const locked = users.filter((u) => u.boundDeviceId).length;
 
@@ -58,11 +63,11 @@ export default function AdminOverviewPage() {
     <div className="space-y-6">
       <PageHeader
         title="Overview"
-        subtitle="The business at a glance — verified revenue, users, and devices."
+        subtitle="Revenue, users, devices, and content issues at a glance."
         action={
           <Button asChild>
-            <Link href="/admin/payments">
-              Review payments <ArrowRight />
+            <Link href="/admin/content/reports">
+              Open reports <ArrowRight />
             </Link>
           </Button>
         }
@@ -70,10 +75,9 @@ export default function AdminOverviewPage() {
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard
-          label="Pending payments"
-          value={loadingPending ? "—" : formatNumber(pending.length)}
-          delta={loadingPending ? undefined : formatMoney(pendingRevenue)}
-          icon={<CreditCard />}
+          label="Open reports"
+          value={loadingReports ? "—" : formatNumber(reports.length)}
+          icon={<Flag />}
         />
         <StatCard
           label="Total users"
@@ -100,10 +104,10 @@ export default function AdminOverviewPage() {
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <Card className="lg:col-span-2">
           <CardHeader className="flex-row items-center justify-between space-y-0">
-            <CardTitle>Recent pending payments</CardTitle>
+            <CardTitle>Recent legacy payment records</CardTitle>
             <Button variant="ghost" size="sm" asChild>
               <Link href="/admin/payments">
-                View queue <ArrowRight />
+                View history <ArrowRight />
               </Link>
             </Button>
           </CardHeader>
@@ -113,8 +117,8 @@ export default function AdminOverviewPage() {
             ) : recent.length === 0 ? (
               <EmptyState
                 icon={<CreditCard />}
-                title="No pending payments"
-                message="Live Odit payments approve automatically. Legacy pending rows appear here."
+                title="No legacy pending records"
+                message="Automated receipts activate plans without admin action."
               />
             ) : (
               <div className="divide-y divide-line">
@@ -156,7 +160,15 @@ export default function AdminOverviewPage() {
             <Button variant="outline" className="w-full justify-between" asChild>
               <Link href="/admin/payments">
                 <span className="flex items-center gap-2">
-                  <CreditCard className="size-4" /> Payment queue
+                  <CreditCard className="size-4" /> Payment history
+                </span>
+                <ArrowRight className="size-4" />
+              </Link>
+            </Button>
+            <Button variant="outline" className="w-full justify-between" asChild>
+              <Link href="/admin/content/reports">
+                <span className="flex items-center gap-2">
+                  <Flag className="size-4" /> Question reports
                 </span>
                 <ArrowRight className="size-4" />
               </Link>

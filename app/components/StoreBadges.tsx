@@ -28,7 +28,7 @@ export default function StoreBadges({
         href={APP_STORE_URL}
         target="_blank"
         rel="noopener noreferrer"
-        aria-label="Download Prime on the App Store"
+        aria-label="Download Prime UAT on the App Store"
         className={`${base} ${styles}`}
       >
         <svg
@@ -51,7 +51,7 @@ export default function StoreBadges({
         href={PLAY_STORE_URL}
         target="_blank"
         rel="noopener noreferrer"
-        aria-label="Get Prime on Google Play"
+        aria-label="Get Prime UAT on Google Play"
         className={`${base} ${styles}`}
       >
         <svg

@@ -124,6 +124,11 @@ export const MaterialReader = forwardRef<HTMLDivElement, MaterialReaderProps>(
               title={material.title}
               className="aspect-video h-full w-full bg-black"
               controls
+              controlsList="nodownload noplaybackrate noremoteplayback"
+              disablePictureInPicture
+              disableRemotePlayback
+              onContextMenu={(event) => event.preventDefault()}
+              onDragStart={(event) => event.preventDefault()}
               playsInline
               preload="metadata"
             />

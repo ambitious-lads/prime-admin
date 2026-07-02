@@ -17,6 +17,8 @@ export const qk = {
   topicStats: (topicId: string) => ["practice", "topic-stats", topicId] as const,
   sets: (topicId: string) => ["practice", "sets", topicId] as const,
   setQuestions: (setId: string) => ["practice", "set-questions", setId] as const,
+  questionReports: (status?: string) =>
+    ["practice", "question-reports", status ?? "all"] as const,
   courses: ["courses"] as const,
   course: (id: string) => ["course", id] as const,
   material: (id: string) => ["material", id] as const,

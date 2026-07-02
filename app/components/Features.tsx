@@ -64,7 +64,7 @@ const features = [
   {
     title: "Streaks & Notes",
     description:
-      "Build a daily study habit with streaks, and keep personal notes — turning Prime into your daily routine.",
+      "Build a daily study habit with streaks, and keep personal notes — turning Prime UAT into your daily routine.",
     icon: (
       <path
         strokeLinecap="round"
@@ -81,7 +81,7 @@ export default function Features() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeading
           title="One platform to study smarter"
-          description="Stop juggling photocopied past papers and scattered notes. Prime brings curated practice, mock exams, courses, and analytics into one focused experience."
+          description="Stop juggling photocopied past papers and scattered notes. Prime UAT brings curated practice, mock exams, courses, and analytics into one focused experience."
         />
 
         <div className="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

@@ -2,6 +2,11 @@ export type Role = "user" | "admin";
 export type PlanKey = "free" | "pro" | "pro_plus";
 export type Difficulty = "easy" | "medium" | "hard";
 export type PaymentStatus = "pending" | "approved" | "rejected";
+export type QuestionReportStatus =
+  | "open"
+  | "reviewing"
+  | "resolved"
+  | "dismissed";
 
 export type SessionUser = {
   id: string;
@@ -138,6 +143,23 @@ export type Question = {
   orderIndex?: number | null;
 };
 
+export type QuestionReport = {
+  id: string;
+  userId: string;
+  questionId: string;
+  reason: string;
+  comment: string | null;
+  status: QuestionReportStatus;
+  createdAt: string;
+  updatedAt: string;
+  userFullName: string | null;
+  userPhone: string | null;
+  questionText: string;
+  correctOption: string;
+  explanation: string | null;
+  practiceSetId: string;
+};
+
 export type SubmitAnswerResult = {
   isCorrect: boolean;
   correctOption: string;
@@ -243,10 +265,14 @@ export type TutorMessage = {
   role: "user" | "assistant";
   content: string;
   createdAt: string;
+  text?: string;
 };
 
 export type TutorSession = {
   messages: TutorMessage[];
+  chatHistory?: { role: "user" | "assistant"; text: string }[];
+  contentId?: string;
+  reply?: string;
 };
 
 export type Note = {

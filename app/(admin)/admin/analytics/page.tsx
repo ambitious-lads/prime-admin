@@ -95,9 +95,9 @@ export default function AdminAnalyticsPage() {
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         <StatCard
-          label="Legacy pending"
+          label="Payment audit"
           value={formatMoney(m.pendingRevenue)}
-          delta={`${m.pendingCount} awaiting manual review`}
+          delta={`${m.pendingCount} legacy pending records`}
           icon={<Clock />}
         />
         <StatCard label="Total users" value={`${m.total}`} icon={<Users />} />

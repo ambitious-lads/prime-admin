@@ -22,8 +22,8 @@ export default function FinalCTA() {
               Ready to ace your exam?
             </h2>
             <p className="mt-5 text-base sm:text-lg text-white/85 font-medium leading-relaxed">
-              Join 50,000+ Ethiopian students studying smarter with Prime. Start
-              free today — no card required.
+              Join 50,000+ Ethiopian students studying smarter with Prime UAT.
+              Start free today — no card required.
             </p>
 
             <div className="mt-9 flex flex-col sm:flex-row items-center justify-center gap-4">

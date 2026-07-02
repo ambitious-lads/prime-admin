@@ -63,8 +63,8 @@ export default function PaymentsPage() {
   return (
     <div className="flex h-[calc(100vh-9rem)] flex-col gap-5">
       <PageHeader
-        title="Payment verification"
-        subtitle="Live Odit payments approve automatically. Review only legacy pending rows here."
+        title="Payment history"
+        subtitle="Automated receipts activate plans. Legacy pending records remain available for audit and fallback resolution."
       />
 
       <Tabs
@@ -103,7 +103,7 @@ export default function PaymentsPage() {
           <EmptyState
             icon={<Inbox />}
             title="No payment selected"
-            message="Pick a legacy pending payment from the queue to review it."
+            message="Pick a payment record to view its receipt and plan details."
             className="h-full"
           />
         )}

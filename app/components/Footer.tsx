@@ -42,13 +42,13 @@ export default function Footer() {
             <Link href="/" className="flex items-center gap-2">
               <Image
                 src="/images/logo.png"
-                alt="Prime logo"
+                alt="Prime UAT logo"
                 width={32}
                 height={32}
                 className="object-contain"
               />
               <span className="text-xl font-black font-accent text-ink">
-                Prime
+                Prime UAT
               </span>
             </Link>
             <p className="mt-4 max-w-xs text-sm text-muted font-medium leading-relaxed">
@@ -81,7 +81,7 @@ export default function Footer() {
 
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-line pt-8 sm:flex-row">
           <p className="text-sm text-muted font-medium">
-            © 2026 Prime. All rights reserved.
+            © 2026 Prime UAT. All rights reserved.
           </p>
           <p className="text-sm text-muted font-medium">
             Made for Ethiopian students 🇪🇹

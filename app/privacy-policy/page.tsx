@@ -27,8 +27,8 @@ const collectedData = [
     body: "Practice answers, question attempts, mock exam attempts, scores, ranks, saved exams, progress, streaks, notes, course progress, and study-time activity.",
   },
   {
-    title: "Payment verification data",
-    body: "Paid-plan selections, receipt links or references, transaction references, payment status, review notes for historical payments, and receipt verification details.",
+    title: "Payment and receipt data",
+    body: "Paid-plan selections, receipt links or references, transaction references, payment status, review notes for historical payments, and automated receipt details.",
   },
   {
     title: "AI tutor content",
@@ -44,7 +44,7 @@ const purposes = [
   "Create, verify, authenticate, and secure your account.",
   "Provide practice sets, mock exams, courses, notes, progress tracking, streaks, analytics, and the AI tutor.",
   "Enforce subscription access, including Free, Pro, and Pro Plus plan limits.",
-  "Verify payments, prevent duplicate receipt use, activate subscriptions, and handle support disputes.",
+  "Check receipts, prevent duplicate receipt use, activate subscriptions, and handle support disputes.",
   "Detect abuse, fraud, unauthorized account access, device conflicts, and service misuse.",
   "Respond to support requests and send essential service messages.",
   "Maintain, debug, measure, and improve Prime UAT.",
@@ -130,10 +130,9 @@ export default function PrivacyPolicyPage() {
             </p>
           </div>
           <p className="text-base leading-8 text-muted sm:text-lg">
-            This Privacy Policy explains how Prime UAT, also called Prime or
-            Primely in some app surfaces, collects, uses, shares, stores, and
-            protects information when you use the Prime UAT mobile application,
-            web application, API, and related services. Prime UAT is an
+            This Privacy Policy explains how Prime UAT collects, uses, shares,
+            stores, and protects information when you use the Prime UAT mobile
+            application, web application, API, and related services. Prime UAT is an
             educational service for students preparing for Ethiopian university
             entrance and aptitude exams.
           </p>

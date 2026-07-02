@@ -39,10 +39,10 @@ export default function Hero() {
               </h1>
 
               <p className="text-base sm:text-lg text-muted max-w-xl leading-relaxed font-sans font-medium">
-                Prime is your all-in-one study companion — thousands of curated
-                questions, realistic mock exams, premium courses, and an AI tutor.
-                Study on the web or the mobile app, with the same account
-                everywhere.
+                Prime UAT is your all-in-one study companion — thousands of
+                curated questions, realistic mock exams, premium courses, and
+                an AI tutor. Study on the web or the mobile app, with the same
+                account everywhere.
               </p>
             </div>
 
@@ -98,7 +98,7 @@ export default function Hero() {
                   50,000+
                   <span className="absolute bottom-0 left-0 w-full h-[3px] bg-brand-100 -z-10 group-hover:h-full transition-all duration-200" />
                 </span>{" "}
-                students preparing with Prime
+                students preparing with Prime UAT
               </div>
             </div>
           </div>

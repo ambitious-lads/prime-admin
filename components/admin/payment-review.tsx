@@ -63,7 +63,7 @@ export function PaymentReview({
     onSuccess: () => {
       invalidate();
       toast.success(
-        `Approved — ${planLabel(payment.plan)} activated for ${
+        `Legacy record approved — ${planLabel(payment.plan)} activated for ${
           user?.fullName ?? "user"
         }.`,
       );
@@ -76,7 +76,7 @@ export function PaymentReview({
     mutationFn: () => plansApi.reject(payment.id, reason.trim()),
     onSuccess: () => {
       invalidate();
-      toast.success("Payment rejected.");
+      toast.success("Legacy payment record rejected.");
       setRejectOpen(false);
       setReason("");
       onResolved();
@@ -142,7 +142,7 @@ export function PaymentReview({
           <ShieldCheck className="size-3.5" /> Verification
         </p>
         <p className="mt-1 text-sm font-semibold text-ink">
-          {isOditVerified ? "Verified by Odit" : "Legacy manual review"}
+          {isOditVerified ? "Auto-verified by Odit" : "Legacy pending record"}
         </p>
         <p className="mt-1 text-xs text-muted">
           {payment.receiptProvider ? `Provider: ${payment.receiptProvider}` : null}
@@ -153,7 +153,7 @@ export function PaymentReview({
 
       <div>
         <p className="mb-2 text-xs font-semibold text-muted">
-          {isOditVerified ? "Receipt proof" : "Legacy payment proof"}
+          {isOditVerified ? "Receipt source" : "Attached proof"}
         </p>
         {payment.proofUrl ? (
           <button
@@ -202,21 +202,21 @@ export function PaymentReview({
             onClick={() => approve.mutate()}
             disabled={busy}
           >
-            {approve.isPending ? <Spinner /> : <Check />} Approve
+            {approve.isPending ? <Spinner /> : <Check />} Approve legacy
           </Button>
           <Dialog open={rejectOpen} onOpenChange={setRejectOpen}>
             <DialogTrigger asChild>
               <Button variant="destructive" className="flex-1" disabled={busy}>
-                <X /> Reject
+                <X /> Reject legacy
               </Button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Reject payment</DialogTitle>
+                <DialogTitle>Reject legacy payment</DialogTitle>
               </DialogHeader>
               <div className="space-y-2">
                 <Textarea
-                  placeholder="Reason shown to the student (required)"
+                  placeholder="Reason saved on this record (required)"
                   value={reason}
                   onChange={(e) => setReason(e.target.value)}
                   maxLength={500}
@@ -236,7 +236,7 @@ export function PaymentReview({
                     reject.isPending
                   }
                 >
-                  {reject.isPending ? <Spinner /> : null} Confirm reject
+                  {reject.isPending ? <Spinner /> : null} Save rejection
                 </Button>
               </DialogFooter>
             </DialogContent>
@@ -244,14 +244,14 @@ export function PaymentReview({
         </div>
       ) : (
         <div className="mt-auto rounded-xl bg-surface p-3 text-center text-sm text-muted">
-          This payment has already been {payment.status}.
+          This payment record has already been {payment.status}.
         </div>
       )}
 
       <Dialog open={lightbox} onOpenChange={setLightbox}>
         <DialogContent className="max-w-3xl">
           <DialogHeader>
-            <DialogTitle>Payment proof</DialogTitle>
+            <DialogTitle>Attached proof</DialogTitle>
           </DialogHeader>
           {payment.proofUrl ? (
             <Image
