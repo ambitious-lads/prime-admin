@@ -1,21 +1,22 @@
 import Image from "next/image";
 import Link from "next/link";
+import DownloadModal from "./DownloadModal";
 
 const avatars = [
   {
-    src: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&h=120&q=80",
+    src: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=120&h=120&q=80",
     alt: "Student Sarah",
   },
   {
-    src: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&h=120&q=80",
+    src: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=120&h=120&q=80",
     alt: "Student Michael",
   },
   {
-    src: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=120&h=120&q=80",
+    src: "https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&w=120&h=120&q=80",
     alt: "Student Emily",
   },
   {
-    src: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=120&h=120&q=80",
+    src: "https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?auto=format&fit=crop&w=120&h=120&q=80",
     alt: "Student Daniel",
   },
 ];
@@ -65,12 +66,10 @@ export default function Hero() {
                 </svg>
               </Link>
 
-              <Link
-                href="#pricing"
+              <DownloadModal
+                label="Download the app"
                 className="inline-flex items-center justify-center px-7 py-4 text-base font-semibold text-brand bg-white border-2 border-brand/80 rounded-2xl hover:bg-brand-50/50 hover:border-brand hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 shadow-sm"
-              >
-                View Pricing
-              </Link>
+              />
             </div>
 
             {/* Social proof */}

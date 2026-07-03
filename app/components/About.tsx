@@ -1,56 +1,58 @@
-import Image from "next/image";
-import SectionHeading from "./SectionHeading";
-
 const points = [
-  "Built around the Ethiopian UAT preparation flow: practice, review, mock, improve.",
-  "Free previews let students start immediately while premium content stays protected.",
-  "Progress, analytics, courses, notes, and AI tutor access stay tied to one account.",
+  {
+    title: "Practice with intent",
+    description:
+      "Questions are organized by subject, topic, and difficulty so students know exactly what to work on next.",
+  },
+  {
+    title: "Mock exams that feel serious",
+    description:
+      "Timed attempts, question navigation, saved progress, reports, and leaderboards keep exam practice focused.",
+  },
+  {
+    title: "Courses, notes, and AI in one account",
+    description:
+      "Students can move from lessons to practice to AI support without losing their progress.",
+  },
 ];
 
 export default function About() {
   return (
-    <section id="about" className="scroll-mt-24 bg-white py-16 md:py-24">
-      <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-10 px-4 sm:px-6 lg:grid-cols-12 lg:px-8">
-        <div className="lg:col-span-5">
-          <SectionHeading
-            eyebrow="About Prime UAT"
-            title="Focused preparation for serious students"
-            description="Prime UAT helps Ethiopian students prepare with organized materials, realistic exams, and clear feedback instead of scattered notes and guesswork."
-            align="left"
-          />
-          <ul className="mt-8 space-y-4">
-            {points.map((point) => (
-              <li key={point} className="flex gap-3 text-sm font-medium leading-relaxed text-ink sm:text-base">
-                <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-brand" />
-                <span>{point}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
+    <section id="about" className="scroll-mt-24 bg-white px-4 py-16 sm:px-6 md:py-24 lg:px-8">
+      <div className="mx-auto max-w-7xl overflow-hidden rounded-2xl bg-ink text-white">
+        <div className="grid grid-cols-1 gap-0 lg:grid-cols-12">
+          <div className="border-b border-white/10 p-6 sm:p-8 lg:col-span-5 lg:border-b-0 lg:border-r lg:p-10">
+            <p className="text-sm font-bold uppercase tracking-[0.18em] text-white/55">
+              Prime UAT
+            </p>
+            <h2 className="mt-4 font-accent text-3xl font-black leading-[1.12] tracking-tight sm:text-4xl lg:text-5xl">
+              A cleaner way to prepare for UAT.
+            </h2>
+            <p className="mt-5 text-base font-medium leading-relaxed text-white/70 sm:text-lg">
+              Built for students who need a focused study system: learn the topic,
+              practice the questions, take a mock, then fix the weak spots.
+            </p>
+          </div>
 
-        <div className="lg:col-span-7">
-          <div className="grid grid-cols-2 gap-3 sm:gap-4">
-            <div className="rounded-lg border border-line bg-surface p-5">
-              <p className="font-accent text-3xl font-black text-ink">50k+</p>
-              <p className="mt-2 text-sm font-medium text-muted">
-                Students preparing with Prime UAT
-              </p>
-            </div>
-            <div className="rounded-lg border border-line bg-white p-5">
-              <p className="font-accent text-3xl font-black text-ink">24/7</p>
-              <p className="mt-2 text-sm font-medium text-muted">
-                Mobile-first study access
-              </p>
-            </div>
-            <div className="relative col-span-2 aspect-[16/9] overflow-hidden rounded-lg border border-line bg-surface">
-              <Image
-                src="/images/hero.png"
-                alt="Prime UAT learning experience"
-                fill
-                sizes="(max-width: 1024px) 92vw, 680px"
-                className="object-contain p-4"
-              />
-            </div>
+          <div className="lg:col-span-7">
+            {points.map((point, index) => (
+              <div
+                key={point.title}
+                className="grid grid-cols-1 gap-4 border-b border-white/10 p-6 last:border-b-0 sm:grid-cols-[4rem_1fr] sm:p-8"
+              >
+                <span className="font-accent text-3xl font-black text-white/25">
+                  0{index + 1}
+                </span>
+                <div>
+                  <h3 className="font-display text-lg font-bold text-white">
+                    {point.title}
+                  </h3>
+                  <p className="mt-2 text-sm font-medium leading-relaxed text-white/65 sm:text-base">
+                    {point.description}
+                  </p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
