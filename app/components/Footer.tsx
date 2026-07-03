@@ -1,33 +1,30 @@
 import Image from "next/image";
 import Link from "next/link";
+import { site } from "@/config/site";
 
 const columns = [
   {
     title: "Product",
     links: [
-      { label: "Features", href: "#features" },
+      { label: "Courses", href: "#courses" },
+      { label: "Mock Tests", href: "#mock-tests" },
       { label: "Pricing", href: "#pricing" },
-      { label: "Mock Exams", href: "#features" },
-      { label: "Download", href: "#download" },
+      { label: "Testimonials", href: "#testimonials" },
     ],
   },
   {
     title: "Company",
     links: [
-      { label: "About Us", href: "#" },
-      { label: "Contact", href: "#" },
-      { label: "Blog", href: "#" },
-      { label: "Careers", href: "#" },
+      { label: "About Us", href: "#about" },
+      { label: "Contact", href: site.supportTelegramUrl },
     ],
   },
   {
     title: "Support",
     links: [
-      { label: "Help Center", href: "#" },
       { label: "FAQ", href: "#faq" },
       { label: "Privacy Policy", href: "/privacy-policy" },
       { label: "Delete Account", href: "/delete-account" },
-      { label: "Terms of Service", href: "#" },
     ],
   },
 ];
@@ -53,7 +50,8 @@ export default function Footer() {
             </Link>
             <p className="mt-4 max-w-xs text-sm text-muted font-medium leading-relaxed">
               The trusted study companion for Ethiopian students preparing for
-              the University Entrance Exam. Ace your exams, study smarter.
+              the University Entrance Exam. Study smarter with focused practice,
+              mock tests, courses, and analytics.
             </p>
           </div>
 
@@ -68,6 +66,8 @@ export default function Footer() {
                   <li key={link.label}>
                     <Link
                       href={link.href}
+                      target={link.href.startsWith("http") ? "_blank" : undefined}
+                      rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
                       className="text-sm font-medium text-muted transition-colors duration-200 hover:text-brand"
                     >
                       {link.label}
@@ -84,7 +84,7 @@ export default function Footer() {
             © 2026 Prime UAT. All rights reserved.
           </p>
           <p className="text-sm text-muted font-medium">
-            Made for Ethiopian students 🇪🇹
+            Built for Ethiopian students
           </p>
         </div>
       </div>

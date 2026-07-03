@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import DownloadModal from "./DownloadModal";
 
 const avatars = [
   {
@@ -22,39 +23,33 @@ const avatars = [
 
 export default function Hero() {
   return (
-    <section className="relative overflow-hidden">
-      {/* Decorative blur gradients */}
-      <div className="absolute top-0 right-0 w-[45rem] h-[45rem] bg-gradient-to-b from-brand/5 to-transparent rounded-full blur-3xl -z-10 pointer-events-none" />
-      <div className="absolute -bottom-40 -left-40 w-[40rem] h-[40rem] bg-gradient-to-tr from-brand-50/40 to-transparent rounded-full blur-3xl -z-10 pointer-events-none" />
-
-      <div className="flex items-center px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full py-12 md:py-20">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 items-center w-full">
-          {/* Left: headline, copy, CTAs, social proof */}
-          <div className="lg:col-span-6 flex flex-col justify-center space-y-8 animate-fade-in-up">
+    <section className="relative overflow-hidden border-b border-line bg-white">
+      <div className="mx-auto flex w-full max-w-7xl items-center px-4 py-12 sm:px-6 md:py-16 lg:px-8 lg:py-20">
+        <div className="grid w-full grid-cols-1 items-center gap-10 lg:grid-cols-12 lg:gap-16">
+          <div className="flex flex-col justify-center space-y-8 lg:col-span-6">
             <div className="space-y-5">
-              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight font-accent text-ink leading-[1.1]">
-                <span className="whitespace-nowrap">Practice Smarter</span>
+              <h1 className="font-accent text-4xl font-black leading-[1.08] tracking-tight text-ink sm:text-5xl lg:text-6xl">
+                <span className="whitespace-nowrap">Practice smarter</span>
                 <br />
                 to Ace UAT
               </h1>
 
-              <p className="text-base sm:text-lg text-muted max-w-xl leading-relaxed font-sans font-medium">
-                Prime UAT is your all-in-one study companion — thousands of
+              <p className="max-w-xl font-sans text-base font-medium leading-relaxed text-muted sm:text-lg">
+                Prime UAT is your all-in-one study companion: thousands of
                 curated questions, realistic mock exams, premium courses, and
                 an AI tutor. Study on the web or the mobile app, with the same
                 account everywhere.
               </p>
             </div>
 
-            {/* CTAs */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+            <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
               <Link
                 href="/register"
-                className="inline-flex items-center justify-center gap-2 px-7 py-4 text-base font-semibold text-white bg-brand rounded-2xl hover:bg-brand-600 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 animate-pulse-glow hover:shadow-xl hover:shadow-brand/20 group"
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-brand px-6 py-3.5 text-base font-semibold text-white transition-colors hover:bg-brand-600"
               >
                 Start Preparing Free
                 <svg
-                  className="w-5 h-5 transition-transform duration-200 group-hover:translate-x-1"
+                  className="h-5 w-5"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
@@ -65,21 +60,18 @@ export default function Hero() {
                 </svg>
               </Link>
 
-              <Link
-                href="#pricing"
-                className="inline-flex items-center justify-center px-7 py-4 text-base font-semibold text-brand bg-white border-2 border-brand/80 rounded-2xl hover:bg-brand-50/50 hover:border-brand hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 shadow-sm"
-              >
-                View Pricing
-              </Link>
+              <DownloadModal
+                label="Download the app"
+                className="inline-flex items-center justify-center rounded-xl border border-brand px-6 py-3.5 text-base font-semibold text-brand transition-colors hover:bg-brand-50"
+              />
             </div>
 
-            {/* Social proof */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 pt-6 border-t border-line/40">
+            <div className="flex flex-col items-start gap-4 border-t border-line pt-6 sm:flex-row sm:items-center">
               <div className="flex -space-x-3">
                 {avatars.map((avatar, idx) => (
                   <div
                     key={idx}
-                    className="relative w-10 h-10 rounded-full border-2 border-white overflow-hidden shadow-md hover:scale-110 hover:z-10 transition-all duration-200 cursor-pointer"
+                    className="relative h-10 w-10 overflow-hidden rounded-full border-2 border-white shadow-sm"
                   >
                     <Image
                       src={avatar.src}
@@ -92,39 +84,23 @@ export default function Hero() {
                 ))}
               </div>
 
-              <div className="text-sm sm:text-base text-muted font-medium">
+              <div className="text-sm font-medium text-muted sm:text-base">
                 Join{" "}
-                <span className="text-brand font-bold relative inline-block group">
-                  50,000+
-                  <span className="absolute bottom-0 left-0 w-full h-[3px] bg-brand-100 -z-10 group-hover:h-full transition-all duration-200" />
-                </span>{" "}
+                <span className="font-bold text-brand">50,000+</span>{" "}
                 students preparing with Prime UAT
               </div>
             </div>
           </div>
 
-          {/* Right: illustration */}
-          <div
-            className="lg:col-span-6 relative flex justify-center lg:justify-end animate-fade-in-up"
-            style={{ animationDelay: "150ms" }}
-          >
-            <svg
-              viewBox="0 0 500 200"
-              preserveAspectRatio="none"
-              aria-hidden="true"
-              className="absolute z-10 -bottom-28 left-0 w-[160%] h-[75%] fill-brand select-none pointer-events-none"
-            >
-              <path d="M0,198 C60,160 120,170 180,150 C250,128 290,150 350,100 C400,60 450,72 500,14 L500,200 L0,200 Z" />
-            </svg>
-
-            <div className="relative w-full max-w-[1000px] lg:max-w-none aspect-square lg:scale-125 lg:origin-right lg:translate-x-12 select-none pointer-events-none">
+          <div className="relative flex justify-center lg:col-span-6 lg:justify-end">
+            <div className="relative aspect-square w-full max-w-[520px] select-none lg:max-w-[620px]">
               <Image
                 src="/images/hero.png"
                 alt="Student smart preparation illustration"
                 fill
                 priority
-                sizes="(max-width: 1024px) 100vw, 1000px"
-                className="object-contain mix-blend-multiply select-none pointer-events-none"
+                sizes="(max-width: 1024px) 92vw, 620px"
+                className="object-contain select-none"
               />
             </div>
           </div>

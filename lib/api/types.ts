@@ -136,6 +136,7 @@ export type QuestionOption = {
 export type Question = {
   id: string;
   practiceSetId?: string;
+  text?: string;
   questionText: string;
   options: QuestionOption[];
   correctOption?: string;
@@ -173,8 +174,11 @@ export type Exam = {
   category: string | null;
   difficulty: Difficulty | null;
   questionCount: number;
+  questionsCount?: number;
+  totalQuestions?: number;
   durationMinutes: number;
   isPremium: boolean;
+  isLocked?: boolean;
   isSaved?: boolean;
   attemptCount?: number;
   bestScore?: number | null;
@@ -184,18 +188,23 @@ export type LeaderboardEntry = {
   rank: number;
   userId: string;
   fullName: string;
+  username?: string;
   avatarUrl: string | null;
   score: number;
   timeSpentSeconds: number;
+  timeTakenSeconds?: number;
 };
 
 export type Leaderboard = {
   entries: LeaderboardEntry[];
   total: number;
+  leaderboard?: LeaderboardEntry[];
+  totalParticipants?: number;
 };
 
 export type ExamAttempt = {
-  attemptId: string;
+  id?: string;
+  attemptId?: string;
   examId: string;
   timeLeftSeconds: number;
 };
@@ -205,6 +214,14 @@ export type ExamAnswer = {
   selectedOption: string | null;
   isFlagged: boolean;
   timeSpentSeconds: number;
+};
+
+export type ExamAttemptQuestions = {
+  attemptId: string;
+  attemptNumber?: number;
+  timeLeftSeconds: number;
+  questions: Question[];
+  savedAnswers: ExamAnswer[];
 };
 
 export type ExamReport = {

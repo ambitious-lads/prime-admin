@@ -78,25 +78,25 @@ function Check({ featured }: { featured?: boolean }) {
 
 export default function Pricing() {
   return (
-    <section id="pricing" className="bg-white py-20 md:py-28">
+    <section id="pricing" className="scroll-mt-24 bg-white py-16 md:py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeading
           title="Plans that fit every student"
           description="Three clean tiers, priced for the Ethiopian market. Start free and upgrade whenever you're ready."
         />
 
-        <div className="mt-16 grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 items-stretch">
+        <div className="mt-12 grid grid-cols-1 items-stretch gap-4 lg:grid-cols-3">
           {plans.map((plan) => (
             <div
               key={plan.name}
-              className={`relative flex flex-col rounded-3xl p-8 transition-all duration-300 ${
+              className={`relative flex flex-col rounded-lg p-6 sm:p-8 ${
                 plan.featured
-                  ? "bg-brand text-white shadow-2xl shadow-brand/30 lg:-translate-y-4 lg:scale-[1.03]"
-                  : "bg-white text-ink border border-line hover:border-brand/30 hover:shadow-xl hover:shadow-brand/5"
+                  ? "bg-brand text-white"
+                  : "bg-white text-ink border border-line"
               }`}
             >
               {plan.featured && (
-                <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full bg-ink px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-white shadow-lg">
+                <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full bg-ink px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-white">
                   Most popular
                 </span>
               )}
@@ -134,10 +134,10 @@ export default function Pricing() {
 
               <Link
                 href={plan.href}
-                className={`mt-8 inline-flex items-center justify-center rounded-2xl px-6 py-3.5 text-base font-semibold transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] ${
+                className={`mt-8 inline-flex items-center justify-center rounded-xl px-6 py-3.5 text-base font-semibold transition-colors ${
                   plan.featured
-                    ? "bg-white text-brand hover:bg-white/90 shadow-lg"
-                    : "bg-brand text-white hover:bg-brand-600 shadow-md shadow-brand/10"
+                    ? "bg-white text-brand hover:bg-white/90"
+                    : "bg-brand text-white hover:bg-brand-600"
                 }`}
               >
                 {plan.cta}
@@ -162,7 +162,7 @@ export default function Pricing() {
         </div>
 
         {/* Local payment note */}
-        <div className="mx-auto mt-12 flex max-w-2xl items-center justify-center gap-3 rounded-2xl border border-line bg-surface px-6 py-4 text-center">
+        <div className="mx-auto mt-10 flex max-w-2xl items-center justify-center gap-3 rounded-lg border border-line bg-surface px-5 py-4 text-center">
           <svg
             className="h-5 w-5 shrink-0 text-brand"
             viewBox="0 0 24 24"

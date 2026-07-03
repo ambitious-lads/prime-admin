@@ -6,10 +6,9 @@ type StoreBadgesProps = {
   className?: string;
 };
 
-// Replace these with the real store listings once published.
 const APP_STORE_URL = "https://apps.apple.com/app/prime";
 const PLAY_STORE_URL =
-  "https://play.google.com/store/apps/details?id=app.prime";
+  "https://play.google.com/store/apps/details?id=com.primely.app";
 
 export default function StoreBadges({
   variant = "dark",

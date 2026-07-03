@@ -3,6 +3,7 @@ import SectionHeading from "./SectionHeading";
 const features = [
   {
     title: "Smart Practice",
+    id: "practice",
     description:
       "Drill exactly the right material — questions organized by category, topic, and difficulty so every minute counts.",
     icon: (
@@ -15,6 +16,7 @@ const features = [
   },
   {
     title: "Realistic Mock Exams",
+    id: "mock-tests",
     description:
       "Full-length timed exams with leaderboards, instant scoring, and detailed answer-by-answer reports.",
     icon: (
@@ -27,6 +29,7 @@ const features = [
   },
   {
     title: "Detailed Analytics",
+    id: "analytics",
     description:
       "Track performance, spot weak areas, and see an estimated net score — your progress is never a guess.",
     icon: (
@@ -39,6 +42,7 @@ const features = [
   },
   {
     title: "Premium Courses",
+    id: "courses",
     description:
       "Structured learning materials and explanations with reading-progress tracking, built for the curriculum.",
     icon: (
@@ -51,6 +55,7 @@ const features = [
   },
   {
     title: "AI Tutor",
+    id: "ai-tutor",
     description:
       "Ask questions in context on any course material and get clear, instant explanations — like a tutor on demand.",
     icon: (
@@ -63,6 +68,7 @@ const features = [
   },
   {
     title: "Streaks & Notes",
+    id: "streaks",
     description:
       "Build a daily study habit with streaks, and keep personal notes — turning Prime UAT into your daily routine.",
     icon: (
@@ -77,22 +83,23 @@ const features = [
 
 export default function Features() {
   return (
-    <section id="features" className="bg-white py-20 md:py-28">
+    <section id="features" className="bg-white py-16 md:py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeading
           title="One platform to study smarter"
           description="Stop juggling photocopied past papers and scattered notes. Prime UAT brings curated practice, mock exams, courses, and analytics into one focused experience."
         />
 
-        <div className="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {features.map((feature) => (
             <div
+              id={feature.id}
               key={feature.title}
-              className="group relative rounded-3xl border border-line bg-white p-8 transition-all duration-300 hover:-translate-y-1 hover:border-brand/30 hover:shadow-xl hover:shadow-brand/5"
+              className="scroll-mt-28 rounded-lg border border-line bg-white p-6 transition-colors hover:border-brand/40"
             >
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-50 text-brand transition-colors duration-300 group-hover:bg-brand group-hover:text-white">
+              <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-brand-50 text-brand">
                 <svg
-                  className="h-7 w-7"
+                  className="h-5 w-5"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
@@ -102,10 +109,10 @@ export default function Features() {
                   {feature.icon}
                 </svg>
               </div>
-              <h3 className="mt-6 text-xl font-bold font-display text-ink">
+              <h3 className="mt-5 text-lg font-bold font-display text-ink">
                 {feature.title}
               </h3>
-              <p className="mt-3 text-base text-muted font-medium leading-relaxed">
+              <p className="mt-2 text-sm text-muted font-medium leading-relaxed sm:text-base">
                 {feature.description}
               </p>
             </div>

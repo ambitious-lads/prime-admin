@@ -42,9 +42,11 @@ export default function ExamAttemptPage() {
     refetchOnWindowFocus: false,
   });
 
+  const attemptData = questionsQuery.data;
+
   const questions = useMemo<Question[]>(
-    () => questionsQuery.data ?? [],
-    [questionsQuery.data],
+    () => attemptData?.questions ?? [],
+    [attemptData],
   );
 
   const [answers, setAnswers] = useState<AnswerMap>({});
@@ -71,15 +73,30 @@ export default function ExamAttemptPage() {
     setAnswers((prev) => {
       if (Object.keys(prev).length > 0) return prev;
       const next: AnswerMap = {};
+      const saved = new Map(
+        (attemptData?.savedAnswers ?? []).map((answer) => [
+          answer.questionId,
+          answer,
+        ]),
+      );
       for (const question of questions) {
-        next[question.id] = emptyAnswer(question.id);
+        const savedAnswer = saved.get(question.id);
+        next[question.id] = savedAnswer
+          ? {
+              ...emptyAnswer(question.id),
+              ...savedAnswer,
+              questionId: question.id,
+            }
+          : emptyAnswer(question.id);
       }
       return next;
     });
     setSecondsLeft((prev) =>
-      prev === null ? questions.length * 60 : prev,
+      prev === null
+        ? attemptData?.timeLeftSeconds || questions.length * 60
+        : prev,
     );
-  }, [questions]);
+  }, [questions, attemptData]);
 
   const buildSyncBody = useCallback(() => {
     const left = secondsLeftRef.current ?? 0;

@@ -1,39 +1,39 @@
 import Link from "next/link";
-import StoreBadges from "./StoreBadges";
+import Image from "next/image";
+import DownloadModal from "./DownloadModal";
 
 export default function FinalCTA() {
   return (
-    <section className="bg-white pb-20 md:pb-28">
+    <section className="bg-white pb-16 md:pb-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="relative overflow-hidden rounded-[2.5rem] bg-brand px-6 py-16 text-center sm:px-12 lg:py-20">
-          {/* Decorative paint waves */}
-          <div className="absolute inset-0 -z-0 opacity-20 pointer-events-none">
-            <svg
-              viewBox="0 0 1200 200"
-              preserveAspectRatio="none"
-              className="absolute bottom-0 left-0 h-40 w-full fill-white"
-            >
-              <path d="M0,80 C300,160 550,20 900,120 C1050,160 1150,90 1200,70 L1200,200 L0,200 Z" />
-            </svg>
+        <div className="rounded-2xl bg-brand px-5 py-12 text-center sm:px-8 lg:px-12 lg:py-16">
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-xl bg-white/10">
+            <Image
+              src="/images/white_logo.png"
+              alt=""
+              width={38}
+              height={38}
+              className="h-10 w-10 object-contain"
+            />
           </div>
 
-          <div className="relative mx-auto max-w-2xl">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black font-accent tracking-tight text-white leading-[1.15]">
+          <div className="mx-auto mt-6 max-w-2xl">
+            <h2 className="font-accent text-3xl font-black leading-[1.15] tracking-tight text-white sm:text-4xl">
               Ready to ace your exam?
             </h2>
             <p className="mt-5 text-base sm:text-lg text-white/85 font-medium leading-relaxed">
               Join 50,000+ Ethiopian students studying smarter with Prime UAT.
-              Start free today — no card required.
+              Start free today with web access or scan the app QR from your phone.
             </p>
 
             <div className="mt-9 flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link
                 href="/register"
-                className="inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-8 py-4 text-base font-semibold text-brand shadow-lg transition-all duration-200 hover:scale-[1.03] active:scale-[0.98] group"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-white px-6 py-3.5 text-base font-semibold text-brand transition-colors hover:bg-white/90 sm:w-auto"
               >
                 Start Preparing Free
                 <svg
-                  className="h-5 w-5 transition-transform duration-200 group-hover:translate-x-1"
+                  className="h-5 w-5"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -42,19 +42,10 @@ export default function FinalCTA() {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
                 </svg>
               </Link>
-              <Link
-                href="/login"
-                className="inline-flex items-center justify-center rounded-2xl border-2 border-white/40 px-8 py-4 text-base font-semibold text-white transition-all duration-200 hover:bg-white/10 hover:border-white/70"
-              >
-                Log in
-              </Link>
-            </div>
-
-            <div className="mt-10 flex flex-col items-center gap-4">
-              <p className="text-sm font-medium text-white/70">
-                Or get the mobile app
-              </p>
-              <StoreBadges variant="light" className="justify-center" />
+              <DownloadModal
+                label="Scan app QR"
+                className="inline-flex w-full items-center justify-center rounded-xl border border-white/40 px-6 py-3.5 text-base font-semibold text-white transition-colors hover:bg-white/10 sm:w-auto"
+              />
             </div>
           </div>
         </div>

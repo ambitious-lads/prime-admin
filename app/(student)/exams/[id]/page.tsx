@@ -85,8 +85,9 @@ export default function ExamDetailPage() {
   const startMutation = useMutation({
     mutationFn: () => examsApi.start(id),
     onSuccess: (attempt: ExamAttempt) => {
-      if (attempt?.attemptId) {
-        router.push(`/exams/attempt/${attempt.attemptId}`);
+      const nextAttemptId = attempt?.attemptId ?? attempt?.id;
+      if (nextAttemptId) {
+        router.push(`/exams/attempt/${nextAttemptId}`);
       } else {
         toastApiError(new Error("Could not start the exam. Please try again."));
       }

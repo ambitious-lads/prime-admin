@@ -25,6 +25,11 @@ export const metadata: Metadata = {
   title: "Prime UAT — Ace the University Entrance Exam, study smarter",
   description:
     "Prime UAT is the all-in-one study companion for Ethiopian students preparing for the University Entrance Exam. Curated practice, realistic mock exams, premium courses, analytics, and an AI tutor — on web and mobile.",
+  icons: {
+    icon: "/images/logo.png",
+    shortcut: "/images/logo.png",
+    apple: "/images/logo.png",
+  },
 };
 
 export default function RootLayout({

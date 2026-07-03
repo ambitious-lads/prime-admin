@@ -11,8 +11,11 @@ import type {
   CourseMaterial,
   Exam,
   ExamAttempt,
+  ExamAttemptQuestions,
+  ExamAnswer,
   ExamReport,
   Leaderboard,
+  LeaderboardEntry,
   Note,
   PlanCatalogItem,
   PlanKey,
@@ -46,6 +49,100 @@ function normalizeTutorSession(data: TutorSession): TutorSession {
       content: message.text,
       text: message.text,
       createdAt: new Date(0).toISOString(),
+    })),
+  };
+}
+
+type RawExam = Partial<Exam> & {
+  userProgress?: {
+    attemptsCount?: number;
+    bestScore?: number | null;
+  };
+};
+
+type RawLeaderboard = Partial<Leaderboard> & {
+  leaderboard?: LeaderboardEntry[];
+  totalParticipants?: number;
+};
+
+type RawQuestion = Partial<Question> & {
+  text?: string;
+};
+
+type RawAttemptQuestions =
+  | Question[]
+  | {
+      attemptId?: string;
+      attemptNumber?: number;
+      timeLeftSeconds?: number;
+      questions?: RawQuestion[];
+      savedAnswers?: Partial<ExamAnswer>[];
+    };
+
+function normalizeExam(data: RawExam): Exam {
+  return {
+    ...data,
+    id: data.id ?? "",
+    title: data.title ?? "Mock exam",
+    description: data.description ?? null,
+    category: data.category ?? null,
+    difficulty: data.difficulty ?? null,
+    questionCount:
+      data.questionCount ?? data.questionsCount ?? data.totalQuestions ?? 0,
+    durationMinutes: data.durationMinutes ?? 0,
+    isPremium: Boolean(data.isPremium ?? data.isLocked),
+    attemptCount: data.attemptCount ?? data.userProgress?.attemptsCount,
+    bestScore: data.bestScore ?? data.userProgress?.bestScore ?? null,
+  };
+}
+
+function normalizeQuestion(data: RawQuestion): Question {
+  return {
+    ...data,
+    id: data.id ?? "",
+    questionText: data.questionText ?? data.text ?? "",
+    options: data.options ?? [],
+  };
+}
+
+function normalizeLeaderboard(data: RawLeaderboard): Leaderboard {
+  const rows = data.entries ?? data.leaderboard ?? [];
+  return {
+    entries: rows.map((entry) => ({
+      ...entry,
+      rank: entry.rank ?? 0,
+      fullName: entry.fullName ?? entry.username ?? "Student",
+      avatarUrl: entry.avatarUrl ?? null,
+      score: entry.score ?? 0,
+      timeSpentSeconds: entry.timeSpentSeconds ?? entry.timeTakenSeconds ?? 0,
+    })),
+    total: data.total ?? data.totalParticipants ?? rows.length,
+  };
+}
+
+function normalizeAttemptQuestions(
+  data: RawAttemptQuestions,
+): ExamAttemptQuestions {
+  if (Array.isArray(data)) {
+    return {
+      attemptId: "",
+      timeLeftSeconds: data.length * 60,
+      questions: data.map(normalizeQuestion),
+      savedAnswers: [],
+    };
+  }
+
+  return {
+    attemptId: data.attemptId ?? "",
+    attemptNumber: data.attemptNumber,
+    timeLeftSeconds:
+      typeof data.timeLeftSeconds === "number" ? data.timeLeftSeconds : 0,
+    questions: (data.questions ?? []).map(normalizeQuestion),
+    savedAnswers: (data.savedAnswers ?? []).map((answer) => ({
+      questionId: answer.questionId ?? "",
+      selectedOption: answer.selectedOption ?? null,
+      isFlagged: Boolean(answer.isFlagged),
+      timeSpentSeconds: answer.timeSpentSeconds ?? 0,
     })),
   };
 }
@@ -93,15 +190,20 @@ export const plansApi = {
 
 export const examsApi = {
   list: (q?: { tab?: string; category?: string; difficulty?: string }) =>
-    api.get<Exam[]>("/exams", q),
-  detail: (id: string) => api.get<Exam>(`/exams/${id}`),
+    api.get<RawExam[]>("/exams", q).then((exams) => exams.map(normalizeExam)),
+  detail: (id: string) =>
+    api.get<RawExam>(`/exams/${id}`).then(normalizeExam),
   leaderboard: (id: string, q?: { limit?: number; offset?: number }) =>
-    api.get<Leaderboard>(`/exams/${id}/leaderboard`, q),
+    api
+      .get<RawLeaderboard>(`/exams/${id}/leaderboard`, q)
+      .then(normalizeLeaderboard),
   save: (id: string) => api.post(`/exams/${id}/save`),
   unsave: (id: string) => api.del(`/exams/${id}/save`),
   start: (id: string) => api.post<ExamAttempt>(`/exams/${id}/start`),
   questions: (attemptId: string) =>
-    api.get<Question[]>(`/exams/attempts/${attemptId}/questions`),
+    api
+      .get<RawAttemptQuestions>(`/exams/attempts/${attemptId}/questions`)
+      .then(normalizeAttemptQuestions),
   sync: (attemptId: string, b: unknown) =>
     api.post(`/exams/attempts/${attemptId}/sync`, b),
   submit: (attemptId: string) =>
