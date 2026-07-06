@@ -162,9 +162,11 @@ export type QuestionReport = {
 };
 
 export type SubmitAnswerResult = {
-  isCorrect: boolean;
-  correctOption: string;
-  explanation: string | null;
+  isCorrect?: boolean;
+  correctOption?: string;
+  explanation?: string | null;
+  /** True when the viewer is on a free plan and results are withheld. */
+  gated?: boolean;
 };
 
 export type Exam = {

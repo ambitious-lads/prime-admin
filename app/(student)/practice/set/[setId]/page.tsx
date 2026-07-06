@@ -14,12 +14,18 @@ import { EmptyState } from "@/components/shared/empty-state";
 import { FullPageSpinner, Spinner } from "@/components/shared/loading";
 import { QuestionCard } from "@/components/student/question-card";
 import { SetSummary } from "@/components/student/set-summary";
+import { SubscribeWall } from "@/components/student/subscribe-wall";
+import { usePlan } from "@/hooks/use-plan";
 import { Button } from "@/components/ui/button";
 import { ListChecks } from "lucide-react";
 
 export default function PracticeRunnerPage() {
   const params = useParams<{ setId: string }>();
   const setId = params.setId;
+
+  const { can, isSuccess: planReady } = usePlan();
+  // Any paid tier (Pro or Pro Plus) sees full results; free users are walled.
+  const isPaid = can("pro");
 
   const { data, isLoading } = useQuery({
     queryKey: qk.setQuestions(setId),
@@ -35,6 +41,7 @@ export default function PracticeRunnerPage() {
   const [submitting, setSubmitting] = useState(false);
   const [finishing, setFinishing] = useState(false);
   const [finished, setFinished] = useState(false);
+  const [gated, setGated] = useState(false);
   const [correctCount, setCorrectCount] = useState(0);
   const [totalTime, setTotalTime] = useState(0);
 
@@ -64,6 +71,7 @@ export default function PracticeRunnerPage() {
       totalTimeRef.current += elapsed;
       setTotalTime(totalTimeRef.current);
       setResult(res);
+      if (res.gated) setGated(true);
       if (res.isCorrect) setCorrectCount((c) => c + 1);
     } catch (e) {
       setSelected(null);
@@ -123,6 +131,12 @@ export default function PracticeRunnerPage() {
   }
 
   if (finished) {
+    // Free-plan attempts get the subscribe wall instead of a graded summary.
+    // `gated` is the server's authoritative signal (it withholds free results);
+    // the plan check is a fallback once the plan query has resolved.
+    if (gated || (planReady && !isPaid)) {
+      return <SubscribeWall total={total} backHref="/practice" />;
+    }
     return (
       <SetSummary
         correct={correctCount}

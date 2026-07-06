@@ -25,10 +25,14 @@ export function QuestionCard({
   onSelect: (label: string) => void;
 }) {
   const answered = result !== null;
+  const gated = result?.gated === true;
   const progress = total > 0 ? ((index + 1) / total) * 100 : 0;
 
   function stateFor(label: string): OptionState {
     if (answered) {
+      // Free/gated attempts never reveal the correct answer — keep the picked
+      // option highlighted as "selected" without grading it.
+      if (gated) return label === selected ? "selected" : "idle";
       if (label === result?.correctOption) return "correct";
       if (label === selected) return "wrong";
       return "idle";
@@ -66,29 +70,40 @@ export function QuestionCard({
         </div>
 
         {answered ? (
-          <div
-            className={cn(
-              "rounded-xl border p-4",
-              result.isCorrect
-                ? "border-emerald-200 bg-emerald-50"
-                : "border-red-200 bg-red-50",
-            )}
-          >
-            <p
+          gated ? (
+            <div className="rounded-xl border border-brand-100 bg-brand-50 p-4">
+              <p className="text-sm font-semibold text-brand">
+                Answer recorded
+              </p>
+              <p className="mt-1 text-sm text-muted">
+                Subscribe to see if you got it right and read the explanation.
+              </p>
+            </div>
+          ) : (
+            <div
               className={cn(
-                "text-sm font-semibold",
-                result.isCorrect ? "text-emerald-700" : "text-red-700",
+                "rounded-xl border p-4",
+                result.isCorrect
+                  ? "border-emerald-200 bg-emerald-50"
+                  : "border-red-200 bg-red-50",
               )}
             >
-              {result.isCorrect ? "Correct!" : "Not quite."}
-            </p>
-            {result.explanation ? (
-              <div className="mt-2 flex gap-2">
-                <Lightbulb className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
-                <p className="text-sm text-ink">{result.explanation}</p>
-              </div>
-            ) : null}
-          </div>
+              <p
+                className={cn(
+                  "text-sm font-semibold",
+                  result.isCorrect ? "text-emerald-700" : "text-red-700",
+                )}
+              >
+                {result.isCorrect ? "Correct!" : "Not quite."}
+              </p>
+              {result.explanation ? (
+                <div className="mt-2 flex gap-2">
+                  <Lightbulb className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
+                  <p className="text-sm text-ink">{result.explanation}</p>
+                </div>
+              ) : null}
+            </div>
+          )
         ) : null}
       </CardContent>
     </Card>
