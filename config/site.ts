@@ -1,7 +1,8 @@
 export const site = {
   name: process.env.NEXT_PUBLIC_APP_NAME ?? "Prime UAT",
   apiBaseUrl:
-    process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://primely-api.onrender.com/api",
+    process.env.NEXT_PUBLIC_API_BASE_URL ??
+    "https://primely-api.onrender.com/api/v1",
   supportPhone: process.env.NEXT_PUBLIC_SUPPORT_PHONE ?? "@prime_uat",
   supportEmail:
     process.env.NEXT_PUBLIC_SUPPORT_EMAIL ?? "@prime_uat",
