@@ -15,6 +15,7 @@ import { authApi } from "@/lib/api/endpoints";
 import { useAuth } from "@/hooks/use-auth";
 import { toastApiError } from "@/hooks/use-api-error";
 import { DeviceConflictError } from "@/lib/api/client";
+import { captureEvent } from "@/lib/observability/posthog";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/shared/loading";
 import { cn } from "@/lib/utils/cn";
@@ -78,11 +79,14 @@ function VerifyForm() {
       return;
     }
     setSubmitting(true);
+    captureEvent("web_otp_verify_attempt");
     try {
       const session = await authApi.verifyOtp({ phone, otpCode: code });
       setSession(session);
+      captureEvent("web_otp_verify_success", { role: session.user.role });
       router.push(session.user.role === "admin" ? "/admin" : "/dashboard");
     } catch (e) {
+      captureEvent("web_otp_verify_failure");
       if (e instanceof DeviceConflictError) {
         router.push("/device?conflict=1");
         return;
@@ -96,9 +100,11 @@ function VerifyForm() {
   async function resend() {
     try {
       await authApi.resendOtp({ phone });
+      captureEvent("web_otp_resend_success");
       toast.success("A new code has been sent.");
       setCooldown(RESEND_SECONDS);
     } catch (e) {
+      captureEvent("web_otp_resend_failure");
       toastApiError(e);
     }
   }

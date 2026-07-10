@@ -6,6 +6,7 @@ import { OverviewStats } from "@/components/student/overview-stats";
 import { StreakCard } from "@/components/student/streak-card";
 import { ContinueStudying } from "@/components/student/continue-studying";
 import { UpgradeNudge } from "@/components/student/upgrade-nudge";
+import { AchievementsCard } from "@/components/student/achievements-card";
 
 export default function DashboardPage() {
   const { user } = useAuth();
@@ -18,9 +19,10 @@ export default function DashboardPage() {
         subtitle="Here's your progress today."
       />
       <OverviewStats />
-      <div className="grid gap-6 lg:grid-cols-3">
-        <StreakCard className="lg:col-span-1" />
-        <ContinueStudying className="lg:col-span-2" />
+      <div className="grid gap-6 xl:grid-cols-4">
+        <StreakCard className="xl:col-span-1" />
+        <AchievementsCard className="xl:col-span-1" />
+        <ContinueStudying className="xl:col-span-2" />
       </div>
       <UpgradeNudge />
     </div>

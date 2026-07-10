@@ -60,7 +60,7 @@ function Check({ featured }: { featured?: boolean }) {
   return (
     <span
       className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full ${
-        featured ? "bg-white/20 text-white" : "bg-brand-50 text-brand"
+        featured ? "bg-brand text-white" : "bg-brand-50 text-brand"
       }`}
     >
       <svg
@@ -91,26 +91,26 @@ export default function Pricing() {
               key={plan.name}
               className={`relative flex flex-col rounded-lg p-6 sm:p-8 ${
                 plan.featured
-                  ? "bg-brand text-white"
-                  : "bg-white text-ink border border-line"
+                  ? "border border-brand/40 bg-brand-50 text-ink shadow-md shadow-brand/10"
+                  : "border border-line bg-white text-ink"
               }`}
             >
               {plan.featured && (
-                <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full bg-ink px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-white">
+                <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full border border-brand/20 bg-white px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-brand shadow-sm">
                   Most popular
                 </span>
               )}
 
               <h3
                 className={`text-xl font-bold font-display ${
-                  plan.featured ? "text-white" : "text-ink"
+                  plan.featured ? "text-brand" : "text-ink"
                 }`}
               >
                 {plan.name}
               </h3>
               <p
                 className={`mt-2 text-sm font-medium leading-relaxed ${
-                  plan.featured ? "text-white/80" : "text-muted"
+                  plan.featured ? "text-muted" : "text-muted"
                 }`}
               >
                 {plan.tagline}
@@ -122,7 +122,7 @@ export default function Pricing() {
                 </span>
                 <span
                   className={`text-base font-semibold ${
-                    plan.featured ? "text-white/70" : "text-muted"
+                    plan.featured ? "text-muted" : "text-muted"
                   }`}
                 >
                   {plan.period}
@@ -136,7 +136,7 @@ export default function Pricing() {
                 href={plan.href}
                 className={`mt-8 inline-flex items-center justify-center rounded-xl px-6 py-3.5 text-base font-semibold transition-colors ${
                   plan.featured
-                    ? "bg-white text-brand hover:bg-white/90"
+                    ? "bg-brand text-white hover:bg-brand-600"
                     : "bg-brand text-white hover:bg-brand-600"
                 }`}
               >
@@ -149,7 +149,7 @@ export default function Pricing() {
                     <Check featured={plan.featured} />
                     <span
                       className={`text-sm font-medium leading-relaxed ${
-                        plan.featured ? "text-white/90" : "text-ink/80"
+                        plan.featured ? "text-ink/80" : "text-ink/80"
                       }`}
                     >
                       {feature}

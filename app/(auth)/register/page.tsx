@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { registerSchema, type RegisterInput } from "@/lib/validation/auth";
 import { authApi } from "@/lib/api/endpoints";
 import { toastApiError } from "@/hooks/use-api-error";
+import { captureEvent } from "@/lib/observability/posthog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -25,11 +26,14 @@ export default function RegisterPage() {
 
   async function onSubmit(values: RegisterInput) {
     setSubmitting(true);
+    captureEvent("web_register_attempt");
     try {
       await authApi.register(values);
+      captureEvent("web_register_success");
       toast.success("Account created. Verify your phone to continue.");
       router.push(`/verify?phone=${encodeURIComponent(values.phone)}`);
     } catch (e) {
+      captureEvent("web_register_failure");
       toastApiError(e);
     } finally {
       setSubmitting(false);

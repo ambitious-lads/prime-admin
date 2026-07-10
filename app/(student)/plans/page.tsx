@@ -58,6 +58,12 @@ export default function PlansPage() {
             const isCurrent = p.key === currentPlan;
             const isPaid = p.key !== "free";
             const highlight = p.key === "pro";
+            const upgrade = data?.availableUpgrades?.find(
+              (item) => item.plan === p.key,
+            );
+            const ctaLabel = upgrade
+              ? `Upgrade for ${formatMoney(upgrade.upgradePrice)}`
+              : `Choose ${p.label}`;
             return (
               <Card
                 key={p.key}
@@ -112,7 +118,7 @@ export default function PlansPage() {
                       <Link
                         href={`/plans/checkout?plan=${p.key as Exclude<PlanKey, "free">}`}
                       >
-                        Choose {p.label}
+                        {ctaLabel}
                       </Link>
                     </Button>
                   ) : (

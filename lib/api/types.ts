@@ -79,6 +79,12 @@ export type PlanMe = {
   planActivatedAt: string | null;
   planExpiresAt: string | null;
   latestPayment: PlanPayment | null;
+  availableUpgrades: {
+    plan: Exclude<PlanKey, "free">;
+    label: string;
+    price: number;
+    upgradePrice: number;
+  }[];
 };
 
 export type Category = {
@@ -347,7 +353,21 @@ export type AdminMarketingAnalytics = {
 export type ScoreCalculatorResult = {
   netScore: number;
   esslceScore?: number;
+  esslceMax?: 600 | 700;
+  normalizedEsslce?: number;
   uatScore?: number;
+};
+
+export type AppNotification = {
+  id: string;
+  userId: string;
+  type: string;
+  title: string;
+  body: string;
+  data: Record<string, unknown>;
+  readAt: string | null;
+  createdAt: string;
+  updatedAt: string;
 };
 
 export type Profile = {

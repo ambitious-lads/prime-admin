@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   ArrowLeft,
   Banknote,
@@ -23,6 +23,7 @@ import { PLANS } from "@/lib/utils/plans";
 import { formatMoney } from "@/lib/utils/format";
 import { subscribeSchema, type SubscribeInput } from "@/lib/validation/plans";
 import { toastApiError } from "@/hooks/use-api-error";
+import { captureEvent } from "@/lib/observability/posthog";
 import type { PlanKey } from "@/lib/api/types";
 import { PageHeader } from "@/components/shared/page-header";
 import { FullPageSpinner, Spinner } from "@/components/shared/loading";
@@ -48,6 +49,13 @@ function CheckoutInner() {
   const [submitting, setSubmitting] = useState(false);
   const [verified, setVerified] = useState(false);
   const [verbIndex, setVerbIndex] = useState(0);
+  const { data: myPlan } = useQuery({
+    queryKey: qk.plan,
+    queryFn: plansApi.me,
+  });
+  const upgrade = myPlan?.availableUpgrades?.find((item) => item.plan === plan);
+  const amountDue = upgrade?.upgradePrice ?? planInfo.price;
+  const isUpgrade = Boolean(upgrade && upgrade.upgradePrice < planInfo.price);
 
   const verbs = ["checking", "matching", "locking", "activating"];
   const form = useForm<SubscribeInput>({
@@ -67,6 +75,11 @@ function CheckoutInner() {
 
   async function onSubmit(values: SubscribeInput) {
     setSubmitting(true);
+    captureEvent("web_checkout_submit", {
+      plan,
+      amountDue,
+      isUpgrade,
+    });
     try {
       const result = await plansApi.subscribe({
         plan: values.plan,
@@ -74,11 +87,22 @@ function CheckoutInner() {
         note: values.note?.trim() || undefined,
       });
       setVerified(true);
+      captureEvent("web_checkout_verified", {
+        plan: result.plan,
+        status: result.status,
+        amountDue,
+        isUpgrade,
+      });
       await queryClient.invalidateQueries({ queryKey: qk.plan });
       if (result.status === "active") {
         window.setTimeout(() => router.push("/dashboard"), 1100);
       }
     } catch (e) {
+      captureEvent("web_checkout_failure", {
+        plan,
+        amountDue,
+        isUpgrade,
+      });
       toastApiError(e);
     } finally {
       setSubmitting(false);
@@ -131,10 +155,24 @@ function CheckoutInner() {
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex items-center justify-between rounded-xl bg-surface px-4 py-3">
-            <span className="text-sm text-muted">Total due</span>
-            <span className="font-accent text-2xl font-black text-ink">
-              {formatMoney(planInfo.price)}
-            </span>
+            <div>
+              <span className="text-sm text-muted">Total due</span>
+              {isUpgrade ? (
+                <p className="mt-0.5 text-xs font-medium text-brand">
+                  Pro to Pro Plus upgrade price
+                </p>
+              ) : null}
+            </div>
+            <div className="text-right">
+              <span className="font-accent text-2xl font-black text-ink">
+                {formatMoney(amountDue)}
+              </span>
+              {isUpgrade ? (
+                <p className="text-xs text-muted line-through">
+                  Full price {formatMoney(planInfo.price)}
+                </p>
+              ) : null}
+            </div>
           </div>
           <div className="space-y-3 rounded-xl border border-line p-4">
             <p className="text-sm font-semibold text-ink">Payment accounts</p>
@@ -176,17 +214,17 @@ function CheckoutInner() {
         </CardContent>
       </Card>
 
-      <Card className="overflow-hidden">
-        <div className="bg-ink px-6 py-5 text-white">
+      <Card className="overflow-hidden border-brand/20">
+        <div className="border-b border-brand/15 bg-brand-50 px-6 py-5">
           <div className="flex items-start gap-3">
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand text-white">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-brand shadow-sm shadow-brand/10">
               <ShieldCheck className="h-5 w-5" />
             </span>
             <div>
-              <p className="font-display text-lg font-bold">
+              <p className="font-display text-lg font-bold text-ink">
                 Live Odit verification
               </p>
-              <p className="mt-1 text-sm leading-6 text-white/75">
+              <p className="mt-1 text-sm leading-6 text-muted">
                 We verify the receipt with the provider, match the Prime account,
                 confirm the amount, and block reused receipt references.
               </p>

@@ -2,6 +2,7 @@ import { api } from "./client";
 import type {
   AdminUser,
   AdminMarketingAnalytics,
+  AppNotification,
   AnalyticsDashboard,
   AnalyticsOverview,
   AuthMe,
@@ -78,6 +79,15 @@ type RawAttemptQuestions =
       questions?: RawQuestion[];
       savedAnswers?: Partial<ExamAnswer>[];
     };
+
+type SubscribeResult = {
+  status: "active" | "pending";
+  plan: PlanKey;
+  amount?: number;
+  isUpgrade?: boolean;
+  payment?: PlanPayment;
+  message?: string;
+};
 
 function normalizeExam(data: RawExam): Exam {
   return {
@@ -178,8 +188,8 @@ export const authApi = {
 export const plansApi = {
   catalog: () => api.get<PlanCatalogItem[]>("/plans"),
   me: () => api.get<PlanMe>("/plans/me"),
-  subscribe: (body: { plan: string; receiptUrl?: string; note?: string }) =>
-    api.post<{ status: string; message?: string }>("/plans/subscribe", body),
+  subscribe: (body: { plan: PlanKey; receiptUrl?: string; note?: string }) =>
+    api.post<SubscribeResult>("/plans/subscribe", body),
   payments: (status?: string) =>
     api.get<PlanPayment[]>("/plans/payments", status ? { status } : undefined),
   approve: (id: string) =>
@@ -269,7 +279,7 @@ export const analyticsApi = {
   adminMarketing: () =>
     api.get<AdminMarketingAnalytics>("/analytics/admin/marketing"),
   overview: () => api.get<AnalyticsOverview>("/analytics/overview"),
-  scoreCalculator: (b: { esslceScore?: number; uatScore?: number }) =>
+  scoreCalculator: (b: { esslceScore?: number; esslceMax?: 600 | 700; uatScore?: number }) =>
     api.post<ScoreCalculatorResult>("/analytics/score-calculator", b),
 };
 
@@ -291,4 +301,11 @@ export const notesApi = {
   detail: (id: string) => api.get<Note>(`/notes/${id}`),
   upload: (form: FormData) => api.upload<Note>("/notes/upload", form),
   remove: (id: string) => api.del(`/notes/${id}`),
+};
+
+export const notificationsApi = {
+  list: (limit = 50) => api.get<AppNotification[]>("/notifications", { limit }),
+  unreadCount: () => api.get<{ count: number }>("/notifications/unread-count"),
+  markAsRead: (id: string) => api.patch<AppNotification>(`/notifications/${id}/read`),
+  markAllAsRead: () => api.patch<{ updatedCount: number }>("/notifications/read-all"),
 };

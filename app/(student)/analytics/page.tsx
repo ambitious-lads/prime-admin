@@ -38,6 +38,13 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { PageHeader } from "@/components/shared/page-header";
 import { StatCard } from "@/components/shared/stat-card";
 import { EmptyState } from "@/components/shared/empty-state";
@@ -340,12 +347,14 @@ function ChartCard({
 
 function ScoreCalculator() {
   const [esslceScore, setEsslce] = useState("");
+  const [esslceMax, setEsslceMax] = useState<"700" | "600">("700");
   const [uatScore, setUat] = useState("");
 
   const calc = useMutation({
     mutationFn: () =>
       analyticsApi.scoreCalculator({
         esslceScore: esslceScore ? Number(esslceScore) : undefined,
+        esslceMax: Number(esslceMax) as 600 | 700,
         uatScore: uatScore ? Number(uatScore) : undefined,
       }),
     onError: toastApiError,
@@ -368,17 +377,34 @@ function ScoreCalculator() {
         <CardTitle className="text-sm">Net score calculator</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-[1fr_1fr_auto] sm:items-end">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-[1fr_150px_1fr_auto] sm:items-end">
           <div className="space-y-1.5">
-            <Label htmlFor="esslce">ESSLCE score</Label>
+            <Label htmlFor="esslce">EUEE / ESSLCE score</Label>
             <Input
               id="esslce"
               type="number"
               inputMode="decimal"
+              min={0}
+              max={Number(esslceMax)}
               value={esslceScore}
               onChange={(e) => setEsslce(e.target.value)}
-              placeholder="e.g. 540"
+              placeholder={esslceMax === "700" ? "e.g. 540" : "e.g. 460"}
             />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="esslceMax">EUEE scale</Label>
+            <Select
+              value={esslceMax}
+              onValueChange={(value) => setEsslceMax(value as "700" | "600")}
+            >
+              <SelectTrigger id="esslceMax">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="700">Out of 700</SelectItem>
+                <SelectItem value="600">Out of 600</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
           <div className="space-y-1.5">
             <Label htmlFor="uat">UAT score</Label>
@@ -397,11 +423,20 @@ function ScoreCalculator() {
           </Button>
         </div>
         {calc.data && (
-          <div className="mt-5 flex items-center justify-between rounded-2xl bg-brand-50 px-5 py-4">
-            <span className="text-sm font-medium text-ink">Net score</span>
-            <span className="font-accent text-3xl font-bold tabular-nums text-brand">
-              {formatNumber(calc.data.netScore)}
-            </span>
+          <div className="mt-5 rounded-2xl bg-brand-50 px-5 py-4">
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium text-ink">Net score</span>
+              <span className="font-accent text-3xl font-bold tabular-nums text-brand">
+                {formatNumber(calc.data.netScore)}
+              </span>
+            </div>
+            {calc.data.normalizedEsslce != null ? (
+              <p className="mt-1 text-xs text-muted">
+                EUEE normalized from {formatNumber(calc.data.esslceScore ?? 0)}
+                /{calc.data.esslceMax ?? Number(esslceMax)} to{" "}
+                {formatNumber(calc.data.normalizedEsslce)}%.
+              </p>
+            ) : null}
           </div>
         )}
       </CardContent>

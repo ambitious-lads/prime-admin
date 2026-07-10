@@ -23,6 +23,7 @@ const columns = [
     title: "Support",
     links: [
       { label: "FAQ", href: "#faq" },
+      { label: "Status", href: "/status" },
       { label: "Privacy Policy", href: "/privacy-policy" },
       { label: "Delete Account", href: "/delete-account" },
     ],
