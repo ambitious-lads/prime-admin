@@ -15,6 +15,7 @@ import {
   ListChecks,
   BookOpen,
   HandCoins,
+  Bell,
   type LucideIcon,
 } from "lucide-react";
 
@@ -30,6 +31,8 @@ export const studentNav: NavItem[] = [
   { label: "Mock Exams", href: "/exams", icon: FileQuestion },
   { label: "Courses", href: "/courses", icon: GraduationCap },
   { label: "Notes", href: "/notes", icon: StickyNote },
+  { label: "Saved Library", href: "/saved", icon: BookOpen },
+  { label: "Notifications", href: "/notifications", icon: Bell },
   { label: "Analytics", href: "/analytics", icon: LineChart },
   { label: "Plan", href: "/plans", icon: CreditCard },
 ];

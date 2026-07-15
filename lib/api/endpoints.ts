@@ -23,6 +23,10 @@ import type {
   PlanMe,
   PlanPayment,
   ReferralPayout,
+  ReferralStatus,
+  SavedAiNote,
+  SavedNoteFolder,
+  SavedQuestion,
   PracticeSet,
   Profile,
   Question,
@@ -319,4 +323,23 @@ export const notificationsApi = {
   unreadCount: () => api.get<{ count: number }>("/notifications/unread-count"),
   markAsRead: (id: string) => api.patch<AppNotification>(`/notifications/${id}/read`),
   markAllAsRead: () => api.patch<{ updatedCount: number }>("/notifications/read-all"),
+};
+
+export const savedApi = {
+  questions: () => api.get<SavedQuestion[]>("/practice/saved/questions"),
+  unsaveQuestion: (id: string) => api.del(`/practice/questions/${id}/save`),
+  folders: () => api.get<SavedNoteFolder[]>("/practice/saved/note-folders"),
+  notes: (folderId?: string) =>
+    api.get<SavedAiNote[]>("/practice/saved/notes", folderId ? { folderId } : undefined),
+  createFolder: (name: string) =>
+    api.post<SavedNoteFolder>("/practice/saved/note-folders", { name }),
+  updateNote: (id: string, body: { title?: string; content?: string; folderId?: string }) =>
+    api.patch<SavedAiNote>(`/practice/saved/notes/${id}`, body),
+  deleteNote: (id: string) => api.del(`/practice/saved/notes/${id}`),
+};
+
+export const referralsStudentApi = {
+  me: () => api.get<ReferralStatus>("/referrals/me"),
+  requestPayout: (body: { payoutMethod?: string; payoutAccount?: string }) =>
+    api.post("/referrals/payouts", body),
 };

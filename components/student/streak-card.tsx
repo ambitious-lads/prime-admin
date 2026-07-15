@@ -14,7 +14,6 @@ import { streaksApi } from "@/lib/api/endpoints";
 import { qk } from "@/lib/query/keys";
 import { cn } from "@/lib/utils/cn";
 import { formatDate } from "@/lib/utils/format";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
 type Bucket = { day: string; questions: number; active: boolean };
@@ -33,15 +32,15 @@ export function StreakCard({ className }: { className?: string }) {
   }));
 
   return (
-    <Card className={cn(className)}>
-      <CardHeader className="flex-row items-center justify-between">
-        <CardTitle>Your streak</CardTitle>
-        <span className="flex items-center gap-1.5 rounded-full bg-amber-50 px-3 py-1 text-sm font-semibold text-amber-700">
+    <section className={cn("py-6 lg:pr-8", className)}>
+      <div className="flex items-center justify-between">
+        <h2 className="text-base font-bold text-ink">Weekly activity</h2>
+        <span className="flex items-center gap-1.5 text-sm font-semibold text-amber-700">
           <Flame className="h-4 w-4" />
           <span className="tabular-nums">{current} day{current === 1 ? "" : "s"}</span>
         </span>
-      </CardHeader>
-      <CardContent className="space-y-4">
+      </div>
+      <div className="mt-4 space-y-4">
         <p className="text-sm text-muted">
           Longest streak{" "}
           <span className="font-semibold text-ink tabular-nums">{longest}</span>{" "}
@@ -84,7 +83,7 @@ export function StreakCard({ className }: { className?: string }) {
             </ResponsiveContainer>
           )}
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </section>
   );
 }

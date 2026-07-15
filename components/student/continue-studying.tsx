@@ -6,7 +6,6 @@ import { ArrowRight, Dumbbell, FileQuestion } from "lucide-react";
 import { practiceApi, examsApi } from "@/lib/api/endpoints";
 import { qk } from "@/lib/query/keys";
 import { cn } from "@/lib/utils/cn";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -24,11 +23,12 @@ export function ContinueStudying({ className }: { className?: string }) {
   const recommended = (exams.data ?? []).slice(0, 3);
 
   return (
-    <Card className={cn(className)}>
-      <CardHeader>
-        <CardTitle>Continue studying</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-6">
+    <section className={cn(className)}>
+      <div className="flex items-end justify-between border-b border-line pb-3">
+        <h2 className="text-lg font-bold text-ink">Continue studying</h2>
+        <Link href="/practice" className="text-sm font-semibold text-brand hover:underline">View all</Link>
+      </div>
+      <div className="grid gap-8 pt-5 lg:grid-cols-2">
         <div className="space-y-3">
           <p className="text-xs font-semibold uppercase tracking-wide text-muted">
             Practice categories
@@ -42,12 +42,12 @@ export function ContinueStudying({ className }: { className?: string }) {
           ) : quickLinks.length === 0 ? (
             <p className="text-sm text-muted">No categories yet.</p>
           ) : (
-            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+            <div>
               {quickLinks.map((c) => (
                 <Link
                   key={c.id}
                   href={`/practice/${c.id}`}
-                  className="flex items-center gap-3 rounded-xl border border-line p-3 transition-colors hover:border-brand/40 hover:bg-surface"
+                  className="flex items-center gap-3 border-b border-line px-1 py-3 transition-colors hover:bg-surface"
                 >
                   <span
                     className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-brand-50 text-brand"
@@ -68,7 +68,7 @@ export function ContinueStudying({ className }: { className?: string }) {
             Recommended mock exams
           </p>
           {exams.isLoading ? (
-            <div className="space-y-2">
+            <div>
               {Array.from({ length: 3 }).map((_, i) => (
                 <Skeleton key={i} className="h-14" />
               ))}
@@ -81,7 +81,7 @@ export function ContinueStudying({ className }: { className?: string }) {
                 <Link
                   key={e.id}
                   href={`/exams/${e.id}`}
-                  className="flex items-center justify-between gap-3 rounded-xl border border-line p-3 transition-colors hover:border-brand/40 hover:bg-surface"
+                  className="flex items-center justify-between gap-3 border-b border-line px-1 py-3 transition-colors hover:bg-surface"
                 >
                   <div className="flex min-w-0 items-center gap-3">
                     <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-brand-50 text-brand">
@@ -105,7 +105,7 @@ export function ContinueStudying({ className }: { className?: string }) {
             </div>
           )}
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </section>
   );
 }

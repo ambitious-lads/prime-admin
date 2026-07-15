@@ -386,6 +386,53 @@ export type AppNotification = {
   updatedAt: string;
 };
 
+export type SavedQuestion = {
+  id: string;
+  questionId: string;
+  questionText: string;
+  options: QuestionOption[];
+  correctOption: string;
+  explanation: string | null;
+  orderIndex: number;
+  practiceSetTitle: string;
+  topicName: string;
+  categoryName: string;
+  savedAt: string;
+};
+
+export type SavedNoteFolder = {
+  id: string;
+  name: string;
+  notesCount: number;
+};
+
+export type SavedAiNote = {
+  id: string;
+  folderId: string;
+  folderName: string;
+  questionId: string | null;
+  title: string;
+  content: string;
+  sourceAction: string | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type ReferralStatus = {
+  enabled: boolean;
+  code: string;
+  shareUrl: string;
+  rewardAmount: number;
+  requiredPaidReferrals: number;
+  registeredCount: number;
+  qualifiedCount: number;
+  paidCount: number;
+  unpaidQualifiedCount: number;
+  progress: number;
+  eligible: boolean;
+  openPayout: ReferralPayout | null;
+};
+
 export type Profile = {
   id: string;
   fullName: string;

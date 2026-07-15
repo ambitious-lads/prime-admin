@@ -4,7 +4,6 @@ import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Award, Flame, Target, Trophy } from "lucide-react";
 import { notificationsApi } from "@/lib/api/endpoints";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils/cn";
 
@@ -27,16 +26,9 @@ export function AchievementsCard({ className }: { className?: string }) {
   );
 
   return (
-    <Card className={cn(className)}>
-      <CardHeader className="pb-3">
-        <CardTitle className="flex items-center gap-2 text-sm">
-          <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-brand-50 text-brand">
-            <Award className="h-4 w-4" />
-          </span>
-          Achievements
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
+    <section className={cn("border-t border-line py-6 lg:border-t-0 lg:pl-8", className)}>
+      <h2 className="text-base font-bold text-ink">Achievements</h2>
+      <div className="mt-4">
         {isLoading ? (
           <div className="space-y-3">
             <Skeleton className="h-14" />
@@ -46,11 +38,8 @@ export function AchievementsCard({ className }: { className?: string }) {
         ) : achievements.length > 0 ? (
           <div className="space-y-3">
             {achievements.map((item) => (
-              <div
-                key={item.id}
-                className="flex items-start gap-3 rounded-xl border border-line bg-surface/60 p-3"
-              >
-                <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white text-brand shadow-sm shadow-brand/10">
+              <div key={item.id} className="flex items-start gap-3 border-b border-line py-3 last:border-0">
+                <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center text-brand">
                   {iconFor(item.type)}
                 </span>
                 <div className="min-w-0">
@@ -63,12 +52,12 @@ export function AchievementsCard({ className }: { className?: string }) {
             ))}
           </div>
         ) : (
-          <div className="rounded-xl border border-dashed border-line bg-surface/50 p-4 text-sm text-muted">
+          <p className="py-4 text-sm leading-6 text-muted">
             Badges appear here after milestones like 100 solved questions, a
             7-day streak, or completing every set in a topic.
-          </div>
+          </p>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </section>
   );
 }

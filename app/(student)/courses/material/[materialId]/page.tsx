@@ -12,7 +12,6 @@ import { FullPageSpinner } from "@/components/shared/loading";
 import { LockBadge } from "@/components/shared/lock-badge";
 import { MaterialReader } from "@/components/depth/material-reader";
 import { ReadingProgressBar } from "@/components/depth/reading-progress-bar";
-import { TutorPanel } from "@/components/depth/tutor-panel";
 import { coursesApi } from "@/lib/api/endpoints";
 import { qk } from "@/lib/query/keys";
 import { usePlan } from "@/hooks/use-plan";
@@ -87,39 +86,30 @@ export default function MaterialPage() {
   return (
     <div className="-mx-4 -my-6 sm:-mx-6 lg:-mx-8">
       <ReadingProgressBar value={readProgress} />
-      <div className="flex items-center gap-3 border-b border-line bg-white px-4 py-3 sm:px-6">
+      <div className="flex items-center justify-between gap-3 border-b border-line bg-white px-4 py-3 sm:px-6">
         <Button asChild variant="ghost" size="sm">
           <Link href={`/courses/${courseId}`}>
             <ArrowLeft className="h-4 w-4" /> Course
           </Link>
         </Button>
+        {hasTutorAccess ? (
+          <Button asChild size="sm">
+            <Link href={`/courses/material/${materialId}/ai`}>
+              <Sparkles className="h-4 w-4" /> Prime AI
+            </Link>
+          </Button>
+        ) : (
+          <Button asChild variant="outline" size="sm">
+            <Link href="/plans"><Lock className="h-4 w-4" /> Prime AI</Link>
+          </Button>
+        )}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px]">
+      <div className="mx-auto max-w-5xl">
         <div className="h-[calc(100vh-9.5rem)] bg-white">
           <MaterialReader material={data} onProgress={setReadProgress} />
         </div>
-        <aside className="hidden h-[calc(100vh-9.5rem)] border-l border-line bg-white lg:block">
-          {hasTutorAccess ? (
-            <TutorPanel materialId={materialId} />
-          ) : (
-            <TutorLockedPanel />
-          )}
-        </aside>
       </div>
-    </div>
-  );
-}
-
-function TutorLockedPanel() {
-  return (
-    <div className="flex h-full flex-col items-center justify-center gap-3 px-6 text-center">
-      <Sparkles className="h-6 w-6 text-brand" />
-      <p className="text-sm font-semibold text-ink">AI Tutor</p>
-      <LockBadge plan={TUTOR_UNLOCK_PLAN} />
-      <Button asChild size="sm">
-        <Link href="/plans">Upgrade</Link>
-      </Button>
     </div>
   );
 }
