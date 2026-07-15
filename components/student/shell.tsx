@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { Flame, Menu, User, Settings, Smartphone, LogOut, X } from "lucide-react";
+import { Flame, Menu, User, Settings, Smartphone, LogOut, X, Send } from "lucide-react";
 import { studentNav } from "@/config/nav";
 import { streaksApi } from "@/lib/api/endpoints";
 import { qk } from "@/lib/query/keys";
@@ -39,7 +39,7 @@ function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
             href={item.href}
             onClick={onNavigate}
             className={cn(
-              "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors",
+              "flex items-center gap-3 rounded-[9px] px-3 py-2.5 text-sm font-medium transition-colors",
               active
                 ? "bg-brand-50 text-brand"
                 : "text-muted hover:bg-surface hover:text-ink",
@@ -125,14 +125,23 @@ export function StudentShell({ children }: { children: React.ReactNode }) {
   }, [pathname]);
 
   return (
-    <div className="min-h-screen bg-surface/40">
-      <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 flex-col border-r border-line bg-white lg:flex">
-        <div className="flex h-16 items-center px-5">
+    <div className="min-h-screen bg-[#f7f9fc]">
+      <aside className="fixed inset-y-0 left-0 z-30 hidden w-60 flex-col border-r border-line bg-white lg:flex">
+        <div className="flex h-16 items-center border-b border-line px-5">
           <Brand href="/dashboard" />
         </div>
         <div className="flex-1 overflow-y-auto px-3 py-4">
           <NavLinks />
         </div>
+        <a
+          href="https://t.me/prime_uat"
+          target="_blank"
+          rel="noreferrer"
+          className="m-3 flex items-center gap-3 border-t border-line px-3 pt-4 text-sm font-semibold text-muted hover:text-brand"
+        >
+          <Send className="h-4 w-4" />
+          @prime_uat
+        </a>
       </aside>
 
       {mobileOpen ? (
@@ -159,8 +168,8 @@ export function StudentShell({ children }: { children: React.ReactNode }) {
         </div>
       ) : null}
 
-      <div className="lg:pl-64">
-        <header className="sticky top-0 z-20 flex h-16 items-center justify-between gap-3 border-b border-line bg-white/80 px-4 backdrop-blur sm:px-6">
+      <div className="lg:pl-60">
+        <header className="sticky top-0 z-20 flex h-16 items-center justify-between gap-3 border-b border-line bg-white px-4 sm:px-6">
           <Button
             variant="ghost"
             size="icon"
@@ -176,7 +185,7 @@ export function StudentShell({ children }: { children: React.ReactNode }) {
           </div>
         </header>
 
-        <main className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6 sm:py-8">
+        <main className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 sm:py-8">
           {children}
         </main>
       </div>

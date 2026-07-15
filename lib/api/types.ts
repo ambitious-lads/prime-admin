@@ -73,6 +73,22 @@ export type PlanPayment = {
   updatedAt: string;
 };
 
+export type ReferralPayout = {
+  id: string;
+  userId: string;
+  userPhone: string;
+  userFullName: string;
+  referralCount: number;
+  amount: number;
+  status: "requested" | "approved" | "paid";
+  payoutMethod: string | null;
+  payoutAccount: string | null;
+  note: string | null;
+  reviewedBy: string | null;
+  reviewedAt: string | null;
+  createdAt: string;
+};
+
 export type PlanMe = {
   plan: PlanKey;
   planLabel: string;

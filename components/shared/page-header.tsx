@@ -11,12 +11,12 @@ export function PageHeader({ title, subtitle, action, className }: PageHeaderPro
   return (
     <div
       className={cn(
-        "flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between",
+        "flex flex-col gap-4 border-b border-line pb-5 sm:flex-row sm:items-end sm:justify-between",
         className,
       )}
     >
       <div className="space-y-1">
-        <h1 className="text-2xl font-bold font-display tracking-tight text-ink">
+        <h1 className="font-display text-2xl font-bold tracking-tight text-ink">
           {title}
         </h1>
         {subtitle && <p className="text-sm text-muted">{subtitle}</p>}

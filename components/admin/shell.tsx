@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { LogOut } from "lucide-react";
+import { LogOut, Send } from "lucide-react";
 import { Brand } from "@/components/shared/brand";
 import { adminNav } from "@/config/nav";
 import { practiceApi } from "@/lib/api/endpoints";
@@ -45,8 +45,8 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   const openReportCount = openReports.length;
 
   return (
-    <div className="flex min-h-screen bg-surface">
-      <aside className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col border-r border-line bg-white lg:flex">
+    <div className="flex min-h-screen bg-[#f7f9fc]">
+      <aside className="sticky top-0 hidden h-screen w-60 shrink-0 flex-col border-r border-line bg-white lg:flex">
         <div className="flex h-16 items-center border-b border-line px-5">
           <Brand href="/admin" />
         </div>
@@ -64,7 +64,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "flex items-center justify-between gap-3 rounded-xl px-3 py-2 text-sm font-medium transition-colors",
+                  "flex items-center justify-between gap-3 rounded-[9px] px-3 py-2 text-sm font-medium transition-colors",
                   active
                     ? "bg-brand-50 text-brand"
                     : "text-muted hover:bg-surface hover:text-ink",
@@ -90,11 +90,20 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
               {openReportCount}
             </p>
           </div>
+          <a
+            href="https://t.me/prime_uat"
+            target="_blank"
+            rel="noreferrer"
+            className="mt-2 flex items-center gap-2 px-3 py-2 text-xs font-semibold text-muted hover:text-brand"
+          >
+            <Send className="size-4" />
+            @prime_uat
+          </a>
         </div>
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-line bg-white/90 px-5 backdrop-blur lg:px-8">
+        <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-line bg-white px-5 lg:px-8">
           <h1 className="font-display text-lg font-bold text-ink">
             {pageTitle(pathname)}
           </h1>

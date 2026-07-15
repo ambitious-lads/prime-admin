@@ -3,6 +3,8 @@ export const qk = {
   plan: ["plan", "me"] as const,
   plansCatalog: ["plans", "catalog"] as const,
   payments: (status?: string) => ["payments", status ?? "all"] as const,
+  referralPayouts: (status?: string) =>
+    ["referrals", "payouts", status ?? "all"] as const,
   users: ["users"] as const,
   user: (id: string) => ["user", id] as const,
   exams: (q?: object) => ["exams", q ?? {}] as const,

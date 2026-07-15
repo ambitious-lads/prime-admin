@@ -22,6 +22,7 @@ import type {
   PlanKey,
   PlanMe,
   PlanPayment,
+  ReferralPayout,
   PracticeSet,
   Profile,
   Question,
@@ -196,6 +197,16 @@ export const plansApi = {
     api.post<{ payment: PlanPayment }>(`/plans/payments/${id}/approve`),
   reject: (id: string, reason: string) =>
     api.post<{ payment: PlanPayment }>(`/plans/payments/${id}/reject`, { reason }),
+};
+
+export const referralsApi = {
+  payouts: (status?: string) =>
+    api.get<ReferralPayout[]>(
+      "/referrals/payouts",
+      status ? { status } : undefined,
+    ),
+  markPaid: (id: string) =>
+    api.post<ReferralPayout>(`/referrals/payouts/${id}/paid`),
 };
 
 export const examsApi = {

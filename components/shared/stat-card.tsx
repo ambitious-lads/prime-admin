@@ -12,10 +12,10 @@ type StatCardProps = {
 export function StatCard({ label, value, delta, trend, icon }: StatCardProps) {
   return (
     <Card>
-      <CardContent className="flex items-center justify-between p-5">
+      <CardContent className="flex items-center justify-between border-l-2 border-brand p-5">
         <div className="space-y-1">
           <p className="text-sm text-muted">{label}</p>
-          <p className="text-2xl font-bold font-display tabular-nums text-ink">
+          <p className="font-display text-2xl font-bold tabular-nums text-ink">
             {value}
           </p>
           {delta ? (
@@ -32,7 +32,7 @@ export function StatCard({ label, value, delta, trend, icon }: StatCardProps) {
           ) : null}
         </div>
         {icon ? (
-          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-50 text-brand [&_svg]:size-5">
+            <div className="flex h-10 w-10 items-center justify-center rounded-[9px] bg-brand-50 text-brand [&_svg]:size-5">
             {icon}
           </div>
         ) : null}

@@ -3,7 +3,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { AlertTriangle, ChevronLeft, ChevronRight, ShieldCheck } from "lucide-react";
+import { toast } from "sonner";
 import { FullPageSpinner } from "@/components/shared/loading";
 import { EmptyState } from "@/components/shared/empty-state";
 import { Button } from "@/components/ui/button";
@@ -53,9 +54,11 @@ export default function ExamAttemptPage() {
   const [current, setCurrent] = useState(0);
   const [secondsLeft, setSecondsLeft] = useState<number | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [integrityStrike, setIntegrityStrike] = useState(0);
 
   const elapsedRef = useRef(0);
   const submittedRef = useRef(false);
+  const integrityStrikeRef = useRef(0);
   const answersRef = useRef<AnswerMap>({});
   const secondsLeftRef = useRef<number | null>(null);
   const lastTickRef = useRef<number>(0);
@@ -122,6 +125,32 @@ export default function ExamAttemptPage() {
     }
   }, [attemptId, buildSyncBody, router]);
 
+  const registerIntegrityViolation = useCallback(
+    (reason: "copy" | "tab") => {
+      if (submittedRef.current) return;
+      const next = Math.min(3, integrityStrikeRef.current + 1);
+      integrityStrikeRef.current = next;
+      setIntegrityStrike(next);
+
+      if (next >= 3) {
+        toast.error("Exam submitted", {
+          description: "Three integrity violations were detected.",
+        });
+        void submit();
+        return;
+      }
+
+      const remaining = 3 - next;
+      toast.warning("Integrity warning", {
+        description:
+          reason === "copy"
+            ? `Copying exam content is blocked. ${remaining} warning${remaining === 1 ? "" : "s"} remaining.`
+            : `Leaving the exam tab is not allowed. ${remaining} warning${remaining === 1 ? "" : "s"} remaining.`,
+      });
+    },
+    [submit],
+  );
+
   const ready = questions.length > 0 && secondsLeft !== null;
 
   useEffect(() => {
@@ -166,6 +195,56 @@ export default function ExamAttemptPage() {
     }, 15_000);
     return () => clearInterval(interval);
   }, [ready, attemptId, buildSyncBody]);
+
+  useEffect(() => {
+    if (!ready) return;
+    let hiddenViolationRecorded = false;
+
+    const onVisibilityChange = () => {
+      if (document.visibilityState === "hidden" && !hiddenViolationRecorded) {
+        hiddenViolationRecorded = true;
+        registerIntegrityViolation("tab");
+      } else if (document.visibilityState === "visible") {
+        hiddenViolationRecorded = false;
+      }
+    };
+    const onCopy = (event: ClipboardEvent) => {
+      event.preventDefault();
+      registerIntegrityViolation("copy");
+    };
+    const onCut = (event: ClipboardEvent) => {
+      event.preventDefault();
+      registerIntegrityViolation("copy");
+    };
+    const onContextMenu = (event: MouseEvent) => event.preventDefault();
+    const onKeyDown = (event: KeyboardEvent) => {
+      const key = event.key.toLowerCase();
+      if (
+        (event.ctrlKey || event.metaKey) &&
+        ["c", "x", "a", "u", "s"].includes(key)
+      ) {
+        event.preventDefault();
+        if (key === "c" || key === "x") registerIntegrityViolation("copy");
+      }
+      if (event.key === "PrintScreen") {
+        event.preventDefault();
+        registerIntegrityViolation("copy");
+      }
+    };
+
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    document.addEventListener("copy", onCopy);
+    document.addEventListener("cut", onCut);
+    document.addEventListener("contextmenu", onContextMenu);
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+      document.removeEventListener("copy", onCopy);
+      document.removeEventListener("cut", onCut);
+      document.removeEventListener("contextmenu", onContextMenu);
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [ready, registerIntegrityViolation]);
 
   useEffect(() => {
     if (!ready) return;
@@ -239,7 +318,19 @@ export default function ExamAttemptPage() {
   const unanswered = paletteStates.filter((state) => !state.answered).length;
 
   return (
-    <div className="space-y-6">
+    <div className="exam-guard space-y-6">
+      <div className="flex items-center justify-between border-b border-line pb-3">
+        <div className="flex items-center gap-2 text-xs font-semibold text-muted">
+          <ShieldCheck className="h-4 w-4 text-brand" />
+          Secure exam mode
+        </div>
+        <div className="flex items-center gap-2 text-xs font-semibold">
+          <AlertTriangle className="h-4 w-4 text-amber-500" />
+          <span className={integrityStrike ? "text-amber-700" : "text-muted"}>
+            Warnings {integrityStrike}/3
+          </span>
+        </div>
+      </div>
       <div className="flex flex-col gap-3 lg:hidden">
         <ExamTimer seconds={secondsLeft ?? 0} />
       </div>
