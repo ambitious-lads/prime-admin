@@ -33,7 +33,7 @@ function LoginForm() {
       if (next) {
         router.push(next);
       } else {
-        router.push(user.role === "admin" ? "/admin" : "/dashboard");
+        router.push(user.role === "admin" ? "/admin" : "/practice");
       }
     } catch (e) {
       if (e instanceof DeviceConflictError) {

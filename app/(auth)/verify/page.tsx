@@ -84,7 +84,7 @@ function VerifyForm() {
       const session = await authApi.verifyOtp({ phone, otpCode: code });
       setSession(session);
       captureEvent("web_otp_verify_success", { role: session.user.role });
-      router.push(session.user.role === "admin" ? "/admin" : "/dashboard");
+      router.push(session.user.role === "admin" ? "/admin" : "/practice");
     } catch (e) {
       captureEvent("web_otp_verify_failure");
       if (e instanceof DeviceConflictError) {
