@@ -124,6 +124,10 @@ export type Topic = {
   displayOrder: number | null;
   setCount?: number;
   totalSets?: number;
+  completedSets?: number;
+  minPlan?: PlanKey;
+  minPlanLabel?: string;
+  isLocked?: boolean;
 };
 
 export type TopicStats = {
@@ -347,10 +351,38 @@ export type AnalyticsOverview = {
 };
 
 export type AnalyticsDashboard = {
-  accuracyOverTime: { date: string; accuracy: number }[];
-  timePerTopic: { topic: string; minutes: number }[];
-  questionsPerDay: { date: string; count: number }[];
-  topicMastery: { topic: string; mastery: number }[];
+  userId?: string;
+  kpis?: {
+    totalSolved: number;
+    accuracy: number;
+    studyTimeHours: number;
+    currentStreakDays: number;
+    longestStreakDays: number;
+  };
+  detailedLocked?: boolean;
+  mockPerformance?: {
+    mocksAttempted: number;
+    averageScore: number;
+    bestScore: number;
+    overallRank: number;
+    percentile: number;
+    totalActiveStudents: number;
+  } | null;
+  weeklyActivity?: { day: string; questionsAnswered: number }[];
+  topicMastery?: {
+    topicId?: string;
+    topicName?: string;
+    categoryName?: string;
+    totalSets?: number;
+    completedSets?: number;
+    avgScore?: number;
+    progressRatio?: number;
+    topic?: string;
+    mastery?: number;
+  }[];
+  accuracyOverTime?: { date: string; accuracy: number }[];
+  timePerTopic?: { topic: string; minutes: number }[];
+  questionsPerDay?: { date: string; count: number }[];
 };
 
 export type MarketingSlice = {

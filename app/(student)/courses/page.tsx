@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { BookOpen, GraduationCap, Layers } from "lucide-react";
+import { GraduationCap, Layers } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { PageHeader } from "@/components/shared/page-header";
@@ -87,8 +87,13 @@ function CourseCard({
             className="object-cover"
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center text-brand/40">
-            <BookOpen className="h-10 w-10" />
+          <div className="relative h-full w-full">
+            <Image
+              src={courseIllustration(course.title)}
+              alt=""
+              fill
+              className="object-contain p-8 opacity-90"
+            />
           </div>
         )}
         {locked && (
@@ -128,4 +133,18 @@ function CourseCard({
   }
 
   return <Link href={`/courses/${courseId}`}>{inner}</Link>;
+}
+
+function courseIllustration(title: string) {
+  const value = title.toLowerCase();
+  if (value.includes("grammar") || value.includes("verbal")) {
+    return "/illustrations/grammar.png";
+  }
+  if (value.includes("quant") || value.includes("math") || value.includes("algebra")) {
+    return "/illustrations/ratio.png";
+  }
+  if (value.includes("vocab") || value.includes("english")) {
+    return "/illustrations/vocab.png";
+  }
+  return "/illustrations/plan.png";
 }

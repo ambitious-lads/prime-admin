@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import {
   useMutation,
   useQuery,
@@ -74,7 +75,7 @@ function ExamCard({
 }) {
   const difficulty = difficultyLabel(exam.difficulty);
   return (
-    <Card className="group relative overflow-hidden transition-shadow hover:shadow-md">
+    <Card className="group relative overflow-hidden border-t-4 border-t-brand transition-all hover:-translate-y-0.5 hover:shadow-md">
       <Link href={`/exams/${exam.id}`} className="block">
         <CardContent className="space-y-4 p-5">
           <div className="flex items-start justify-between gap-3">
@@ -172,8 +173,29 @@ export default function ExamsPage() {
     <div className="space-y-6">
       <PageHeader
         title="Mock exams"
-        subtitle="Timed, full-length exams to test where you stand."
+        subtitle="Rehearse the real test, measure your readiness, and improve under time pressure."
       />
+
+      <div className="relative min-h-40 overflow-hidden rounded-2xl bg-emerald-600 px-5 py-6 text-white sm:px-7">
+        <div className="relative z-10 max-w-xl">
+          <p className="text-xs font-bold uppercase tracking-[0.16em] text-emerald-100">
+            Exam simulation
+          </p>
+          <h2 className="mt-2 text-xl font-bold sm:text-2xl">
+            Practice calm, accurate decisions before exam day.
+          </h2>
+          <p className="mt-2 max-w-lg text-sm leading-6 text-white/80">
+            Pick a mock, protect enough uninterrupted time, and review every result afterward.
+          </p>
+        </div>
+        <Image
+          src="/illustrations/plan.png"
+          alt=""
+          width={210}
+          height={160}
+          className="absolute -bottom-8 right-2 hidden object-contain opacity-90 sm:block"
+        />
+      </div>
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <Tabs value={tab} onValueChange={setTab}>

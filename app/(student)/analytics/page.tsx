@@ -129,13 +129,30 @@ function AnalyticsDashboard() {
 
   const o = overview.data;
   const d = dashboard.data;
+  const kpis = d?.kpis;
 
   return (
     <div className="space-y-6">
       <PageHeader
         title="Analytics"
-        subtitle="Your performance at a glance."
+        subtitle="See what is improving, where to focus next, and how close you are to your goal."
       />
+
+      <div className="relative overflow-hidden rounded-2xl bg-ink px-5 py-6 text-white sm:px-7">
+        <div className="relative z-10 max-w-2xl">
+          <p className="text-xs font-bold uppercase tracking-[0.16em] text-brand-100">
+            Your study picture
+          </p>
+          <h2 className="mt-2 text-xl font-bold sm:text-2xl">
+            Small daily progress compounds into exam-day confidence.
+          </h2>
+          <p className="mt-2 text-sm leading-6 text-white/70">
+            Use your accuracy, time, streak, and topic mastery to decide what to practice next.
+          </p>
+        </div>
+        <div className="absolute -right-10 -top-16 h-48 w-48 rounded-full bg-brand/40" />
+        <div className="absolute -bottom-24 right-32 h-48 w-48 rounded-full bg-emerald-400/20" />
+      </div>
 
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
         {overview.isLoading || !o ? (
@@ -145,26 +162,67 @@ function AnalyticsDashboard() {
             <StatCard
               label="Accuracy"
               value={formatPercent(o.accuracy ?? 0)}
-              icon={<Target />}
+              icon={<Target className="text-brand" />}
             />
             <StatCard
               label="Questions solved"
               value={formatNumber(o.questionsSolved ?? 0)}
-              icon={<CheckCircle2 />}
+              icon={<CheckCircle2 className="text-emerald-600" />}
             />
             <StatCard
               label="Study time"
               value={formatDuration(o.studyTimeSeconds ?? 0)}
-              icon={<Clock />}
+              icon={<Clock className="text-sky-600" />}
             />
             <StatCard
               label="Rank"
               value={o.rank != null ? `#${formatNumber(o.rank)}` : "—"}
-              icon={<Trophy />}
+              icon={<Trophy className="text-amber-600" />}
             />
           </>
         )}
       </div>
+
+      {kpis || d?.mockPerformance ? (
+        <div className="grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
+          {kpis ? (
+            <div className="rounded-2xl bg-gradient-to-br from-brand to-indigo-700 p-5 text-white">
+              <p className="text-xs font-bold uppercase tracking-[0.14em] text-white/70">
+                Your momentum
+              </p>
+              <div className="mt-4 grid grid-cols-3 gap-3">
+                <Metric label="Solved" value={formatNumber(kpis.totalSolved)} />
+                <Metric label="Study time" value={`${kpis.studyTimeHours}h`} />
+                <Metric label="Best streak" value={`${kpis.longestStreakDays}d`} />
+              </div>
+              <p className="mt-5 text-sm leading-6 text-white/80">
+                You are on a {kpis.currentStreakDays}-day streak. Keep one focused session going today.
+              </p>
+            </div>
+          ) : null}
+          {d?.mockPerformance ? (
+            <div className="rounded-2xl border border-line bg-amber-50 p-5">
+              <div className="flex items-center gap-2 text-amber-700">
+                <Trophy className="h-5 w-5" />
+                <p className="font-bold">Mock exam standing</p>
+              </div>
+              <p className="mt-4 text-3xl font-black text-ink">
+                #{d.mockPerformance.overallRank}
+              </p>
+              <p className="mt-1 text-sm text-muted">
+                Better than {Math.round(d.mockPerformance.percentile)}% of{" "}
+                {formatNumber(d.mockPerformance.totalActiveStudents)} students
+              </p>
+              <div className="mt-4 h-2 overflow-hidden rounded-full bg-amber-200">
+                <div
+                  className="h-full rounded-full bg-amber-500"
+                  style={{ width: `${Math.min(100, d.mockPerformance.percentile)}%` }}
+                />
+              </div>
+            </div>
+          ) : null}
+        </div>
+      ) : null}
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <ChartCard
@@ -303,6 +361,15 @@ function AnalyticsDashboard() {
       </div>
 
       <ScoreCalculator />
+    </div>
+  );
+}
+
+function Metric({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <p className="text-xl font-black tabular-nums">{value}</p>
+      <p className="mt-1 text-xs text-white/70">{label}</p>
     </div>
   );
 }
