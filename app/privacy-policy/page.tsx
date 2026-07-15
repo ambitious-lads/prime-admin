@@ -38,6 +38,10 @@ const collectedData = [
     title: "Device and diagnostic data",
     body: "Device identifier, device name, app or browser context, IP-derived request information, logs, and technical signals used for security, fraud prevention, support, and reliability.",
   },
+  {
+    title: "Referral information",
+    body: "Referral codes, inviter and invited-account relationships, subscription qualification, reward status, and payout-request information when the referral program is enabled.",
+  },
 ];
 
 const purposes = [
@@ -47,6 +51,7 @@ const purposes = [
   "Check receipts, prevent duplicate receipt use, activate subscriptions, and handle support disputes.",
   "Detect abuse, fraud, unauthorized account access, device conflicts, and service misuse.",
   "Respond to support requests and send essential service messages.",
+  "Operate referral attribution, reward qualification, and payout requests when the referral program is enabled.",
   "Maintain, debug, measure, and improve Prime UAT.",
   "Comply with legal, accounting, tax, safety, and policy obligations.",
 ];
@@ -81,6 +86,11 @@ const providers = [
     name: "Expo and app distribution tooling",
     purpose: "Mobile app delivery, updates, and diagnostics.",
     data: "App version, installation, device, and diagnostic data.",
+  },
+  {
+    name: "PostHog and Sentry",
+    purpose: "Product analytics, reliability monitoring, crash reporting, and troubleshooting.",
+    data: "App events, account or device identifiers, app version, error details, and technical diagnostics configured by Prime UAT.",
   },
 ];
 
@@ -175,8 +185,9 @@ export default function PrivacyPolicyPage() {
               Prime UAT requests device permissions only when needed for a
               feature. Camera and photo access are used for optional profile
               images or learning files, not for new payment verification.
-              Microphone access is used only if a voice-based learning feature is enabled. Notifications may be
-              used for reminders, study alerts, and account messages. You can
+              Notifications may be used for reminders, study alerts, and
+              account messages. Prime UAT does not currently request microphone
+              access. You can
               control optional permissions in your device settings.
             </p>
           </Section>
