@@ -43,7 +43,7 @@ export default function Footer() {
                 alt="Prime UAT logo"
                 width={32}
                 height={32}
-                className="object-contain"
+                className="h-8 w-8 object-contain"
               />
               <span className="text-xl font-black font-accent text-ink">
                 Prime UAT

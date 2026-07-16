@@ -67,6 +67,7 @@ export default async function Hero() {
                       src={member.avatarUrl}
                       alt={member.displayName}
                       fill
+                      unoptimized
                       sizes="40px"
                       className="object-cover"
                     />
