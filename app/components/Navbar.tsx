@@ -3,6 +3,15 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { site } from "@/config/site";
+
+const navLinks = [
+  { label: "Simulation", href: "/#mock-tests" },
+  { label: "UAT Guide", href: "/uat-guide" },
+  { label: "Testimonials", href: "/#testimonials" },
+  { label: "About Us", href: "/about" },
+  { label: "Contact", href: site.supportTelegramUrl, external: true },
+];
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -45,35 +54,19 @@ export default function Navbar() {
             </Link>
           </div>
 
-          <nav className="hidden md:flex items-center space-x-8">
-            <Link
-              href="#courses"
-              className="text-muted hover:text-ink font-medium text-sm transition-colors duration-200 relative group py-2"
-            >
-              Courses
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-brand transition-all duration-300 group-hover:w-full" />
-            </Link>
-            <Link
-              href="#mock-tests"
-              className="text-muted hover:text-ink font-medium text-sm transition-colors duration-200 relative group py-2"
-            >
-              Mock Tests
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-brand transition-all duration-300 group-hover:w-full" />
-            </Link>
-            <Link
-              href="#pricing"
-              className="text-muted hover:text-ink font-medium text-sm transition-colors duration-200 relative group py-2"
-            >
-              Pricing
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-brand transition-all duration-300 group-hover:w-full" />
-            </Link>
-            <Link
-              href="#about"
-              className="text-muted hover:text-ink font-medium text-sm transition-colors duration-200 relative group py-2"
-            >
-              About Us
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-brand transition-all duration-300 group-hover:w-full" />
-            </Link>
+          <nav className="hidden items-center gap-6 md:flex">
+            {navLinks.map((item) => (
+              <Link
+                key={item.label}
+                href={item.href}
+                target={item.external ? "_blank" : undefined}
+                rel={item.external ? "noopener noreferrer" : undefined}
+                className="group relative py-2 text-sm font-medium text-muted transition-colors duration-200 hover:text-ink"
+              >
+                {item.label}
+                <span className="absolute bottom-0 left-0 h-0.5 w-0 bg-brand transition-all duration-300 group-hover:w-full" />
+              </Link>
+            ))}
           </nav>
 
           <div className="hidden md:flex items-center space-x-5">
@@ -145,34 +138,18 @@ export default function Navbar() {
         id="mobile-menu"
       >
         <div className="px-4 pt-2 pb-6 space-y-2">
-          <Link
-            href="#courses"
-            onClick={() => setIsOpen(false)}
-            className="block px-3 py-2.5 rounded-lg text-base font-medium text-muted hover:text-brand hover:bg-brand-50 transition-all"
-          >
-            Courses
-          </Link>
-          <Link
-            href="#mock-tests"
-            onClick={() => setIsOpen(false)}
-            className="block px-3 py-2.5 rounded-lg text-base font-medium text-muted hover:text-brand hover:bg-brand-50 transition-all"
-          >
-            Mock Tests
-          </Link>
-          <Link
-            href="#pricing"
-            onClick={() => setIsOpen(false)}
-            className="block px-3 py-2.5 rounded-lg text-base font-medium text-muted hover:text-brand hover:bg-brand-50 transition-all"
-          >
-            Pricing
-          </Link>
-          <Link
-            href="#about"
-            onClick={() => setIsOpen(false)}
-            className="block px-3 py-2.5 rounded-lg text-base font-medium text-muted hover:text-brand hover:bg-brand-50 transition-all"
-          >
-            About Us
-          </Link>
+          {navLinks.map((item) => (
+            <Link
+              key={item.label}
+              href={item.href}
+              target={item.external ? "_blank" : undefined}
+              rel={item.external ? "noopener noreferrer" : undefined}
+              onClick={() => setIsOpen(false)}
+              className="block rounded-lg px-3 py-2.5 text-base font-medium text-muted transition-all hover:bg-brand-50 hover:text-brand"
+            >
+              {item.label}
+            </Link>
+          ))}
           <div className="pt-4 flex flex-col gap-3 px-3">
             <Link
               href="/login"
