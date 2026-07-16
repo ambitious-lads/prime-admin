@@ -1,27 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import DownloadModal from "./DownloadModal";
+import { getPublicCommunity } from "@/lib/public-community";
 
-const avatars = [
-  {
-    src: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=120&h=120&q=80",
-    alt: "Student Sarah",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=120&h=120&q=80",
-    alt: "Student Michael",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&w=120&h=120&q=80",
-    alt: "Student Emily",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?auto=format&fit=crop&w=120&h=120&q=80",
-    alt: "Student Daniel",
-  },
-];
-
-export default function Hero() {
+export default async function Hero() {
+  const community = await getPublicCommunity();
   return (
     <section className="relative overflow-hidden">
       {/* Decorative blur gradients */}
@@ -75,14 +58,14 @@ export default function Hero() {
             {/* Social proof */}
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 pt-6 border-t border-line/40">
               <div className="flex -space-x-3">
-                {avatars.map((avatar, idx) => (
+                {community.recentMembers.map((member) => (
                   <div
-                    key={idx}
+                    key={member.id}
                     className="relative w-10 h-10 rounded-full border-2 border-white overflow-hidden shadow-md hover:scale-110 hover:z-10 transition-all duration-200 cursor-pointer"
                   >
                     <Image
-                      src={avatar.src}
-                      alt={avatar.alt}
+                      src={member.avatarUrl}
+                      alt={member.displayName}
                       fill
                       sizes="40px"
                       className="object-cover"
@@ -94,7 +77,7 @@ export default function Hero() {
               <div className="text-sm sm:text-base text-muted font-medium">
                 Join{" "}
                 <span className="text-brand font-bold relative inline-block group">
-                  50,000+
+                  {community.displayedCommunitySize.toLocaleString()}+
                   <span className="absolute bottom-0 left-0 w-full h-[3px] bg-brand-100 -z-10 group-hover:h-full transition-all duration-200" />
                 </span>{" "}
                 students preparing with Prime UAT

@@ -1,11 +1,16 @@
-const stats = [
-  { value: "10,000+", label: "Practice questions" },
-  { value: "500+", label: "Realistic mock exams" },
-  { value: "50,000+", label: "Students preparing" },
-  { value: "4.8★", label: "Average app rating" },
-];
+import { getPublicCommunity } from "@/lib/public-community";
 
-export default function Stats() {
+export default async function Stats() {
+  const community = await getPublicCommunity();
+  const stats = [
+    { value: "10,000+", label: "Practice questions" },
+    { value: "500+", label: "Realistic mock exams" },
+    {
+      value: `${community.displayedCommunitySize.toLocaleString()}+`,
+      label: "Students preparing",
+    },
+    { value: "4.8★", label: "Average app rating" },
+  ];
   return (
     <section className="relative bg-brand">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">

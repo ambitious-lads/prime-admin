@@ -1,8 +1,10 @@
 import Link from "next/link";
 import Image from "next/image";
 import DownloadModal from "./DownloadModal";
+import { getPublicCommunity } from "@/lib/public-community";
 
-export default function FinalCTA() {
+export default async function FinalCTA() {
+  const community = await getPublicCommunity();
   return (
     <section className="bg-white pb-16 md:pb-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -22,7 +24,8 @@ export default function FinalCTA() {
               Ready to ace your exam?
             </h2>
             <p className="mt-5 text-base sm:text-lg text-white/85 font-medium leading-relaxed">
-              Join 50,000+ Ethiopian students studying smarter with Prime UAT.
+              Join {community.displayedCommunitySize.toLocaleString()}+ Ethiopian
+              students studying smarter with Prime UAT.
               Start free today with web access or scan the app QR from your phone.
             </p>
 
