@@ -2,35 +2,7 @@
 
 import { useEffect, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
-import Image from "next/image";
-import Link from "next/link";
-import QRCode from "qrcode";
-
-const PLAY_STORE_URL =
-  "https://play.google.com/store/apps/details?id=com.primely.app";
-
-function GooglePlayIcon() {
-  return (
-    <svg className="h-6 w-6 shrink-0" viewBox="0 0 24 24" aria-hidden="true">
-      <path
-        d="M3.6 2.6 13.1 12 3.6 21.4c-.36-.2-.6-.58-.6-1.04V3.64c0-.46.24-.84.6-1.04z"
-        fill="#34A853"
-      />
-      <path
-        d="M16.7 8.4 13.1 12 3.6 2.6c.34-.2.78-.22 1.16-.01L16.7 8.4z"
-        fill="#EA4335"
-      />
-      <path
-        d="M16.7 15.6 4.76 21.42c-.38.2-.82.18-1.16-.02L13.1 12l3.6 3.6z"
-        fill="#FBBC04"
-      />
-      <path
-        d="m16.7 8.4 4.06 2.23c.78.43.78 1.45 0 1.88L16.7 15.6 13.1 12l3.6-3.6z"
-        fill="#4285F4"
-      />
-    </svg>
-  );
-}
+import { CalendarDays, X } from "lucide-react";
 
 export default function DownloadModal({
   className = "",
@@ -40,18 +12,6 @@ export default function DownloadModal({
   label?: ReactNode;
 }) {
   const [open, setOpen] = useState(false);
-  const [qrSrc, setQrSrc] = useState("");
-
-  useEffect(() => {
-    if (!open || qrSrc) return;
-    QRCode.toDataURL(PLAY_STORE_URL, {
-      errorCorrectionLevel: "M",
-      margin: 2,
-      width: 256,
-    })
-      .then(setQrSrc)
-      .catch(() => setQrSrc(""));
-  }, [open, qrSrc]);
 
   useEffect(() => {
     if (!open) return;
@@ -93,10 +53,10 @@ export default function DownloadModal({
               id="download-dialog-title"
               className="mt-2 font-accent text-2xl font-black text-ink sm:text-3xl"
             >
-              Scan to download
+              Coming soon in 2 days
             </h2>
             <p className="mt-2 text-sm font-medium leading-relaxed text-muted">
-              Open the Play Store listing on your phone and install Prime UAT.
+              The Prime UAT app launches on July 20, 2026.
             </p>
           </div>
           <button
@@ -105,36 +65,29 @@ export default function DownloadModal({
             onClick={() => setOpen(false)}
             className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-line text-muted transition-colors hover:bg-surface hover:text-ink"
           >
-            X
+            <X className="h-4 w-4" />
           </button>
         </div>
 
-        <div className="mt-6 rounded-xl border border-line bg-surface p-4">
-          {qrSrc ? (
-            <Image
-              src={qrSrc}
-              alt="QR code for the Prime UAT Google Play listing"
-              width={224}
-              height={224}
-              unoptimized
-              className="mx-auto h-48 w-48 rounded-lg bg-white p-2 sm:h-56 sm:w-56"
-            />
-          ) : (
-            <div className="mx-auto flex h-48 w-48 items-center justify-center rounded-lg bg-white text-sm font-medium text-muted sm:h-56 sm:w-56">
-              Loading QR...
-            </div>
-          )}
+        <div className="mt-6 flex items-center gap-4 rounded-xl border border-brand/20 bg-brand-50 p-4">
+          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-white text-brand shadow-sm">
+            <CalendarDays className="h-5 w-5" />
+          </span>
+          <div>
+            <p className="font-black text-ink">July 20, 2026</p>
+            <p className="mt-1 text-sm font-medium text-muted">
+              Available soon for mobile.
+            </p>
+          </div>
         </div>
 
-        <Link
-          href={PLAY_STORE_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mt-5 flex w-full items-center justify-center gap-3 rounded-xl bg-ink px-5 py-3 text-white transition-colors hover:bg-ink/90"
+        <button
+          type="button"
+          onClick={() => setOpen(false)}
+          className="mt-5 flex min-h-11 w-full items-center justify-center rounded-xl bg-brand px-5 text-sm font-bold text-white transition-colors hover:bg-brand-600"
         >
-          <GooglePlayIcon />
-          <span className="text-sm font-semibold">Open Google Play</span>
-        </Link>
+          Got it
+        </button>
       </div>
     </div>
   ) : null;
