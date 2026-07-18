@@ -10,6 +10,7 @@ import {
   ArrowLeft,
   Banknote,
   CheckCircle2,
+  Clock3,
   Flashlight,
   Link2,
   Phone,
@@ -48,6 +49,7 @@ function CheckoutInner() {
   const planInfo = PLANS[plan];
   const [submitting, setSubmitting] = useState(false);
   const [verified, setVerified] = useState(false);
+  const [pendingReview, setPendingReview] = useState(false);
   const [verbIndex, setVerbIndex] = useState(0);
   const { data: myPlan } = useQuery({
     queryKey: qk.plan,
@@ -86,6 +88,7 @@ function CheckoutInner() {
         receiptUrl: values.receiptUrl.trim(),
         note: values.note?.trim() || undefined,
       });
+      setPendingReview(result.status === "pending");
       setVerified(true);
       captureEvent("web_checkout_verified", {
         plan: result.plan,
@@ -114,20 +117,23 @@ function CheckoutInner() {
       <div className="mx-auto max-w-lg space-y-6">
         <Card>
           <CardContent className="flex flex-col items-center gap-4 p-8 text-center">
-            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600">
-              <CheckCircle2 className="h-8 w-8" />
+            <div className={`flex h-16 w-16 items-center justify-center rounded-2xl ${pendingReview ? "bg-amber-50 text-amber-600" : "bg-emerald-50 text-emerald-600"}`}>
+              {pendingReview ? <Clock3 className="h-8 w-8" /> : <CheckCircle2 className="h-8 w-8" />}
             </div>
             <div className="space-y-1">
               <h2 className="font-display text-xl font-bold text-ink">
-                Payment verified
+                {pendingReview ? "Payment saved for review" : "Payment verified"}
               </h2>
               <p className="text-sm text-muted">
-                Your {planInfo.label} plan is active. Taking you back to your
-                dashboard.
+                {pendingReview
+                  ? "Telebirr is temporarily limiting receipt checks. Your payment is saved; do not pay again. We will review it shortly."
+                  : `Your ${planInfo.label} plan is active. Taking you back to your dashboard.`}
               </p>
             </div>
             <Button asChild variant="outline" className="w-full">
-              <Link href="/dashboard">Go to dashboard</Link>
+              <Link href={pendingReview ? "/plans" : "/dashboard"}>
+                {pendingReview ? "View payment status" : "Go to dashboard"}
+              </Link>
             </Button>
           </CardContent>
         </Card>

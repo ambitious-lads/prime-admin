@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Check,
+  ExternalLink,
   X,
   ImageOff,
   Maximize2,
@@ -87,6 +88,7 @@ export function PaymentReview({
   const isPending = payment.status === "pending";
   const busy = approve.isPending || reject.isPending;
   const isOditVerified = payment.verificationMethod === "odit";
+  const isOditPending = payment.verificationMethod?.startsWith("odit_") ?? false;
 
   return (
     <div className="flex h-full flex-col gap-4 overflow-auto rounded-2xl border border-line bg-white p-5">
@@ -142,7 +144,7 @@ export function PaymentReview({
           <ShieldCheck className="size-3.5" /> Verification
         </p>
         <p className="mt-1 text-sm font-semibold text-ink">
-          {isOditVerified ? "Auto-verified by Odit" : "Legacy pending record"}
+          {isOditVerified ? "Auto-verified by Odit" : isOditPending ? "Odit delayed — awaiting review" : "Manual review"}
         </p>
         <p className="mt-1 text-xs text-muted">
           {payment.receiptProvider ? `Provider: ${payment.receiptProvider}` : null}
@@ -156,6 +158,13 @@ export function PaymentReview({
           {isOditVerified ? "Receipt source" : "Attached proof"}
         </p>
         {payment.proofUrl ? (
+          isOditPending ? (
+            <Button asChild variant="outline" className="w-full">
+              <a href={payment.proofUrl} target="_blank" rel="noopener noreferrer">
+                <ExternalLink className="size-4" /> Open submitted receipt
+              </a>
+            </Button>
+          ) : (
           <button
             onClick={() => setLightbox(true)}
             className="group relative block w-full overflow-hidden rounded-xl border border-line"
@@ -172,6 +181,7 @@ export function PaymentReview({
               <Maximize2 className="size-3.5" /> Expand
             </span>
           </button>
+          )
         ) : (
           <div className="flex flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-line bg-surface/50 py-10 text-muted">
             {isOditVerified ? (
