@@ -16,6 +16,7 @@ export default function Home() {
       <Navbar />
       <main className="flex-grow">
         <Hero />
+        <Stats />
         <section className="border-y border-line bg-surface/50">
           <div className="mx-auto grid max-w-7xl gap-5 px-5 py-10 sm:px-8 md:grid-cols-[1fr_auto] md:items-center lg:px-12">
             <div>
@@ -26,7 +27,6 @@ export default function Home() {
             <Link href="/uat-guide" className="inline-flex min-h-11 items-center justify-center rounded-md bg-ink px-5 text-sm font-bold text-white transition-colors hover:bg-black">Read the AAU UAT guide</Link>
           </div>
         </section>
-        <Stats />
         <Features />
         <Testimonials />
         <About />
