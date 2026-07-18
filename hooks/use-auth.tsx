@@ -14,6 +14,7 @@ import {
   clearSession,
   getStoredUser,
   saveSession,
+  SESSION_CLEARED_EVENT,
   type SessionUser,
 } from "@/lib/auth/session";
 
@@ -42,6 +43,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     setUser(getStoredUser());
     setReady(true);
+
+    const handleSessionCleared = () => setUser(null);
+    window.addEventListener(SESSION_CLEARED_EVENT, handleSessionCleared);
+    return () => window.removeEventListener(SESSION_CLEARED_EVENT, handleSessionCleared);
   }, []);
 
   const setSession = useCallback(
@@ -70,7 +75,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } finally {
       clearSession();
       setUser(null);
-      router.push("/login");
+      router.replace("/login");
     }
   }, [router]);
 
@@ -78,7 +83,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     await authApi.deleteAccount();
     clearSession();
     setUser(null);
-    router.push("/");
+    router.replace("/");
   }, [router]);
 
   const refreshUser = useCallback(() => {

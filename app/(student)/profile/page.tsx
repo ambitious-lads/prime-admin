@@ -10,7 +10,6 @@ import { toastApiError } from "@/hooks/use-api-error";
 import { useAuth } from "@/hooks/use-auth";
 import { initialsOf } from "@/lib/utils/format";
 import type { Profile } from "@/lib/api/types";
-import { PageHeader } from "@/components/shared/page-header";
 import { Dropzone } from "@/components/shared/dropzone";
 import { FullPageSpinner, Spinner } from "@/components/shared/loading";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -18,14 +17,21 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 type ProfileForm = {
   fullName: string;
-  school: string;
-  town: string;
+  schoolName: string;
+  townName: string;
   region: string;
-  stream: string;
-  grade: string;
+  stream: "natural" | "social" | "";
+  whereDidYouHearAboutUs: string;
 };
 
 export default function ProfilePage() {
@@ -42,38 +48,43 @@ export default function ProfilePage() {
   const form = useForm<ProfileForm>({
     defaultValues: {
       fullName: "",
-      school: "",
-      town: "",
+      schoolName: "",
+      townName: "",
       region: "",
       stream: "",
-      grade: "",
+      whereDidYouHearAboutUs: "",
     },
   });
 
   const { reset } = form;
   useEffect(() => {
     if (data) {
+      const profile = data.profile;
       reset({
         fullName: data.fullName ?? "",
-        school: data.school ?? "",
-        town: data.town ?? "",
-        region: data.region ?? "",
-        stream: data.stream ?? "",
-        grade: data.grade ?? "",
+        schoolName: profile?.schoolName ?? "",
+        townName: profile?.townName ?? "",
+        region: profile?.region ?? "",
+        stream: profile?.stream ?? "",
+        whereDidYouHearAboutUs: profile?.whereDidYouHearAboutUs ?? "",
       });
     }
   }, [data, reset]);
 
   async function onSubmit(values: ProfileForm) {
+    if (!values.stream || !values.whereDidYouHearAboutUs) {
+      toast.error("Select your stream and where you heard about Prime UAT.");
+      return;
+    }
     setSaving(true);
     try {
       const fd = new FormData();
       fd.append("fullName", values.fullName);
-      fd.append("school", values.school);
-      fd.append("town", values.town);
+      fd.append("schoolName", values.schoolName);
+      fd.append("townName", values.townName);
       fd.append("region", values.region);
       fd.append("stream", values.stream);
-      fd.append("grade", values.grade);
+      fd.append("whereDidYouHearAboutUs", values.whereDidYouHearAboutUs);
       if (avatar) fd.append("avatar", avatar);
       const updated: Profile = await profileApi.update(fd);
       queryClient.setQueryData(qk.profile, updated);
@@ -88,11 +99,11 @@ export default function ProfilePage() {
   if (isLoading) return <FullPageSpinner />;
 
   const name = data?.fullName ?? user?.fullName ?? "Student";
-  const avatarUrl = data?.avatarUrl ?? user?.avatarUrl ?? null;
+  const avatarUrl = data?.profile?.avatarUrl ?? user?.avatarUrl ?? null;
 
   return (
     <div className="mx-auto max-w-2xl space-y-6">
-      <PageHeader title="Profile" subtitle="Manage your personal details." />
+
 
       <Card>
         <CardHeader>
@@ -136,24 +147,56 @@ export default function ProfilePage() {
             </div>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="school">School</Label>
-                <Input id="school" {...form.register("school")} />
+                <Label htmlFor="schoolName">School</Label>
+                <Input id="schoolName" required {...form.register("schoolName")} />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="grade">Grade</Label>
-                <Input id="grade" {...form.register("grade")} />
+                <Label htmlFor="townName">Town</Label>
+                <Input id="townName" {...form.register("townName")} />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="stream">Stream</Label>
-                <Input id="stream" {...form.register("stream")} />
+                <Select
+                  value={form.watch("stream")}
+                  onValueChange={(value: "natural" | "social") =>
+                    form.setValue("stream", value)
+                  }
+                >
+                  <SelectTrigger id="stream">
+                    <SelectValue placeholder="Select stream" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="natural">Natural Science</SelectItem>
+                    <SelectItem value="social">Social Science</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="region">Region</Label>
-                <Input id="region" {...form.register("region")} />
+                <Input id="region" required {...form.register("region")} />
               </div>
               <div className="space-y-2 sm:col-span-2">
-                <Label htmlFor="town">Town</Label>
-                <Input id="town" {...form.register("town")} />
+                <Label htmlFor="whereDidYouHearAboutUs">
+                  Where did you hear about Prime UAT?
+                </Label>
+                <Select
+                  value={form.watch("whereDidYouHearAboutUs")}
+                  onValueChange={(value) =>
+                    form.setValue("whereDidYouHearAboutUs", value)
+                  }
+                >
+                  <SelectTrigger id="whereDidYouHearAboutUs">
+                    <SelectValue placeholder="Select a source" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="telegram">Telegram</SelectItem>
+                    <SelectItem value="friend">Friend or classmate</SelectItem>
+                    <SelectItem value="school">School or teacher</SelectItem>
+                    <SelectItem value="social_media">Social media</SelectItem>
+                    <SelectItem value="search">Web search</SelectItem>
+                    <SelectItem value="other">Other</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
             <Button type="submit" disabled={saving}>

@@ -2,14 +2,12 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import {
   useMutation,
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
 import { Clock, FileQuestion, Heart, ListChecks } from "lucide-react";
-import { PageHeader } from "@/components/shared/page-header";
 import { EmptyState } from "@/components/shared/empty-state";
 import { CardGridSkeleton } from "@/components/shared/loading";
 import { LockBadge } from "@/components/shared/lock-badge";
@@ -171,31 +169,6 @@ export default function ExamsPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        title="Mock exams"
-        subtitle="Rehearse the real test, measure your readiness, and improve under time pressure."
-      />
-
-      <div className="relative min-h-40 overflow-hidden rounded-2xl bg-emerald-600 px-5 py-6 text-white sm:px-7">
-        <div className="relative z-10 max-w-xl">
-          <p className="text-xs font-bold uppercase tracking-[0.16em] text-emerald-100">
-            Exam simulation
-          </p>
-          <h2 className="mt-2 text-xl font-bold sm:text-2xl">
-            Practice calm, accurate decisions before exam day.
-          </h2>
-          <p className="mt-2 max-w-lg text-sm leading-6 text-white/80">
-            Pick a mock, protect enough uninterrupted time, and review every result afterward.
-          </p>
-        </div>
-        <Image
-          src="/illustrations/plan.png"
-          alt=""
-          width={210}
-          height={160}
-          className="absolute -bottom-8 right-2 hidden object-contain opacity-90 sm:block"
-        />
-      </div>
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <Tabs value={tab} onValueChange={setTab}>

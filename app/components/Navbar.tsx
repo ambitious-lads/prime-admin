@@ -6,8 +6,9 @@ import Link from "next/link";
 import { site } from "@/config/site";
 
 const navLinks = [
-  { label: "Simulation", href: "/#mock-tests" },
   { label: "UAT Guide", href: "/uat-guide" },
+  { label: "Cutoff Points", href: "/cutoff-points" },
+  { label: "Tuition", href: "/tuition" },
   { label: "Testimonials", href: "/#testimonials" },
   { label: "About Us", href: "/about" },
   { label: "Contact", href: site.supportTelegramUrl, external: true },
@@ -33,8 +34,8 @@ export default function Navbar() {
     <header
       className={`sticky top-0 z-50 w-full transition-all duration-300 ${
         isScrolled
-          ? "bg-white/90 backdrop-blur-lg shadow-sm border-b border-line/40 py-3"
-          : "bg-white/80 backdrop-blur-md border-b border-transparent py-4"
+          ? "border-b border-line/40 bg-white/95 py-3 shadow-sm backdrop-blur-lg"
+          : "border-b border-line/40 bg-white/95 py-3 backdrop-blur-lg"
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

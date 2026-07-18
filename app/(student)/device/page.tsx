@@ -5,7 +5,6 @@ import { useSearchParams } from "next/navigation";
 import { MessageCircle, Smartphone, ShieldCheck } from "lucide-react";
 import { site } from "@/config/site";
 import { useDevice } from "@/hooks/use-device";
-import { PageHeader } from "@/components/shared/page-header";
 import { DeviceConflict } from "@/components/shared/device-conflict";
 import { FullPageSpinner } from "@/components/shared/loading";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -21,10 +20,6 @@ function DeviceInner() {
 
   return (
     <div className="mx-auto max-w-2xl space-y-6">
-      <PageHeader
-        title="Your device"
-        subtitle="Prime UAT keeps your account secure on one device at a time."
-      />
 
       <Card>
         <CardHeader>

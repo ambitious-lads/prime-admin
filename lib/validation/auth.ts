@@ -9,6 +9,7 @@ export const registerSchema = z.object({
   fullName: z.string().min(2, "Enter your full name"),
   phone: z.string().min(10, "Enter a valid phone number"),
   password: z.string().min(8, "At least 8 characters"),
+  referralCode: z.string().trim().max(32, "Invite code is too long").refine((value) => value === "" || value.length >= 4, "Enter a valid invite code").optional(),
 });
 
 export const otpSchema = z.object({

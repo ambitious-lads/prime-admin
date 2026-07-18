@@ -16,7 +16,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { PageHeader } from "@/components/shared/page-header";
 import { EmptyState } from "@/components/shared/empty-state";
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import { Dropzone } from "@/components/shared/dropzone";
@@ -93,10 +92,6 @@ export default function NotesPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        title="Notes"
-        subtitle="Upload and keep your study files in one place."
-      />
 
       <Card>
         <CardContent className="space-y-4 p-5">

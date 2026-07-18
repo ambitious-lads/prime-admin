@@ -3,8 +3,8 @@ import { getPublicCommunity } from "@/lib/public-community";
 export default async function Stats() {
   const community = await getPublicCommunity();
   const stats = [
-    { value: "10,000+", label: "Practice questions" },
-    { value: "500+", label: "Realistic mock exams" },
+    { value: "5,000+", label: "Practice questions" },
+    { value: "49+", label: "Realistic mock exams" },
     {
       value: `${community.displayedCommunitySize.toLocaleString()}+`,
       label: "Students preparing",

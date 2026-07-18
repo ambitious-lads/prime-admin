@@ -10,7 +10,6 @@ import { qk } from "@/lib/query/keys";
 import { useAuth } from "@/hooks/use-auth";
 import { toastApiError } from "@/hooks/use-api-error";
 import type { Settings } from "@/lib/api/types";
-import { PageHeader } from "@/components/shared/page-header";
 import { FullPageSpinner } from "@/components/shared/loading";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
@@ -55,7 +54,6 @@ export default function SettingsPage() {
 
   return (
     <div className="mx-auto max-w-2xl space-y-6">
-      <PageHeader title="Settings" subtitle="Manage your preferences." />
 
       <Card>
         <CardHeader>

@@ -205,13 +205,61 @@ export type Exam = {
   questionsCount?: number;
   totalQuestions?: number;
   durationMinutes: number;
-  isPremium: boolean;
-  isLocked?: boolean;
+  type?: string;
+  totalMarks?: number;
+  marks?: number;
+  isRecommended?: boolean;
+  minPlan?: PlanKey;
+  scheduledAt?: string | null;
+  participantsCount?: number;
+  totalParticipants?: number;
+  primaryColor?: string;
+  icon?: string;
+  isPremium: boolean;  isLocked?: boolean;
   isSaved?: boolean;
   attemptCount?: number;
   bestScore?: number | null;
 };
 
+export type ExamAdminQuestion = {
+  id: string;
+  examId: string;
+  text: string;
+  passage: string | null;
+  options: QuestionOption[];
+  correctOption: string;
+  explanation: string;
+  topic: string;
+  difficulty: Difficulty;
+  marks: number;
+  orderIndex: number;
+};
+
+export type ExamEditorInput = {
+  title: string;
+  type: string;
+  category?: string | null;
+  durationMinutes: number;
+  description: string;
+  difficulty: "Easy" | "Medium" | "Hard";
+  isRecommended?: boolean;
+  minPlan?: PlanKey;
+  scheduledAt?: string | null;
+  primaryColor?: string;
+  icon?: string;
+};
+
+export type ExamQuestionEditorInput = {
+  text: string;
+  passage?: string | null;
+  options: QuestionOption[];
+  correctOption: string;
+  explanation: string;
+  topic: string;
+  difficulty: "Easy" | "Medium" | "Hard";
+  marks: number;
+  orderIndex: number;
+};
 export type LeaderboardEntry = {
   rank: number;
   userId: string;
@@ -456,10 +504,12 @@ export type ReferralStatus = {
   shareUrl: string;
   rewardAmount: number;
   requiredPaidReferrals: number;
+  payoutHoldDays: number;
   registeredCount: number;
   qualifiedCount: number;
   paidCount: number;
   unpaidQualifiedCount: number;
+  pendingQualifiedCount: number;
   progress: number;
   eligible: boolean;
   openPayout: ReferralPayout | null;
@@ -469,12 +519,18 @@ export type Profile = {
   id: string;
   fullName: string;
   phone: string;
-  avatarUrl: string | null;
-  school: string | null;
-  town: string | null;
-  region: string | null;
-  stream: string | null;
-  grade: string | null;
+  role: Role;
+  plan: PlanKey;
+  planLabel: string;
+  profile: {
+    userId: string;
+    schoolName: string | null;
+    townName: string | null;
+    region: string | null;
+    stream: "natural" | "social" | null;
+    whereDidYouHearAboutUs: string | null;
+    avatarUrl: string | null;
+  } | null;
 };
 
 export type Settings = {

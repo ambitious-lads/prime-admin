@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Bookmark, FileText, Folder, Trash2 } from "lucide-react";
 import { savedApi } from "@/lib/api/endpoints";
-import { PageHeader } from "@/components/shared/page-header";
 import { EmptyState } from "@/components/shared/empty-state";
 import { RowsSkeleton } from "@/components/shared/loading";
 import { Button } from "@/components/ui/button";
@@ -34,7 +33,6 @@ export default function SavedLibraryPage() {
 
   return (
     <div className="space-y-5">
-      <PageHeader title="Saved Library" subtitle="Questions and notes you kept for revision." />
       <Tabs value={tab} onValueChange={setTab}>
         <TabsList className="w-full justify-start">
           <TabsTrigger value="questions"><Bookmark /> Questions</TabsTrigger>

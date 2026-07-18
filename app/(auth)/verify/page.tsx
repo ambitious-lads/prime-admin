@@ -19,6 +19,7 @@ import { captureEvent } from "@/lib/observability/posthog";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/shared/loading";
 import { cn } from "@/lib/utils/cn";
+import { resolvePostAuthRoute } from "@/lib/auth/post-auth-route";
 
 const OTP_LENGTH = 6;
 const RESEND_SECONDS = 60;
@@ -84,7 +85,7 @@ function VerifyForm() {
       const session = await authApi.verifyOtp({ phone, otpCode: code });
       setSession(session);
       captureEvent("web_otp_verify_success", { role: session.user.role });
-      router.push(session.user.role === "admin" ? "/admin" : "/practice");
+      router.replace(await resolvePostAuthRoute(session.user));
     } catch (e) {
       captureEvent("web_otp_verify_failure");
       if (e instanceof DeviceConflictError) {

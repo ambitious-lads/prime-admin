@@ -7,10 +7,12 @@ export function CardSpotlight({
   children,
   className,
   color = "rgba(255,255,255,0.2)",
+  id,
 }: {
   children: ReactNode;
   className?: string;
   color?: string;
+  id?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -24,6 +26,7 @@ export function CardSpotlight({
 
   return (
     <div
+      id={id}
       ref={ref}
       onMouseMove={move}
       className={cn(

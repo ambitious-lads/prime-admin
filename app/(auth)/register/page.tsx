@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -14,21 +14,35 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/shared/loading";
+import { clearPendingReferralCode, getPendingReferralCode, normalizeReferralCode, savePendingReferralCode } from "@/lib/referrals/attribution";
 
-export default function RegisterPage() {
+function RegisterForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [submitting, setSubmitting] = useState(false);
 
   const form = useForm<RegisterInput>({
     resolver: zodResolver(registerSchema),
-    defaultValues: { fullName: "", phone: "", password: "" },
+    defaultValues: { fullName: "", phone: "", password: "", referralCode: "" },
   });
 
+  useEffect(() => {
+    const linkedCode = normalizeReferralCode(
+      searchParams.get("referralCode") ?? searchParams.get("ref"),
+    );
+    const referralCode = linkedCode
+      ? savePendingReferralCode(linkedCode)
+      : getPendingReferralCode();
+    if (referralCode) {
+      form.setValue("referralCode", referralCode, { shouldValidate: true });
+    }
+  }, [form, searchParams]);
   async function onSubmit(values: RegisterInput) {
     setSubmitting(true);
     captureEvent("web_register_attempt");
     try {
-      await authApi.register(values);
+      await authApi.register({ ...values, referralCode: normalizeReferralCode(values.referralCode) || undefined });
+      clearPendingReferralCode();
       captureEvent("web_register_success");
       toast.success("Account created. Verify your phone to continue.");
       router.push(`/verify?phone=${encodeURIComponent(values.phone)}`);
@@ -96,7 +110,25 @@ export default function RegisterPage() {
             </p>
           ) : null}
         </div>
-        <Button type="submit" className="w-full" size="lg" disabled={submitting}>
+        <div className="space-y-1.5">
+          <Label htmlFor="referralCode">Invite code <span className="font-normal text-muted">(optional)</span></Label>
+          <Input
+            id="referralCode"
+            placeholder="Enter invite code"
+            autoCapitalize="characters"
+            autoComplete="off"
+            {...form.register("referralCode", {
+              onChange: (event) => {
+                event.target.value = normalizeReferralCode(event.target.value);
+              },
+            })}
+          />
+          {form.formState.errors.referralCode ? (
+            <p className="text-xs text-red-600">
+              {form.formState.errors.referralCode.message}
+            </p>
+          ) : null}
+        </div>        <Button type="submit" className="w-full" size="lg" disabled={submitting}>
           {submitting ? <Spinner /> : null} Create account
         </Button>
       </form>
@@ -108,5 +140,12 @@ export default function RegisterPage() {
         </Link>
       </p>
     </div>
+  );
+}
+export default function RegisterPage() {
+  return (
+    <Suspense fallback={<Spinner className="mx-auto" />}>
+      <RegisterForm />
+    </Suspense>
   );
 }

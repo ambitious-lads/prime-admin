@@ -4,6 +4,7 @@ const ACCESS_KEY = "prime.access";
 const REFRESH_KEY = "prime.refresh";
 const USER_KEY = "prime.user";
 const ROLE_COOKIE = "prime.role";
+export const SESSION_CLEARED_EVENT = "prime:session-cleared";
 
 export type { SessionUser };
 
@@ -59,4 +60,7 @@ export function clearSession() {
   localStorage.removeItem(REFRESH_KEY);
   localStorage.removeItem(USER_KEY);
   clearRoleCookie();
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new Event(SESSION_CLEARED_EVENT));
+  }
 }

@@ -3,7 +3,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Bell, CheckCheck } from "lucide-react";
 import { notificationsApi } from "@/lib/api/endpoints";
-import { PageHeader } from "@/components/shared/page-header";
 import { EmptyState } from "@/components/shared/empty-state";
 import { RowsSkeleton } from "@/components/shared/loading";
 import { Button } from "@/components/ui/button";
@@ -23,7 +22,7 @@ export default function NotificationsPage() {
 
   return (
     <div className="space-y-5">
-      <PageHeader title="Notifications" action={<Button variant="outline" onClick={() => readAll.mutate()}><CheckCheck /> Mark all read</Button>} />
+      <div className="flex justify-end"><Button variant="outline" onClick={() => readAll.mutate()}><CheckCheck /> Mark all read</Button></div>
       {query.isLoading ? <RowsSkeleton /> : !query.data?.length ? (
         <EmptyState icon={<Bell />} title="No notifications yet" message="Study updates and achievements will appear here." />
       ) : (

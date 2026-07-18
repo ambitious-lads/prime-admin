@@ -45,7 +45,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { PageHeader } from "@/components/shared/page-header";
 import { StatCard } from "@/components/shared/stat-card";
 import { EmptyState } from "@/components/shared/empty-state";
 import { Spinner } from "@/components/shared/loading";
@@ -74,10 +73,6 @@ export default function AnalyticsPage() {
 function AnalyticsLocked() {
   return (
     <div className="space-y-6">
-      <PageHeader
-        title="Analytics"
-        subtitle="Track your accuracy, study time and topic mastery."
-      />
       <div className="relative overflow-hidden rounded-2xl border border-line">
         <div className="pointer-events-none select-none blur-sm" aria-hidden>
           <div className="space-y-4 p-6">
@@ -133,26 +128,6 @@ function AnalyticsDashboard() {
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        title="Analytics"
-        subtitle="See what is improving, where to focus next, and how close you are to your goal."
-      />
-
-      <div className="relative overflow-hidden rounded-2xl bg-ink px-5 py-6 text-white sm:px-7">
-        <div className="relative z-10 max-w-2xl">
-          <p className="text-xs font-bold uppercase tracking-[0.16em] text-brand-100">
-            Your study picture
-          </p>
-          <h2 className="mt-2 text-xl font-bold sm:text-2xl">
-            Small daily progress compounds into exam-day confidence.
-          </h2>
-          <p className="mt-2 text-sm leading-6 text-white/70">
-            Use your accuracy, time, streak, and topic mastery to decide what to practice next.
-          </p>
-        </div>
-        <div className="absolute -right-10 -top-16 h-48 w-48 rounded-full bg-brand/40" />
-        <div className="absolute -bottom-24 right-32 h-48 w-48 rounded-full bg-emerald-400/20" />
-      </div>
 
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
         {overview.isLoading || !o ? (

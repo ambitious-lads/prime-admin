@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/shared/loading";
+import { resolvePostAuthRoute } from "@/lib/auth/post-auth-route";
 
 function LoginForm() {
   const router = useRouter();
@@ -33,7 +34,7 @@ function LoginForm() {
       if (next) {
         router.push(next);
       } else {
-        router.push(user.role === "admin" ? "/admin" : "/practice");
+        router.replace(await resolvePostAuthRoute(user));
       }
     } catch (e) {
       if (e instanceof DeviceConflictError) {

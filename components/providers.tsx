@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
 import { DeviceConflictWatcher } from "@/components/shared/device-conflict-watcher";
 import { ObservabilityProvider } from "@/components/observability-provider";
+import { MobileAppPrompt } from "@/components/shared/mobile-app-prompt";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
@@ -15,6 +16,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
           <TooltipProvider delayDuration={200}>
             {children}
             <DeviceConflictWatcher />
+            <MobileAppPrompt />
             <Toaster />
           </TooltipProvider>
         </ObservabilityProvider>

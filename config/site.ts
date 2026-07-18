@@ -3,13 +3,13 @@ export const site = {
   apiBaseUrl:
     process.env.NEXT_PUBLIC_API_BASE_URL ??
     "https://primely-api.onrender.com/api/v1",
-  supportPhone: process.env.NEXT_PUBLIC_SUPPORT_PHONE ?? "@prime_uat",
+  supportPhone: process.env.NEXT_PUBLIC_SUPPORT_PHONE ?? "@PrimeUAT",
   supportEmail:
-    process.env.NEXT_PUBLIC_SUPPORT_EMAIL ?? "@prime_uat",
+    process.env.NEXT_PUBLIC_SUPPORT_EMAIL ?? "@PrimeUAT",
   supportTelegram:
-    process.env.NEXT_PUBLIC_SUPPORT_TELEGRAM ?? "@prime_uat",
+    process.env.NEXT_PUBLIC_SUPPORT_TELEGRAM ?? "@PrimeUAT",
   supportTelegramUrl:
-    process.env.NEXT_PUBLIC_SUPPORT_TELEGRAM_URL ?? "https://t.me/prime_uat",
+    process.env.NEXT_PUBLIC_SUPPORT_TELEGRAM_URL ?? "https://t.me/PrimeUAT",
   paymentAccounts: [
     {
       method: "Telebirr",

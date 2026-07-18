@@ -5,10 +5,10 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Copy, Gift, Send } from "lucide-react";
 import { toast } from "sonner";
 import { referralsStudentApi } from "@/lib/api/endpoints";
-import { PageHeader } from "@/components/shared/page-header";
 import { EmptyState } from "@/components/shared/empty-state";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { toastApiError } from "@/hooks/use-api-error";
 
 export default function ReferralsPage() {
   const [account, setAccount] = useState("");
@@ -26,7 +26,6 @@ export default function ReferralsPage() {
 
   return (
     <div className="space-y-5">
-      <PageHeader title="Referrals" subtitle="Invite friends. Rewards count after they subscribe." />
       {data ? (
         <>
           <section className="border-y border-line bg-white px-5 py-6">
@@ -49,9 +48,10 @@ export default function ReferralsPage() {
           <section className="border-y border-line bg-white px-5 py-6">
             <div className="flex justify-between text-sm font-semibold"><span>Payout progress</span><span>{data.progress}/{data.requiredPaidReferrals}</span></div>
             <div className="mt-3 h-2 overflow-hidden bg-surface"><div className="h-full bg-brand" style={{ width: `${Math.min(100, data.progress / data.requiredPaidReferrals * 100)}%` }} /></div>
-            <p className="mt-3 text-sm text-muted">{data.rewardAmount} birr per paid referral.</p>
+            <p className="mt-3 text-sm text-muted">{data.rewardAmount} birr per verified paid referral. Rewards become withdrawable after a {data.payoutHoldDays}-day review period.</p>
+            {data.pendingQualifiedCount > 0 ? <p className="mt-2 text-sm font-medium text-amber-700">{data.pendingQualifiedCount} referral{data.pendingQualifiedCount === 1 ? "" : "s"} still in review.</p> : null}
             {!data.openPayout ? (
-              <div className="mt-5 flex gap-2"><Input value={account} onChange={(e) => setAccount(e.target.value)} placeholder="Payment phone/account" /><Button disabled={!data.eligible || payout.isPending} onClick={() => payout.mutate({ payoutMethod: "manual", payoutAccount: account })}>Request payout</Button></div>
+              <div className="mt-5 flex gap-2"><Input value={account} onChange={(e) => setAccount(e.target.value)} placeholder="Payment phone/account" /><Button disabled={!data.eligible || !account.trim() || payout.isPending} onClick={() => payout.mutate({ payoutMethod: "manual", payoutAccount: account.trim() })}>Request payout</Button></div>
             ) : <p className="mt-5 text-sm font-semibold text-brand">Payout request: {data.openPayout.status}</p>}
           </section>
         </>

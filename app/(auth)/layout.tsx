@@ -1,9 +1,12 @@
 import Link from "next/link";
 import { GraduationCap, Sparkles, Target } from "lucide-react";
 import { Brand } from "@/components/shared/brand";
+import { site } from "@/config/site";
+import { RequireGuest } from "@/components/shared/route-guards";
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
+    <RequireGuest>
     <div className="grid min-h-screen w-full bg-surface lg:grid-cols-2">
       <div className="flex flex-col px-6 py-10 sm:px-10">
         <div className="mx-auto w-full max-w-md">
@@ -15,8 +18,13 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         <div className="mx-auto w-full max-w-md text-sm text-muted">
           <p>
             Need help?{" "}
-            <Link href="/" className="font-medium text-brand hover:underline">
-              Visit Prime UAT
+            <Link
+              href={site.supportTelegramUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-brand hover:underline"
+            >
+              Message {site.supportTelegram}
             </Link>
           </p>
         </div>
@@ -71,5 +79,6 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         </div>
       </div>
     </div>
+    </RequireGuest>
   );
 }

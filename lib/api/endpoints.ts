@@ -11,6 +11,9 @@ import type {
   Course,
   CourseMaterial,
   Exam,
+  ExamAdminQuestion,
+  ExamEditorInput,
+  ExamQuestionEditorInput,
   ExamAttempt,
   ExamAttemptQuestions,
   ExamAnswer,
@@ -163,7 +166,7 @@ function normalizeAttemptQuestions(
 }
 
 export const authApi = {
-  register: (b: { phone: string; password: string; fullName: string }) =>
+  register: (b: { phone: string; password: string; fullName: string; referralCode?: string }) =>
     api.public.post<{ userId: string; phone: string; message: string }>(
       "/auth/register",
       b,
@@ -238,6 +241,20 @@ export const examsApi = {
   performance: () => api.get<AnalyticsOverview>("/user/performance"),
 };
 
+export const adminExamsApi = {
+  create: (body: ExamEditorInput) => api.post<Exam>("/exams", body),
+  update: (id: string, body: Partial<ExamEditorInput>) =>
+    api.patch<Exam>(`/exams/${id}`, body),
+  remove: (id: string) => api.del<{ id: string }>(`/exams/${id}`),
+  questions: (examId: string) =>
+    api.get<ExamAdminQuestion[]>(`/exams/${examId}/questions`),
+  createQuestion: (examId: string, body: ExamQuestionEditorInput) =>
+    api.post<ExamAdminQuestion>(`/exams/${examId}/questions`, body),
+  updateQuestion: (questionId: string, body: Partial<ExamQuestionEditorInput>) =>
+    api.patch<ExamAdminQuestion>(`/exams/questions/${questionId}`, body),
+  removeQuestion: (questionId: string) =>
+    api.del<{ id: string; examId: string }>(`/exams/questions/${questionId}`),
+};
 export const practiceApi = {
   categories: () => api.get<Category[]>("/practice/categories"),
   topics: (categoryId: string) =>
@@ -340,6 +357,6 @@ export const savedApi = {
 
 export const referralsStudentApi = {
   me: () => api.get<ReferralStatus>("/referrals/me"),
-  requestPayout: (body: { payoutMethod?: string; payoutAccount?: string }) =>
+  requestPayout: (body: { payoutMethod: string; payoutAccount: string }) =>
     api.post("/referrals/payouts", body),
 };

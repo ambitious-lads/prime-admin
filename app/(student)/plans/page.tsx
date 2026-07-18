@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { Check, Crown } from "lucide-react";
 import { plansApi } from "@/lib/api/endpoints";
@@ -9,13 +10,15 @@ import { PLAN_LIST } from "@/lib/utils/plans";
 import { cn } from "@/lib/utils/cn";
 import { formatMoney } from "@/lib/utils/format";
 import type { PlanKey } from "@/lib/api/types";
-import { PageHeader } from "@/components/shared/page-header";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { site } from "@/config/site";
 
 export default function PlansPage() {
+  const searchParams = useSearchParams();
+  const onboarding = searchParams.get("onboarding") === "1";
   const { data, isLoading } = useQuery({ queryKey: qk.plan, queryFn: plansApi.me });
 
   const currentPlan = data?.plan ?? "free";
@@ -25,10 +28,22 @@ export default function PlansPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        title="Plans"
-        subtitle="Pick the plan that fits how you study."
-      />
+
+      {onboarding ? (
+        <div className="rounded-lg border border-brand/20 bg-brand-50 px-5 py-4 text-sm leading-6 text-ink">
+          Your account is ready. Paid plans continue to secure checkout, while
+          the Free plan is already active. Need payment help?{" "}
+          <Link
+            href={site.supportTelegramUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-bold text-brand hover:underline"
+          >
+            Message {site.supportTelegram}
+          </Link>
+          .
+        </div>
+      ) : null}
 
       {showPending ? (
         <div className="rounded-2xl border border-amber-200 bg-amber-50 px-5 py-4 text-sm text-amber-800">

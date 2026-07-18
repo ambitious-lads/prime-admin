@@ -1,26 +1,28 @@
-import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowRight,
   BookOpen,
-  Brain,
   Building2,
   Calculator,
   Check,
   Clock3,
   ExternalLink,
+  FileCheck2,
+  Laptop,
   MapPin,
+  ShieldCheck,
+  TimerReset,
 } from "lucide-react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { CardSpotlight } from "@/components/aceternity/card-spotlight";
-import { GridPattern } from "@/components/magicui/grid-pattern";
 
 const contents = [
   ["overview", "What the UAT is"],
   ["admission", "How admission works"],
   ["aau", "Why students choose AAU"],
   ["subjects", "What the test covers"],
+  ["test-day", "Registration and test day"],
   ["competition", "How competitive it is"],
   ["prepare", "How to prepare"],
   ["sources", "Official and unofficial information"],
@@ -59,22 +61,6 @@ const testedAreas = [
     tone: "bg-rose-500 text-white",
     glow: "rgba(254,205,211,0.35)",
   },
-  {
-    number: "03",
-    title: "Analytical reasoning",
-    description:
-      "Evaluates whether you can recognize patterns, organize information, and reach defensible conclusions.",
-    topics: [
-      "Pattern recognition",
-      "Logical arrangements",
-      "Critical thinking",
-      "Data interpretation",
-      "Deductive reasoning",
-    ],
-    icon: Brain,
-    tone: "bg-emerald-500 text-white",
-    glow: "rgba(167,243,208,0.35)",
-  },
 ];
 
 const preparationPlan = [
@@ -104,52 +90,19 @@ export default function UatGuidePage() {
   return (
     <div className="min-h-screen bg-white text-ink">
       <Navbar />
-      <main>
-        <section className="relative overflow-hidden border-b border-black/10 bg-[#f7f9ff]">
-          <GridPattern className="text-brand/10 [mask-image:linear-gradient(to_bottom,black,transparent_85%)]" />
-          <div className="mx-auto grid max-w-7xl lg:grid-cols-[1.05fr_0.95fr]">
-            <div className="relative z-10 flex min-h-[480px] flex-col justify-center px-5 py-14 sm:px-8 lg:px-12 lg:py-20">
-              <h1 className="max-w-3xl font-accent text-4xl font-black leading-[1.04] sm:text-5xl lg:text-6xl">
-                Understand the test before you{" "}
-                <span className="relative inline-block text-brand">
-                  prepare for it.
-                  <span className="absolute inset-x-0 bottom-0 -z-10 h-3 bg-amber-300/60" />
-                </span>
+      <main className="relative z-0">
+        <section className="border-b border-black/10 bg-white">
+          <div className="mx-auto flex min-h-[420px] max-w-7xl items-center justify-center px-5 py-20 text-center sm:min-h-[500px] sm:px-8 lg:px-12">
+            <div className="max-w-4xl">
+              <h1 className="font-accent text-4xl font-black leading-[1.04] text-black sm:text-6xl lg:text-7xl">
+                Undergraduate Admission Test
               </h1>
-              <p className="mt-6 max-w-2xl text-base leading-8 text-muted sm:text-lg">
-                A practical guide to what the UAT measures, how AAU admission is
-                considered, what makes the exam competitive, and how to prepare
-                without depending on rumors.
+              <p className="mx-auto mt-6 max-w-2xl text-base leading-8 text-neutral-600 sm:text-lg">
+                Understand how the AAU UAT works, what it may assess, how
+                admission is considered, and how to prepare with a focused,
+                evidence-based plan.
               </p>
-              <div className="mt-8 grid max-w-xl grid-cols-3 border-y border-black/10 text-sm font-semibold">
-                <span className="flex items-center gap-2 border-r border-black/10 py-4">
-                  <span className="h-2.5 w-2.5 bg-indigo-600" />
-                  Verbal
-                </span>
-                <span className="flex items-center justify-center gap-2 border-r border-black/10 py-4">
-                  <span className="h-2.5 w-2.5 bg-rose-500" />
-                  Quantitative
-                </span>
-                <span className="flex items-center justify-end gap-2 py-4">
-                  <span className="h-2.5 w-2.5 bg-emerald-500" />
-                  Analytical
-                </span>
-              </div>
             </div>
-
-            <figure className="relative z-10 min-h-[360px] overflow-hidden bg-neutral-100 lg:min-h-[560px]">
-              <Image
-                src="/images/aau-gate.jpg"
-                alt="Entrance gate of Addis Ababa University"
-                fill
-                priority
-                className="object-cover"
-                sizes="(max-width: 1024px) 100vw, 48vw"
-              />
-              <figcaption className="absolute inset-x-0 bottom-0 bg-white/90 px-4 py-3 text-xs text-neutral-600 backdrop-blur-sm">
-                Addis Ababa University entrance. Photo: A. Savin, Wikimedia Commons, FAL.
-              </figcaption>
-            </figure>
           </div>
         </section>
 
@@ -202,6 +155,19 @@ export default function UatGuidePage() {
                 the university&apos;s undergraduate admission test. Always follow
                 the terminology used in the current official announcement.
               </Note>
+              <div className="mt-8 grid overflow-hidden rounded-lg border border-line sm:grid-cols-2 lg:grid-cols-4">
+                {[
+                  ["100", "multiple-choice questions"],
+                  ["55", "verbal reasoning items"],
+                  ["45", "quantitative reasoning items"],
+                  ["120", "minutes in total"],
+                ].map(([value, label]) => (
+                  <div key={label} className="border-b border-line p-5 last:border-b-0 sm:border-r sm:last:border-r-0">
+                    <p className="text-3xl font-black tabular-nums">{value}</p>
+                    <p className="mt-2 text-xs leading-5 text-muted">{label}</p>
+                  </div>
+                ))}
+              </div>
             </section>
 
             <section id="admission" className="scroll-mt-28 border-b border-black/10 py-14">
@@ -322,8 +288,94 @@ export default function UatGuidePage() {
               </div>
             </section>
 
-            <section id="competition" className="scroll-mt-28 border-b border-black/10 py-14">
+            <section id="test-day" className="scroll-mt-28 border-b border-black/10 py-14">
               <SectionNumber value="05" />
+              <h2 className="mt-3 text-3xl font-black">Registration and test day</h2>
+              <p className="mt-6 text-base leading-8 text-neutral-700">
+                The 2024 information booklet describes a digitally administered
+                exam coordinated by AAU&apos;s Institute of Educational Research
+                Testing Center. Candidates sit in designated computer labs under
+                standardized conditions.
+              </p>
+
+              <div className="mt-8 grid gap-px overflow-hidden rounded-lg border border-line bg-line sm:grid-cols-2">
+                {[
+                  {
+                    icon: FileCheck2,
+                    title: "Register and pay",
+                    text: "Apply through the AAU portal, select an available test location, complete the stated payment, and download the UAT admission ticket.",
+                  },
+                  {
+                    icon: TimerReset,
+                    title: "Two timed sections",
+                    text: "Verbal and quantitative reasoning receive 60 minutes each. The system closes a section when its allocated time ends.",
+                  },
+                  {
+                    icon: Laptop,
+                    title: "Digital testing",
+                    text: "The exam is delivered through AAU's testing portal in designated labs using the university's network infrastructure.",
+                  },
+                  {
+                    icon: ShieldCheck,
+                    title: "Identity and integrity",
+                    text: "Bring valid identification and the admission ticket. Follow invigilator instructions and use only explicitly authorized materials.",
+                  },
+                ].map(({ icon: Icon, title, text }) => (
+                  <article key={title} className="bg-white p-6">
+                    <Icon className="h-5 w-5 text-brand" />
+                    <h3 className="mt-5 font-black">{title}</h3>
+                    <p className="mt-2 text-sm leading-7 text-muted">{text}</p>
+                  </article>
+                ))}
+              </div>
+
+              <div className="mt-10 grid gap-8 md:grid-cols-2">
+                <div>
+                  <h3 className="font-black">Bring and prepare</h3>
+                  <BulletList
+                    items={[
+                      "A valid identification document",
+                      "Your downloaded UAT admission ticket",
+                      "A permitted basic four-function calculator",
+                      "A pen or pencil for the supplied rough-work sheet",
+                      "Arrival before the reporting time on your ticket",
+                    ]}
+                  />
+                </div>
+                <div>
+                  <h3 className="font-black">Do not bring into the room</h3>
+                  <BulletList
+                    items={[
+                      "Phones, tablets, smart watches, or laptops",
+                      "Headphones, Bluetooth, or communication devices",
+                      "Books, notes, handouts, or personal scratch paper",
+                      "Scientific or programmable calculators",
+                      "Formula sheets or unauthorized measuring aids",
+                    ]}
+                  />
+                </div>
+              </div>
+
+              <Note>
+                Applicants who need disability accommodations should disclose
+                their needs during the application process and coordinate with
+                the assigned testing center. The booklet states that visually
+                impaired candidates use the JAWS screen reader.
+              </Note>
+
+              <div className="mt-8 border-t border-line pt-8">
+                <h3 className="text-lg font-black">Results and verification</h3>
+                <p className="mt-3 text-sm leading-7 text-muted">
+                  The booklet says candidates may receive a raw score, T-score,
+                  and percentile rank. The passing score is announced separately.
+                  Digital result certificates include a QR code or verification
+                  link so the certificate can be authenticated.
+                </p>
+              </div>
+            </section>
+
+            <section id="competition" className="scroll-mt-28 border-b border-black/10 py-14">
+              <SectionNumber value="06" />
               <h2 className="mt-3 text-3xl font-black">How competitive is it?</h2>
               <p className="mt-6 text-base leading-8 text-neutral-700">
                 Competition depends on the number of qualified applicants, their
@@ -344,7 +396,7 @@ export default function UatGuidePage() {
             </section>
 
             <section id="prepare" className="scroll-mt-28 border-b border-black/10 py-14">
-              <SectionNumber value="06" />
+              <SectionNumber value="07" />
               <h2 className="mt-3 text-3xl font-black">A practical preparation plan</h2>
               <div className="relative mt-8 space-y-3">
                 <div className="absolute bottom-8 left-[27px] top-8 w-px bg-gradient-to-b from-indigo-500 via-rose-500 to-emerald-500" />
@@ -390,7 +442,7 @@ export default function UatGuidePage() {
             </section>
 
             <section id="sources" className="scroll-mt-28 pt-14">
-              <SectionNumber value="07" />
+              <SectionNumber value="08" />
               <h2 className="mt-3 text-3xl font-black">Official and unofficial information</h2>
               <p className="mt-6 text-base leading-8 text-neutral-700">
                 Telegram channels, tutors, past candidates, and preparation

@@ -7,7 +7,6 @@ import { useQuery } from "@tanstack/react-query";
 import { GraduationCap, Layers } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { PageHeader } from "@/components/shared/page-header";
 import { EmptyState } from "@/components/shared/empty-state";
 import { LockBadge } from "@/components/shared/lock-badge";
 import { CardGridSkeleton } from "@/components/shared/loading";
@@ -27,10 +26,6 @@ export default function CoursesPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        title="Courses"
-        subtitle="Premium video, PDF and reading material with an AI tutor."
-      />
 
       {courses.isLoading ? (
         <CardGridSkeleton count={6} />
@@ -76,7 +71,7 @@ function CourseCard({
   const materialCount = course.materialCount ?? course.materialsCount ?? 0;
 
   const inner = (
-    <Card className="group h-full overflow-hidden transition-shadow hover:shadow-md">
+    <Card className="group h-full overflow-hidden border-line transition-all duration-200 hover:-translate-y-0.5 hover:border-black/20 hover:shadow-lg hover:shadow-black/5">
       <div className="relative aspect-[16/9] w-full bg-brand-50">
         {course.coverUrl ? (
           <Image
@@ -84,16 +79,11 @@ function CourseCard({
             alt={course.title}
             fill
             unoptimized
-            className="object-cover"
+            className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
           />
-        ) : (
-          <div className="relative h-full w-full">
-            <Image
-              src={courseIllustration(course.title)}
-              alt=""
-              fill
-              className="object-contain p-8 opacity-90"
-            />
+) : (
+          <div className="flex h-full items-center justify-center text-brand">
+            <GraduationCap className="h-10 w-10" />
           </div>
         )}
         {locked && (
@@ -133,18 +123,4 @@ function CourseCard({
   }
 
   return <Link href={`/courses/${courseId}`}>{inner}</Link>;
-}
-
-function courseIllustration(title: string) {
-  const value = title.toLowerCase();
-  if (value.includes("grammar") || value.includes("verbal")) {
-    return "/illustrations/grammar.png";
-  }
-  if (value.includes("quant") || value.includes("math") || value.includes("algebra")) {
-    return "/illustrations/ratio.png";
-  }
-  if (value.includes("vocab") || value.includes("english")) {
-    return "/illustrations/vocab.png";
-  }
-  return "/illustrations/plan.png";
 }

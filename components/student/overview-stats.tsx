@@ -6,6 +6,7 @@ import { qk } from "@/lib/query/keys";
 import { formatNumber, formatPercent } from "@/lib/utils/format";
 import type { AnalyticsOverview } from "@/lib/api/types";
 import { Skeleton } from "@/components/ui/skeleton";
+import { BarChart3, CheckCircle2, ListChecks, Trophy } from "lucide-react";
 
 export function OverviewStats() {
   const overview = useQuery({
@@ -38,18 +39,21 @@ export function OverviewStats() {
   const examsTaken = data.examsTaken ?? 0;
 
   const stats = [
-    ["Questions solved", formatNumber(solved)],
-    ["Accuracy", formatPercent(accuracy)],
-    ["Rank", rank ? `#${formatNumber(rank)}` : "—"],
-    ["Exams taken", formatNumber(examsTaken)],
+    { label: "Questions solved", value: formatNumber(solved), icon: ListChecks },
+    { label: "Accuracy", value: formatPercent(accuracy), icon: CheckCircle2 },
+    { label: "Rank", value: rank ? `#${formatNumber(rank)}` : "—", icon: Trophy },
+    { label: "Exams taken", value: formatNumber(examsTaken), icon: BarChart3 },
   ];
 
   return (
-    <div className="grid grid-cols-2 divide-x divide-y divide-line border-y border-line lg:grid-cols-4 lg:divide-y-0">
-      {stats.map(([label, value]) => (
-        <div key={label} className="px-4 py-5 first:pl-0 lg:px-6 lg:first:pl-0">
-          <p className="text-xs font-medium text-muted">{label}</p>
-          <p className="mt-1 text-2xl font-bold tabular-nums text-ink">{value}</p>
+    <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+      {stats.map(({ label, value, icon: Icon }) => (
+        <div key={label} className="rounded-lg border border-line bg-white p-4">
+          <div className="flex items-center justify-between">
+            <p className="text-xs font-medium text-muted">{label}</p>
+            <Icon className="h-4 w-4 text-brand" />
+          </div>
+          <p className="mt-4 text-2xl font-bold tabular-nums text-ink">{value}</p>
         </div>
       ))}
     </div>
