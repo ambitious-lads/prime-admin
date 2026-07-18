@@ -11,15 +11,13 @@ export default async function Hero() {
       <div className="absolute top-0 right-0 w-[45rem] h-[45rem] bg-gradient-to-b from-brand/5 to-transparent rounded-full blur-3xl -z-10 pointer-events-none" />
       <div className="absolute -bottom-40 -left-40 w-[40rem] h-[40rem] bg-gradient-to-tr from-brand-50/40 to-transparent rounded-full blur-3xl -z-10 pointer-events-none" />
 
-      <div className="flex items-center px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full py-12 md:py-20">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 items-center w-full">
+      <div className="mx-auto flex w-full max-w-7xl items-center px-5 py-10 sm:px-6 sm:py-14 lg:px-8 lg:py-20">
+        <div className="grid w-full grid-cols-1 items-center gap-8 sm:gap-10 lg:grid-cols-12 lg:gap-20">
           {/* Left: headline, copy, CTAs, social proof */}
-          <div className="lg:col-span-6 flex flex-col justify-center space-y-8 animate-fade-in-up">
+          <div className="flex min-w-0 flex-col justify-center space-y-7 animate-fade-in-up lg:col-span-6">
             <div className="space-y-5">
-              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight font-accent text-ink leading-[1.1]">
-                <span className="whitespace-nowrap">Practice Smarter</span>
-                <br />
-                to Ace UAT
+              <h1 className="max-w-[12ch] text-4xl font-black leading-[1.08] tracking-normal text-ink font-accent sm:max-w-none sm:text-5xl lg:text-7xl">
+                Practice Smarter to Ace UAT
               </h1>
 
               <p className="text-base sm:text-lg text-muted max-w-xl leading-relaxed font-sans font-medium">
@@ -88,26 +86,26 @@ export default async function Hero() {
 
           {/* Right: illustration */}
           <div
-            className="lg:col-span-6 relative flex justify-center lg:justify-end animate-fade-in-up"
+            className="relative flex min-w-0 justify-center animate-fade-in-up lg:col-span-6 lg:justify-end"
             style={{ animationDelay: "150ms" }}
           >
             <svg
               viewBox="0 0 500 200"
               preserveAspectRatio="none"
               aria-hidden="true"
-              className="absolute z-10 -bottom-28 left-0 w-[160%] h-[75%] fill-brand select-none pointer-events-none"
+              className="pointer-events-none absolute -bottom-28 left-0 z-10 hidden h-[75%] w-[160%] select-none fill-brand lg:block"
             >
               <path d="M0,198 C60,160 120,170 180,150 C250,128 290,150 350,100 C400,60 450,72 500,14 L500,200 L0,200 Z" />
             </svg>
 
-            <div className="relative w-full max-w-[1000px] lg:max-w-none aspect-square lg:scale-125 lg:origin-right lg:translate-x-12 select-none pointer-events-none">
+            <div className="pointer-events-none relative h-[390px] w-full max-w-[430px] select-none sm:h-[500px] sm:max-w-[560px] lg:h-auto lg:max-w-none lg:translate-x-12 lg:scale-125 lg:origin-right lg:aspect-square">
               <Image
                 src="/images/hero.png"
                 alt="Student smart preparation illustration"
                 fill
                 priority
                 sizes="(max-width: 1024px) 100vw, 1000px"
-                className="object-contain mix-blend-multiply select-none pointer-events-none"
+                className="pointer-events-none select-none object-contain object-bottom mix-blend-multiply"
               />
             </div>
           </div>

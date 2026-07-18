@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { ArrowUpRight, Menu, X } from "lucide-react";
 import { site } from "@/config/site";
 
 const navLinks = [
@@ -17,155 +18,103 @@ const navLinks = [
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 10) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
-    };
-    window.addEventListener("scroll", handleScroll);
+    const handleScroll = () => setIsScrolled(window.scrollY > 10);
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setIsOpen(false);
+    };
+    const handlePointerDown = (event: PointerEvent) => {
+      if (!headerRef.current?.contains(event.target as Node)) setIsOpen(false);
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener("pointerdown", handlePointerDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener("pointerdown", handlePointerDown);
+    };
+  }, [isOpen]);
+
   return (
     <header
-      className={`sticky top-0 z-50 w-full transition-all duration-300 ${
-        isScrolled
-          ? "border-b border-line/40 bg-white/95 py-3 shadow-sm backdrop-blur-lg"
-          : "border-b border-line/40 bg-white/95 py-3 backdrop-blur-lg"
+      ref={headerRef}
+      className={`sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur-lg transition-shadow ${
+        isScrolled || isOpen ? "border-line shadow-sm" : "border-line/50"
       }`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-12">
-          <div className="flex-shrink-0 flex items-center">
-            <Link href="/" className="flex items-center gap-3 group">
-              <div className="relative w-8 h-8 select-none pointer-events-none">
-                <Image
-                  src="/images/logo.png"
-                  alt="Prime UAT Logo"
-                  width={32}
-                  height={32}
-                  priority
-                  className="h-8 w-8 object-contain"
-                />
-              </div>
-            </Link>
-          </div>
+      <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
+        <div className="flex h-16 items-center justify-between">
+          <Link href="/" className="flex items-center" aria-label="Prime UAT home">
+            <Image src="/images/logo.png" alt="Prime UAT" width={36} height={36} priority className="h-9 w-9 object-contain" />
+          </Link>
 
-          <nav className="hidden items-center gap-6 md:flex">
+          <nav className="hidden items-center gap-6 md:flex" aria-label="Primary navigation">
             {navLinks.map((item) => (
               <Link
                 key={item.label}
                 href={item.href}
                 target={item.external ? "_blank" : undefined}
                 rel={item.external ? "noopener noreferrer" : undefined}
-                className="group relative py-2 text-sm font-medium text-muted transition-colors duration-200 hover:text-ink"
+                className="group relative py-2 text-sm font-medium text-muted transition-colors hover:text-ink"
               >
                 {item.label}
-                <span className="absolute bottom-0 left-0 h-0.5 w-0 bg-brand transition-all duration-300 group-hover:w-full" />
+                <span className="absolute inset-x-0 bottom-0 h-0.5 origin-left scale-x-0 bg-brand transition-transform group-hover:scale-x-100" />
               </Link>
             ))}
           </nav>
 
-          <div className="hidden md:flex items-center space-x-5">
-            <Link
-              href="/login"
-              className="text-muted hover:text-ink font-medium text-sm transition-colors duration-200 px-3 py-2"
-            >
-              Log in
-            </Link>
-            <Link
-              href="/register"
-              className="inline-flex items-center justify-center rounded-xl bg-brand px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-600"
-            >
-              Sign up
-            </Link>
+          <div className="hidden items-center gap-3 md:flex">
+            <Link href="/login" className="px-3 py-2 text-sm font-semibold text-muted transition-colors hover:text-ink">Log in</Link>
+            <Link href="/register" className="inline-flex min-h-10 items-center justify-center rounded-lg bg-brand px-5 text-sm font-semibold text-white transition-colors hover:bg-brand-600">Sign up</Link>
           </div>
 
-          <div className="flex md:hidden">
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              type="button"
-              className="inline-flex items-center justify-center p-2 rounded-lg text-muted hover:text-ink hover:bg-brand-50 focus:outline-none transition-all duration-200"
-              aria-controls="mobile-menu"
-              aria-expanded={isOpen}
-            >
-              <span className="sr-only">Open main menu</span>
-              {isOpen ? (
-                <svg
-                  className="h-6 w-6"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  aria-hidden="true"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              ) : (
-                <svg
-                  className="h-6 w-6"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  aria-hidden="true"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
-                </svg>
-              )}
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={() => setIsOpen((open) => !open)}
+            className="inline-flex h-11 w-11 items-center justify-center rounded-lg text-ink transition-colors hover:bg-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand md:hidden"
+            aria-controls="mobile-menu"
+            aria-expanded={isOpen}
+            aria-label={isOpen ? "Close navigation" : "Open navigation"}
+          >
+            {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </button>
         </div>
       </div>
 
       <div
-        className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
-          isOpen ? "max-h-[300px] border-b border-line/20 bg-white" : "max-h-0"
-        }`}
         id="mobile-menu"
+        className={`absolute inset-x-0 top-full overflow-hidden border-b border-line bg-white shadow-xl transition-[opacity,transform,visibility] duration-200 md:hidden ${
+          isOpen ? "visible translate-y-0 opacity-100" : "invisible -translate-y-2 opacity-0"
+        }`}
       >
-        <div className="px-4 pt-2 pb-6 space-y-2">
-          {navLinks.map((item) => (
-            <Link
-              key={item.label}
-              href={item.href}
-              target={item.external ? "_blank" : undefined}
-              rel={item.external ? "noopener noreferrer" : undefined}
-              onClick={() => setIsOpen(false)}
-              className="block rounded-lg px-3 py-2.5 text-base font-medium text-muted transition-all hover:bg-brand-50 hover:text-brand"
-            >
-              {item.label}
-            </Link>
-          ))}
-          <div className="pt-4 flex flex-col gap-3 px-3">
-            <Link
-              href="/login"
-              onClick={() => setIsOpen(false)}
-              className="text-center py-2.5 rounded-lg text-base font-medium text-muted hover:text-ink border border-line hover:bg-surface transition-all"
-            >
-              Log in
-            </Link>
-            <Link
-              href="/register"
-              onClick={() => setIsOpen(false)}
-              className="text-center py-2.5 rounded-lg text-base font-semibold text-white bg-brand hover:bg-brand-600 transition-all shadow-md shadow-brand/10"
-            >
-              Sign up
-            </Link>
+        <div className="max-h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain px-5 py-4">
+          <nav className="divide-y divide-line" aria-label="Mobile navigation">
+            {navLinks.map((item) => (
+              <Link
+                key={item.label}
+                href={item.href}
+                target={item.external ? "_blank" : undefined}
+                rel={item.external ? "noopener noreferrer" : undefined}
+                onClick={() => setIsOpen(false)}
+                className="flex min-h-12 items-center justify-between py-3 text-[15px] font-semibold text-ink transition-colors hover:text-brand"
+              >
+                {item.label}
+                {item.external ? <ArrowUpRight className="h-4 w-4 text-muted" /> : null}
+              </Link>
+            ))}
+          </nav>
+          <div className="grid grid-cols-2 gap-3 border-t border-line pt-4">
+            <Link href="/login" onClick={() => setIsOpen(false)} className="inline-flex min-h-11 items-center justify-center rounded-lg border border-line bg-white px-4 text-sm font-semibold text-ink">Log in</Link>
+            <Link href="/register" onClick={() => setIsOpen(false)} className="inline-flex min-h-11 items-center justify-center rounded-lg bg-brand px-4 text-sm font-semibold text-white">Sign up</Link>
           </div>
         </div>
       </div>
