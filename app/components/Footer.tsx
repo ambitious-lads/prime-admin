@@ -13,6 +13,14 @@ const columns = [
     ],
   },
   {
+    title: "AAU Resources",
+    links: [
+      { label: "UAT Guide", href: "/uat-guide" },
+      { label: "Cutoff Points", href: "/cutoff-points" },
+      { label: "Tuition Fees", href: "/tuition" },
+    ],
+  },
+  {
     title: "Company",
     links: [
       { label: "About Us", href: "#about" },
@@ -50,9 +58,7 @@ export default function Footer() {
               </span>
             </Link>
             <p className="mt-4 max-w-xs text-sm text-muted font-medium leading-relaxed">
-              The trusted study companion for Ethiopian students preparing for
-              the University Entrance Exam. Study smarter with focused practice,
-              mock tests, courses, and analytics.
+              An independent preparation platform for Ethiopian students preparing for the AAU Undergraduate Admission Test. Prime UAT is not affiliated with Addis Ababa University.
             </p>
           </div>
 

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import TuitionExplorer from "./TuitionExplorer";
@@ -22,7 +23,11 @@ export default function TuitionPage() {
         </header>
 
         <TuitionExplorer />
-      </main>
+        <div className="mx-auto max-w-7xl px-5 pb-14 sm:px-8 lg:px-12">
+          <p className="border-t border-line pt-6 text-sm leading-7 text-muted">
+            Reviewing admission costs? Read the <Link href="/uat-guide" className="font-bold text-ink underline underline-offset-4">AAU UAT guide</Link> for test format, registration guidance, and preparation steps.
+          </p>
+        </div>      </main>
       <Footer />
     </div>
   );

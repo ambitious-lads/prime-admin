@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
 import { Search, SlidersHorizontal } from "lucide-react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
@@ -88,7 +89,11 @@ export default function CutoffPointsPage() {
             for orientation and confirm final placement information through AAU.
           </p>
         </section>
-      </main>
+        <div className="mx-auto max-w-7xl px-5 pb-14 sm:px-8 lg:px-12">
+          <p className="border-t border-line pt-6 text-sm leading-7 text-muted">
+            Preparing for admission? Read the <Link href="/uat-guide" className="font-bold text-ink underline underline-offset-4">AAU UAT guide</Link> for the published exam structure, test-day rules, and preparation plan.
+          </p>
+        </div>      </main>
       <Footer />
     </div>
   );

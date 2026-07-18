@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -16,6 +17,7 @@ import {
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { CardSpotlight } from "@/components/aceternity/card-spotlight";
+import { absoluteUrl, seo } from "@/lib/seo";
 
 const contents = [
   ["overview", "What the UAT is"],
@@ -26,8 +28,81 @@ const contents = [
   ["competition", "How competitive it is"],
   ["prepare", "How to prepare"],
   ["sources", "Official and unofficial information"],
+  ["faq", "Frequently asked questions"],
 ] as const;
 
+
+export const metadata: Metadata = {
+  title: "AAU UAT Guide: Exam Format, Registration and Preparation",
+  description:
+    "Learn how the Addis Ababa University Undergraduate Admission Test works, what it may assess, how registration and test day work, and how to prepare effectively.",
+  alternates: { canonical: "/uat-guide" },
+  openGraph: {
+    type: "article",
+    title: "AAU UAT Guide: Exam Format, Registration and Preparation",
+    description:
+      "A clear, independent guide to the AAU Undergraduate Admission Test, including format, test day, scoring, preparation, and official-source checks.",
+    url: "/uat-guide",
+    siteName: seo.siteName,
+    images: [{ url: "/images/prime.png", width: 1200, height: 630, alt: "Prime UAT AAU UAT preparation guide" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "AAU UAT Guide: Exam Format, Registration and Preparation",
+    description:
+      "Understand the AAU Undergraduate Admission Test and prepare with a focused plan.",
+    images: ["/images/prime.png"],
+  },
+};
+
+const faqItems = [
+  { question: "What is the AAU UAT?", answer: "The Undergraduate Admission Test is an aptitude-focused assessment used as part of Addis Ababa University's undergraduate admission process. It is intended to measure reasoning and readiness, not only memorized school content." },
+  { question: "How many questions and sections does the UAT have?", answer: "The 2024 information booklet describes 100 multiple-choice questions: 55 verbal reasoning items and 45 quantitative reasoning items, with 60 minutes allocated to each section." },
+  { question: "Is the UAT the same as the Grade 12 entrance examination?", answer: "No. The UAT is a separate university admission assessment. Applicants should follow the current AAU announcement for how the UAT and national examination are considered together." },
+  { question: "Where should I confirm dates, fees, and admission decisions?", answer: "Confirm current dates, eligibility, fees, test locations, results, and admission decisions through AAU's official website, applicant portal, and current Testing Center announcements." },
+  { question: "How should I prepare for the UAT?", answer: "Build verbal and quantitative foundations, practice by topic, review mistakes, add timed sets, and finish with realistic full-length simulations under quiet test-day conditions." },
+] as const;
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "@id": `${absoluteUrl("/uat-guide")}#article`,
+      headline: "AAU UAT Guide: Exam Format, Registration and Preparation",
+      description: "An independent, student-first guide to the Addis Ababa University Undergraduate Admission Test.",
+      url: absoluteUrl("/uat-guide"),
+      datePublished: "2026-07-18",
+      dateModified: "2026-07-18",
+      author: { "@type": "Organization", name: seo.author },
+      publisher: { "@type": "Organization", name: seo.siteName, logo: { "@type": "ImageObject", url: absoluteUrl("/images/logo.png") } },
+      isPartOf: { "@type": "WebSite", name: seo.siteName, url: absoluteUrl("/") },
+      about: { "@type": "Thing", name: "Addis Ababa University Undergraduate Admission Test" },
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": `${absoluteUrl("/uat-guide")}#breadcrumbs`,
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: absoluteUrl("/") },
+        { "@type": "ListItem", position: 2, name: "UAT Guide", item: absoluteUrl("/uat-guide") },
+      ],
+    },
+    {
+      "@type": "Organization",
+      "@id": `${absoluteUrl("/")}#organization`,
+      name: seo.siteName,
+      url: absoluteUrl("/"),
+      logo: absoluteUrl("/images/logo.png"),
+      description: "An independent preparation platform for Ethiopian students. Prime UAT is not affiliated with Addis Ababa University.",
+      sameAs: ["https://t.me/PrimeUAT"],
+    },
+    {
+      "@type": "FAQPage",
+      "@id": `${absoluteUrl("/uat-guide")}#faq`,
+      mainEntity: faqItems.map((item) => ({ "@type": "Question", name: item.question, acceptedAnswer: { "@type": "Answer", text: item.answer } })),
+    },
+  ],
+};
 const testedAreas = [
   {
     number: "01",
@@ -91,6 +166,7 @@ export default function UatGuidePage() {
     <div className="min-h-screen bg-white text-ink">
       <Navbar />
       <main className="relative z-0">
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
         <section className="border-b border-black/10 bg-white">
           <div className="mx-auto flex min-h-[420px] max-w-7xl items-center justify-center px-5 py-20 text-center sm:min-h-[500px] sm:px-8 lg:px-12">
             <div className="max-w-4xl">
@@ -102,6 +178,12 @@ export default function UatGuidePage() {
                 admission is considered, and how to prepare with a focused,
                 evidence-based plan.
               </p>
+              <div className="mx-auto mt-6 flex max-w-2xl flex-wrap items-center justify-center gap-x-4 gap-y-2 text-xs font-semibold text-neutral-500">
+                <span>Reviewed by the Prime UAT Editorial Team</span>
+                <span aria-hidden="true">•</span>
+                <time dateTime="2026-07-18">Updated July 18, 2026</time>
+              </div>
+              <p className="mx-auto mt-4 max-w-2xl text-xs leading-6 text-neutral-500">Prime UAT is an independent preparation platform and is not affiliated with or operated by Addis Ababa University. Always confirm current admission information through official AAU channels.</p>
             </div>
           </div>
         </section>
@@ -508,6 +590,20 @@ export default function UatGuidePage() {
                     <ExternalLink className="h-3.5 w-3.5" />
                   </Link>
                 </div>
+              </div>
+            </section>
+            <section id="faq" className="scroll-mt-28 border-t border-black/10 pt-14">
+              <SectionNumber value="09" />
+              <h2 className="mt-3 text-3xl font-black">Frequently asked questions</h2>
+              <div className="mt-8 divide-y divide-black/10 border-y border-black/10">
+                {faqItems.map((item) => (
+                  <details key={item.question} className="group py-5">
+                    <summary className="cursor-pointer list-none pr-8 text-base font-black marker:hidden">
+                      {item.question}
+                    </summary>
+                    <p className="mt-3 max-w-3xl text-sm leading-7 text-neutral-600">{item.answer}</p>
+                  </details>
+                ))}
               </div>
             </section>
           </article>
