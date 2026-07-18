@@ -39,15 +39,14 @@ export default function Navbar() {
   return (
     <header ref={headerRef} className={`sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur-lg transition-shadow ${isScrolled || isOpen ? "border-line shadow-sm" : "border-line/50"}`}>
       <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between">
-          <Link href="/" className="flex items-center" aria-label="Prime UAT home"><Image src="/images/logo.png" alt="Prime UAT" width={36} height={36} priority className="h-9 w-9 object-contain" /></Link>
+        <div className="grid h-16 grid-cols-[1fr_auto_1fr] items-center md:flex md:justify-between">
+          <Link href="/" className="col-start-2 flex items-center md:col-auto" aria-label="Prime UAT home"><Image src="/images/logo.png" alt="Prime UAT" width={36} height={36} priority className="h-9 w-9 object-contain" /></Link>
           <nav className="hidden items-center gap-6 md:flex" aria-label="Primary navigation">
             {navLinks.map((item) => <Link key={item.label} href={item.href} target={item.external ? "_blank" : undefined} rel={item.external ? "noopener noreferrer" : undefined} className="group relative py-2 text-sm font-medium text-muted transition-colors hover:text-ink">{item.label}<span className="absolute inset-x-0 bottom-0 h-0.5 origin-left scale-x-0 bg-brand transition-transform group-hover:scale-x-100" /></Link>)}
           </nav>
           <div className="hidden items-center gap-3 md:flex"><Link href="/login" className="px-3 py-2 text-sm font-semibold text-muted transition-colors hover:text-ink">Log in</Link><Link href="/register" className="inline-flex min-h-10 items-center justify-center rounded-lg bg-brand px-5 text-sm font-semibold text-white transition-colors hover:bg-brand-600">Sign up</Link></div>
-          <div className="ml-auto flex items-center gap-1 md:hidden">
-            <Link href="/login" className="inline-flex h-10 items-center justify-center px-3 text-sm font-bold text-brand">Log in</Link>
-            <button type="button" onClick={() => setIsOpen((open) => !open)} className="inline-flex h-11 w-11 items-center justify-center rounded-lg text-ink transition-colors hover:bg-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand" aria-controls="mobile-menu" aria-expanded={isOpen} aria-label={isOpen ? "Close navigation" : "Open navigation"}>{isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}</button>
+          <div className="col-start-3 flex items-center justify-self-end md:hidden">
+            <button type="button" onClick={() => setIsOpen((open) => !open)} className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-line bg-white text-ink shadow-sm transition-colors hover:bg-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand" aria-controls="mobile-menu" aria-expanded={isOpen} aria-label={isOpen ? "Close navigation" : "Open navigation"}>{isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}</button>
           </div>
         </div>
       </div>

@@ -26,6 +26,9 @@ export default async function Stats() {
             </div>
           ))}
         </dl>
+        <p className="mt-10 border-t border-white/20 pt-5 text-center text-sm font-semibold text-white md:hidden">
+          Join <span className="font-black">{community.displayedCommunitySize.toLocaleString()}+</span> students preparing with Prime UAT
+        </p>
       </div>
     </section>
   );

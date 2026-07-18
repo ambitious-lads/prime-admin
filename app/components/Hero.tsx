@@ -14,8 +14,9 @@ export default async function Hero() {
         <div className="grid w-full grid-cols-1 items-center gap-7 sm:gap-10 lg:grid-cols-12 lg:gap-20">
           <div className="flex min-w-0 flex-col justify-center space-y-6 text-center animate-fade-in-up sm:space-y-8 sm:text-left lg:col-span-6">
             <div className="space-y-4 sm:space-y-5">
-              <h1 className="mx-auto max-w-[12ch] text-center text-4xl font-black leading-[1.08] tracking-normal text-ink font-accent sm:mx-0 sm:max-w-none sm:text-left sm:text-5xl lg:text-7xl">
-                Practice Smarter to Ace UAT
+              <h1 className="mx-auto text-center text-5xl font-black leading-[1.04] tracking-normal text-ink font-accent sm:mx-0 sm:max-w-none sm:text-left sm:text-5xl lg:text-7xl">
+                <span className="block">Practice Smarter</span>
+                <span className="block">to Ace UAT</span>
               </h1>
               <p className="mx-auto max-w-sm text-sm font-medium leading-6 text-muted sm:hidden">
                 Prepare for the Addis Ababa University UAT with focused practice, mock exams, and guided learning.
@@ -37,7 +38,7 @@ export default async function Hero() {
               />
             </div>
 
-            <div className="flex flex-col items-center gap-3 border-t border-line/40 pt-5 sm:flex-row sm:items-center sm:gap-4 sm:pt-6">
+            <div className="hidden flex-col items-center gap-3 border-t border-line/40 pt-5 md:flex md:flex-row md:items-center md:gap-4 md:pt-6">
               <div className="flex -space-x-3">
                 {community.recentMembers.map((member) => (
                   <div key={member.id} className="relative h-10 w-10 overflow-hidden rounded-full border-2 border-white shadow-md transition-all duration-200 hover:z-10 hover:scale-110">
@@ -51,7 +52,7 @@ export default async function Hero() {
             </div>
           </div>
 
-          <div className="relative flex min-w-0 justify-center animate-fade-in-up lg:col-span-6 lg:justify-end" style={{ animationDelay: "150ms" }}>
+          <div className="relative hidden min-w-0 justify-center animate-fade-in-up lg:col-span-6 lg:flex lg:justify-end" style={{ animationDelay: "150ms" }}>
             <svg viewBox="0 0 500 200" preserveAspectRatio="none" aria-hidden="true" className="pointer-events-none absolute -bottom-28 left-0 z-10 hidden h-[75%] w-[160%] select-none fill-brand lg:block"><path d="M0,198 C60,160 120,170 180,150 C250,128 290,150 350,100 C400,60 450,72 500,14 L500,200 L0,200 Z" /></svg>
             <div className="pointer-events-none relative h-[300px] w-full max-w-[430px] translate-y-10 select-none overflow-hidden sm:h-[500px] sm:max-w-[560px] sm:translate-y-0 sm:overflow-visible lg:h-auto lg:max-w-none lg:translate-x-12 lg:scale-125 lg:origin-right lg:aspect-square">
               <Image src="/images/hero.png" alt="Student preparing for the Addis Ababa University UAT" fill priority sizes="(max-width: 1024px) 100vw, 1000px" className="pointer-events-none translate-y-12 scale-110 select-none object-contain object-bottom mix-blend-multiply sm:translate-y-0 sm:scale-100" />
