@@ -6,6 +6,7 @@ import type { Question, SubmitAnswerResult } from "@/lib/api/types";
 import { OptionButton, type OptionState } from "@/components/student/option-button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import { RichDocumentView } from "@/components/student/rich-document-view";
 
 export function QuestionCard({
   question,
@@ -53,9 +54,15 @@ export function QuestionCard({
           <Progress value={progress} />
         </div>
 
-        <h2 className="text-lg font-semibold font-display text-ink">
-          {question.questionText}
-        </h2>
+        {question.visual?.type !== "rich_document" ? (
+          <h2 className="text-lg font-semibold font-display text-ink">
+            {question.questionText}
+          </h2>
+        ) : null}
+
+        {question.visual?.type === "rich_document" ? (
+          <RichDocumentView document={question.visual.prompt} />
+        ) : null}
 
         <div className="space-y-3">
           {(question.options ?? []).map((opt) => (

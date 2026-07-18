@@ -3,13 +3,16 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { AlertTriangle, ChevronLeft, ChevronRight, ShieldCheck } from "lucide-react";
-import { toast } from "sonner";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { FullPageSpinner } from "@/components/shared/loading";
 import { EmptyState } from "@/components/shared/empty-state";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ExamTimer } from "@/components/exams/exam-timer";
+import {
+  ExamIntegrityGuard,
+  type IntegrityReason,
+} from "@/components/exams/exam-integrity-guard";
 import { FlagButton } from "@/components/exams/flag-button";
 import { QuestionPalette } from "@/components/exams/question-palette";
 import { QuestionView } from "@/components/exams/question-view";
@@ -55,6 +58,7 @@ export default function ExamAttemptPage() {
   const [secondsLeft, setSecondsLeft] = useState<number | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [integrityStrike, setIntegrityStrike] = useState(0);
+  const [securityAccepted, setSecurityAccepted] = useState(false);
 
   const elapsedRef = useRef(0);
   const submittedRef = useRef(false);
@@ -126,27 +130,12 @@ export default function ExamAttemptPage() {
   }, [attemptId, buildSyncBody, router]);
 
   const registerIntegrityViolation = useCallback(
-    (reason: "copy" | "tab") => {
+    (_reason: IntegrityReason) => {
       if (submittedRef.current) return;
       const next = Math.min(3, integrityStrikeRef.current + 1);
       integrityStrikeRef.current = next;
       setIntegrityStrike(next);
-
-      if (next >= 3) {
-        toast.error("Exam submitted", {
-          description: "Three integrity violations were detected.",
-        });
-        void submit();
-        return;
-      }
-
-      const remaining = 3 - next;
-      toast.warning("Integrity warning", {
-        description:
-          reason === "copy"
-            ? `Copying exam content is blocked. ${remaining} warning${remaining === 1 ? "" : "s"} remaining.`
-            : `Leaving the exam tab is not allowed. ${remaining} warning${remaining === 1 ? "" : "s"} remaining.`,
-      });
+      if (next >= 3) void submit();
     },
     [submit],
   );
@@ -154,7 +143,7 @@ export default function ExamAttemptPage() {
   const ready = questions.length > 0 && secondsLeft !== null;
 
   useEffect(() => {
-    if (!ready) return;
+    if (!ready || !securityAccepted) return;
     lastTickRef.current = Date.now();
     const interval = setInterval(() => {
       const now = Date.now();
@@ -186,18 +175,18 @@ export default function ExamAttemptPage() {
       });
     }, 1000);
     return () => clearInterval(interval);
-  }, [ready, current, questions, submit]);
+  }, [ready, securityAccepted, current, questions, submit]);
 
   useEffect(() => {
-    if (!ready) return;
+    if (!ready || !securityAccepted) return;
     const interval = setInterval(() => {
       examsApi.sync(attemptId, buildSyncBody()).catch(() => {});
     }, 15_000);
     return () => clearInterval(interval);
-  }, [ready, attemptId, buildSyncBody]);
+  }, [ready, securityAccepted, attemptId, buildSyncBody]);
 
   useEffect(() => {
-    if (!ready) return;
+    if (!ready || !securityAccepted) return;
     let hiddenViolationRecorded = false;
 
     const onVisibilityChange = () => {
@@ -247,13 +236,13 @@ export default function ExamAttemptPage() {
   }, [ready, registerIntegrityViolation]);
 
   useEffect(() => {
-    if (!ready) return;
+    if (!ready || !securityAccepted) return;
     const handler = () => {
       examsApi.sync(attemptId, buildSyncBody()).catch(() => {});
     };
     window.addEventListener("beforeunload", handler);
     return () => window.removeEventListener("beforeunload", handler);
-  }, [ready, attemptId, buildSyncBody]);
+  }, [ready, securityAccepted, attemptId, buildSyncBody]);
 
   const goTo = useCallback(
     (index: number) => {
@@ -319,18 +308,13 @@ export default function ExamAttemptPage() {
 
   return (
     <div className="exam-guard space-y-6">
-      <div className="flex items-center justify-between border-b border-line pb-3">
-        <div className="flex items-center gap-2 text-xs font-semibold text-muted">
-          <ShieldCheck className="h-4 w-4 text-brand" />
-          Secure exam mode
-        </div>
-        <div className="flex items-center gap-2 text-xs font-semibold">
-          <AlertTriangle className="h-4 w-4 text-amber-500" />
-          <span className={integrityStrike ? "text-amber-700" : "text-muted"}>
-            Warnings {integrityStrike}/3
-          </span>
-        </div>
-      </div>
+      <ExamIntegrityGuard
+        ready={ready}
+        submitting={submitting}
+        strikeCount={integrityStrike}
+        onViolation={registerIntegrityViolation}
+        onAccepted={() => setSecurityAccepted(true)}
+      />
       <div className="flex flex-col gap-3 lg:hidden">
         <ExamTimer seconds={secondsLeft ?? 0} />
       </div>

@@ -154,17 +154,38 @@ export type PracticeSet = {
   completionPercentage?: number;
 };
 
-export type QuestionOption = {
-  label: string;
-  text: string;
+export type RichImage = {
+  uri: string;
+  alt?: string;
+  width?: number;
+  height?: number;
+  role?: "equation" | "diagram_2d" | "solid_3d" | "option" | "illustration";
 };
 
+export type RichInline =
+  | { type: "text"; text: string; bold?: boolean; italic?: boolean; superscript?: boolean; subscript?: boolean }
+  | ({ type: "image" } & RichImage);
+
+export type RichContentBlock =
+  | { type: "paragraph"; children: RichInline[] }
+  | ({ type: "figure"; caption?: string } & RichImage)
+  | { type: "table"; caption?: string; headerRows?: number; rows: { cells: { blocks: RichContentBlock[]; colSpan?: number; rowSpan?: number }[] }[] };
+
+export type RichDocument = { version: 1; blocks: RichContentBlock[] };
+
+export type QuestionVisual =
+  | { type: "coordinate_graph"; title?: string; xMin: number; xMax: number; yMin: number; yMax: number; lines?: unknown[]; points?: unknown[] }
+  | ({ type: "image" } & RichImage)
+  | { type: "rich_document"; prompt: RichDocument; explanation?: RichDocument };
+
+export type QuestionOption = { label: string; text: string; content?: RichDocument };
 export type Question = {
   id: string;
   practiceSetId?: string;
   text?: string;
   questionText: string;
   options: QuestionOption[];
+  visual?: QuestionVisual | null;
   correctOption?: string;
   explanation?: string | null;
   orderIndex?: number | null;

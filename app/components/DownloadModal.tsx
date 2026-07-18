@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
 import Link from "next/link";
@@ -37,7 +37,7 @@ export default function DownloadModal({
   label = "Download the app",
 }: {
   className?: string;
-  label?: string;
+  label?: ReactNode;
 }) {
   const [open, setOpen] = useState(false);
   const [qrSrc, setQrSrc] = useState("");

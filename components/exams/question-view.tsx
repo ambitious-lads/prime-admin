@@ -3,6 +3,7 @@
 import { Check } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import type { Question } from "@/lib/api/types";
+import { RichDocumentView } from "@/components/student/rich-document-view";
 
 export function QuestionView({
   question,
@@ -24,9 +25,15 @@ export function QuestionView({
         <p className="text-xs font-semibold uppercase tracking-wide text-muted">
           Question {index + 1} of {total}
         </p>
-        <p className="text-lg font-medium leading-relaxed text-ink">
-          {question.questionText}
-        </p>
+        {question.visual?.type !== "rich_document" ? (
+          <p className="text-lg font-medium leading-relaxed text-ink">
+            {question.questionText}
+          </p>
+        ) : null}
+
+        {question.visual?.type === "rich_document" ? (
+          <RichDocumentView document={question.visual.prompt} />
+        ) : null}
       </div>
       <div className="space-y-3">
         {options.map((option) => {
