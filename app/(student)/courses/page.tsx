@@ -1,126 +1,117 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { GraduationCap, Layers } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import {
+  BookOpen,
+  ChevronRight,
+  FileText,
+  GraduationCap,
+  Layers3,
+  LockKeyhole,
+  PlayCircle,
+} from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { EmptyState } from "@/components/shared/empty-state";
-import { LockBadge } from "@/components/shared/lock-badge";
 import { CardGridSkeleton } from "@/components/shared/loading";
+import { openSubscriptionPrompt } from "@/components/student/subscription-prompt-modal";
 import { coursesApi } from "@/lib/api/endpoints";
 import { qk } from "@/lib/query/keys";
-import { usePlan } from "@/hooks/use-plan";
-import { COURSE_UNLOCK_PLAN } from "@/lib/utils/plans";
-import { formatNumber, formatPercent } from "@/lib/utils/format";
+import { cn } from "@/lib/utils/cn";
 import type { Course } from "@/lib/api/types";
 
-export default function CoursesPage() {
-  const router = useRouter();
-  const { can } = usePlan();
-  const hasCourseAccess = can(COURSE_UNLOCK_PLAN);
+const FILTERS = ["All", "Verbal", "Quantitative", "Analytical"] as const;
 
+function hexToRgba(hex: string, alpha: number) {
+  const clean = hex.replace("#", "");
+  if (!/^[0-9a-f]{6}$/i.test(clean)) return `rgba(45, 91, 255, ${alpha})`;
+  const value = Number.parseInt(clean, 16);
+  return `rgba(${(value >> 16) & 255}, ${(value >> 8) & 255}, ${value & 255}, ${alpha})`;
+}
+
+export default function CoursesPage() {
+  const [activeCategory, setActiveCategory] = useState<(typeof FILTERS)[number]>("All");
   const courses = useQuery({ queryKey: qk.courses, queryFn: coursesApi.list });
+  const filtered = useMemo(() => (courses.data ?? []).filter((course) => {
+    if (activeCategory === "All") return true;
+    const category = String(course.category ?? "").toLowerCase();
+    const label = String(course.categoryLabel ?? "").toLowerCase();
+    return category === activeCategory.toLowerCase() || label === activeCategory.toLowerCase();
+  }), [activeCategory, courses.data]);
 
   return (
     <div className="space-y-6">
+      <div className="flex gap-2 overflow-x-auto border-b border-line pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        {FILTERS.map((filter) => (
+          <button key={filter} type="button" onClick={() => setActiveCategory(filter)} className={cn("h-9 shrink-0 cursor-pointer rounded-xl px-4 text-sm font-bold transition-colors", activeCategory === filter ? "bg-ink text-white" : "bg-surface text-ink hover:bg-brand-50")}>{filter}</button>
+        ))}
+      </div>
 
       {courses.isLoading ? (
-        <CardGridSkeleton count={6} />
+        <CardGridSkeleton count={4} />
       ) : courses.isError ? (
-        <EmptyState
-          icon={<GraduationCap />}
-          title="Couldn't load courses"
-          message="Please refresh and try again."
-        />
-      ) : (courses.data ?? []).length === 0 ? (
-        <EmptyState
-          icon={<GraduationCap />}
-          title="No courses yet"
-          message="Premium courses will appear here once published."
-        />
+        <EmptyState icon={<GraduationCap />} title="Couldn't load courses" message="Please refresh and try again." />
+      ) : filtered.length === 0 ? (
+        <EmptyState icon={<BookOpen />} title="No courses found" message="There are no courses in this category yet." />
       ) : (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {(courses.data ?? []).map((course) => (
-            <CourseCard
-              key={course.id ?? course.courseId}
-              course={course}
-              locked={course.isLocked || !hasCourseAccess}
-              onLockedClick={() => router.push("/plans")}
-            />
-          ))}
+        <div className="grid gap-4 xl:grid-cols-2">
+          {filtered.map((course) => <CourseCard key={course.id ?? course.courseId} course={course} />)}
         </div>
       )}
     </div>
   );
 }
 
-function CourseCard({
-  course,
-  locked,
-  onLockedClick,
-}: {
-  course: Course;
-  locked: boolean;
-  onLockedClick: () => void;
-}) {
-  const progress = Math.min(100, Math.max(0, course.progressPercentage ?? 0));
+function CourseCard({ course }: { course: Course }) {
   const courseId = course.id ?? course.courseId;
-  const materialCount = course.materialCount ?? course.materialsCount ?? 0;
-
-  const inner = (
-    <Card className="group h-full overflow-hidden border-line transition-all duration-200 hover:-translate-y-0.5 hover:border-black/20 hover:shadow-lg hover:shadow-black/5">
-      <div className="relative aspect-[16/9] w-full bg-brand-50">
-        {course.coverUrl ? (
-          <Image
-            src={course.coverUrl}
-            alt={course.title}
-            fill
-            unoptimized
-            className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
-          />
-) : (
-          <div className="flex h-full items-center justify-center text-brand">
-            <GraduationCap className="h-10 w-10" />
+  const color = course.color || "#2D5BFF";
+  const progress = Math.min(100, Math.max(0, course.progressPercentage ?? 0));
+  const total = course.materialsCount ?? course.materialCount ?? 0;
+  const videos = course.videoCount ?? 0;
+  const notes = course.notesCount ?? course.pdfCount ?? 0;
+  const locked = Boolean(course.isLocked);
+  const card = (
+    <article className="h-full rounded-2xl border bg-white p-4 shadow-[0_5px_18px_rgba(15,23,42,0.05)] transition-all hover:-translate-y-0.5 hover:shadow-md sm:p-5" style={{ borderColor: hexToRgba(color, 0.18) }}>
+      <div className="flex items-start gap-3.5">
+        <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl border" style={{ color, borderColor: hexToRgba(color, 0.16), backgroundColor: hexToRgba(color, 0.09) }}>
+          {locked ? <LockKeyhole className="h-6 w-6" /> : <GraduationCap className="h-6 w-6" />}
+        </span>
+        <div className="min-w-0 flex-1">
+          <div className="flex items-start gap-2">
+            <h2 className="min-w-0 flex-1 text-base font-black leading-6 text-ink sm:text-lg">{course.title}</h2>
+            {course.isPremium ? <span className="inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-1 text-[10px] font-black" style={{ color, backgroundColor: hexToRgba(color, 0.1) }}>Pro Plus</span> : null}
           </div>
-        )}
-        {locked && (
-          <div className="absolute right-3 top-3">
-            <LockBadge plan={COURSE_UNLOCK_PLAN} />
-          </div>
-        )}
+          {course.description ? <p className="mt-1.5 line-clamp-2 text-sm leading-5 text-muted">{course.description}</p> : null}
+        </div>
       </div>
-      <CardContent className="space-y-3 p-5">
-        <h3 className="line-clamp-1 font-display text-base font-bold text-ink">
-          {course.title}
-        </h3>
-        {course.description && (
-          <p className="line-clamp-2 text-sm text-muted">{course.description}</p>
-        )}
-        <div className="flex items-center gap-1.5 text-xs text-muted">
-          <Layers className="h-3.5 w-3.5" />
-          {formatNumber(materialCount)} materials
-        </div>
-        <div className="space-y-1">
-          <div className="flex items-center justify-between text-xs">
-            <span className="text-muted">Progress</span>
-            <span className="font-medium text-ink">{formatPercent(progress)}</span>
-          </div>
-          <Progress value={progress} />
-        </div>
-      </CardContent>
-    </Card>
+
+      <div className="mt-4 flex flex-wrap gap-2">
+        <Meta icon={<Layers3 />} text={`${total} lessons`} color={color} />
+        <Meta icon={<PlayCircle />} text={`${videos} videos`} color={color} />
+        <Meta icon={<FileText />} text={`${notes} notes`} color={color} />
+      </div>
+
+      <div className="mt-4">
+        <div className="mb-2 flex items-center justify-between text-xs font-bold"><span className="text-muted">Course progress</span><span style={{ color }}>{progress}%</span></div>
+        <Progress value={progress} className="h-1.5 [&>div]:bg-[var(--course-color)]" style={{ "--course-color": color } as React.CSSProperties} />
+      </div>
+
+      <div className="mt-4 flex items-center justify-between gap-3">
+        <span className="truncate text-xs font-black uppercase text-muted">{course.categoryLabel || course.category || "UAT course"}</span>
+        <span className="inline-flex items-center gap-1 rounded-xl px-3 py-2 text-xs font-black" style={{ color, backgroundColor: hexToRgba(color, 0.09) }}>
+          {locked ? <LockKeyhole className="h-3.5 w-3.5" /> : null}{locked ? "Upgrade" : "Open"}<ChevronRight className="h-3.5 w-3.5" />
+        </span>
+      </div>
+    </article>
   );
 
   if (locked) {
-    return (
-      <button type="button" onClick={onLockedClick} className="text-left">
-        {inner}
-      </button>
-    );
+    return <button type="button" className="h-full cursor-pointer text-left" onClick={() => openSubscriptionPrompt({ requiredPlan: course.minPlan === "pro" ? "pro" : "pro_plus", title: `Unlock ${course.title}`, description: "Upgrade to unlock every lesson in this course, track your reading progress, and use the course AI tutor." })}>{card}</button>;
   }
+  return <Link href={`/courses/${courseId}`} className="h-full">{card}</Link>;
+}
 
-  return <Link href={`/courses/${courseId}`}>{inner}</Link>;
+function Meta({ icon, text, color }: { icon: React.ReactNode; text: string; color: string }) {
+  return <span className="inline-flex items-center gap-1.5 rounded-lg border border-line bg-surface px-2.5 py-1.5 text-xs font-bold text-muted [&_svg]:h-3.5 [&_svg]:w-3.5" style={{ color }}>{icon}<span className="text-muted">{text}</span></span>;
 }

@@ -68,10 +68,7 @@ function normalizeTutorSession(data: TutorSession): TutorSession {
 }
 
 type RawExam = Partial<Exam> & {
-  userProgress?: {
-    attemptsCount?: number;
-    bestScore?: number | null;
-  };
+  userProgress?: Exam["userProgress"];
 };
 
 type RawLeaderboard = Partial<Leaderboard> & {
@@ -116,6 +113,7 @@ function normalizeExam(data: RawExam): Exam {
     isPremium: Boolean(data.isPremium ?? data.isLocked),
     attemptCount: data.attemptCount ?? data.userProgress?.attemptsCount,
     bestScore: data.bestScore ?? data.userProgress?.bestScore ?? null,
+    userProgress: data.userProgress,
   };
 }
 

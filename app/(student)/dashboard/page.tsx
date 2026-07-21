@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { ArrowRight, BookOpen, Brain, ClipboardCheck } from "lucide-react";
-import { OverviewStats } from "@/components/student/overview-stats";
 import { StreakCard } from "@/components/student/streak-card";
 import { ContinueStudying } from "@/components/student/continue-studying";
 import { AchievementsCard } from "@/components/student/achievements-card";
@@ -10,11 +9,10 @@ import { AchievementsCard } from "@/components/student/achievements-card";
 export default function DashboardPage() {
   return (
     <div className="space-y-10">
-      <OverviewStats />
 
       <section>
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-bold text-ink">Choose your next session</h2>
+          <div><p className="text-xs font-bold uppercase tracking-[0.14em] text-brand">Study home</p><h1 className="mt-1 text-2xl font-black text-ink">Choose your next session</h1></div>
           <Link href="/analytics" className="text-sm font-semibold text-brand hover:underline">
             View analytics
           </Link>

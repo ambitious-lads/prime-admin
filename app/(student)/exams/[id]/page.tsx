@@ -38,8 +38,8 @@ import {
 import { formatClock, formatNumber, initialsOf } from "@/lib/utils/format";
 import { examsApi } from "@/lib/api/endpoints";
 import { qk } from "@/lib/query/keys";
-import { usePlan } from "@/hooks/use-plan";
 import { toastApiError } from "@/hooks/use-api-error";
+import { openSubscriptionPrompt } from "@/components/student/subscription-prompt-modal";
 import { EXAM_UNLOCK_PLAN, planLabel } from "@/lib/utils/plans";
 import type { ExamAttempt } from "@/lib/api/types";
 
@@ -67,7 +67,6 @@ export default function ExamDetailPage() {
   const params = useParams<{ id: string }>();
   const id = params.id;
   const router = useRouter();
-  const { can } = usePlan();
   const [offset, setOffset] = useState(0);
 
   const examQuery = useQuery({
@@ -96,7 +95,7 @@ export default function ExamDetailPage() {
   });
 
   const exam = examQuery.data;
-  const locked = Boolean(exam?.isPremium) && !can(EXAM_UNLOCK_PLAN);
+  const locked = Boolean(exam?.isLocked);
 
   const leaderboard = leaderboardQuery.data;
   const entries = leaderboard?.entries ?? [];
@@ -234,8 +233,15 @@ export default function ExamDetailPage() {
                         exam and the full mock library.
                       </p>
                     </div>
-                    <Button asChild className="w-full">
-                      <Link href="/plans">Upgrade to {planLabel(EXAM_UNLOCK_PLAN)}</Link>
+                    <Button
+                      className="w-full"
+                      onClick={() => openSubscriptionPrompt({
+                        requiredPlan: exam.minPlan === "pro_plus" ? "pro_plus" : "pro",
+                        title: `Unlock ${exam.title}`,
+                        description: "Upgrade to start this mock exam and access its leaderboard and full performance report.",
+                      })}
+                    >
+                      Upgrade to {planLabel(EXAM_UNLOCK_PLAN)}
                     </Button>
                   </CardContent>
                 </Card>

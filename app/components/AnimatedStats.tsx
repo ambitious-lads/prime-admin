@@ -9,7 +9,7 @@ type Stat = {
   decimals?: number;
 };
 
-export function AnimatedStats({ stats, communitySize }: { stats: Stat[]; communitySize: number }) {
+export function AnimatedStats({ stats }: { stats: Stat[] }) {
   const [visible, setVisible] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
 
@@ -32,9 +32,6 @@ export function AnimatedStats({ stats, communitySize }: { stats: Stat[]; communi
         <dl className="grid grid-cols-2 lg:grid-cols-4 gap-x-3 gap-y-7 md:gap-x-6 md:gap-y-10 text-center">
           {stats.map((stat) => <AnimatedStat key={stat.label} {...stat} visible={visible} />)}
         </dl>
-        <p className="mt-7 border-t border-white/20 pt-5 text-center text-sm font-semibold text-white md:hidden">
-          Join <span className="font-black"><CountUp value={communitySize} suffix="+" visible={visible} /></span> students preparing with Prime UAT
-        </p>
       </div>
     </section>
   );

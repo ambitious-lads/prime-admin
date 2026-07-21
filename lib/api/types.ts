@@ -276,6 +276,16 @@ export type Exam = {
   isSaved?: boolean;
   attemptCount?: number;
   bestScore?: number | null;
+  isScheduleRestricted?: boolean;
+  totalAttempts?: number;
+  userProgress?: {
+    isSolved?: boolean;
+    attemptsCount?: number;
+    firstTrialScore?: number | null;
+    firstTrialRank?: number | null;
+    bestScore?: number | null;
+    percentile?: number | null;
+  };
 };
 
 export type ExamAdminQuestion = {
@@ -389,6 +399,16 @@ export type Course = {
   isLocked: boolean;
   progressPercentage?: number;
   materials?: CourseMaterial[];
+  category?: string;
+  categoryLabel?: string;
+  color?: string | null;
+  icon?: string | null;
+  isPremium?: boolean;
+  minPlan?: PlanKey;
+  minPlanLabel?: string;
+  videoCount?: number;
+  pdfCount?: number;
+  notesCount?: number;
 };
 
 export type CourseMaterial = {

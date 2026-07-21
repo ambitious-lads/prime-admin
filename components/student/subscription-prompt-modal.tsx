@@ -17,6 +17,22 @@ import {
 
 const PROMPT_SESSION_KEY = "prime.subscription-prompt-shown";
 const IMPORTANT_ROUTES = new Set(["/practice", "/exams", "/courses", "/analytics"]);
+export const SUBSCRIPTION_PROMPT_EVENT = "prime:open-subscription";
+
+export type SubscriptionPromptDetail = {
+  requiredPlan?: "pro" | "pro_plus";
+  title?: string;
+  description?: string;
+};
+
+export function openSubscriptionPrompt(detail?: SubscriptionPromptDetail) {
+  if (typeof window === "undefined") return;
+  window.dispatchEvent(
+    new CustomEvent<SubscriptionPromptDetail>(SUBSCRIPTION_PROMPT_EVENT, {
+      detail,
+    }),
+  );
+}
 
 export function SubscriptionPromptModal() {
   const pathname = usePathname();
@@ -25,7 +41,19 @@ export function SubscriptionPromptModal() {
   const { plan, isLoading, data: planData } = usePlan();
   const paymentPending = planData?.latestPayment?.status === "pending";
   const [open, setOpen] = useState(false);
+  const [detail, setDetail] = useState<SubscriptionPromptDetail>({});
   const query = searchParams.toString();
+
+  useEffect(() => {
+    function handlePrompt(event: Event) {
+      const prompt = event as CustomEvent<SubscriptionPromptDetail>;
+      setDetail(prompt.detail ?? {});
+      setOpen(true);
+    }
+
+    window.addEventListener(SUBSCRIPTION_PROMPT_EVENT, handlePrompt);
+    return () => window.removeEventListener(SUBSCRIPTION_PROMPT_EVENT, handlePrompt);
+  }, []);
 
   useEffect(() => {
     if (isLoading || plan !== "free" || paymentPending) return;
@@ -69,6 +97,7 @@ export function SubscriptionPromptModal() {
   function dismiss() {
     window.sessionStorage.setItem(PROMPT_SESSION_KEY, "1");
     setOpen(false);
+    setDetail({});
     if (searchParams.has("subscription") || searchParams.has("onboarding")) {
       clearPromptQuery();
     }
@@ -88,11 +117,11 @@ export function SubscriptionPromptModal() {
           </span>
           <DialogHeader className="mt-4 pr-7">
             <DialogTitle className="text-2xl text-white sm:text-3xl">
-              Unlock your complete UAT preparation
+              {detail.title ?? "Unlock your complete UAT preparation"}
             </DialogTitle>
             <DialogDescription className="leading-6 text-white/80">
-              Keep your Free access, or unlock every practice set, mock exam,
-              course, AI tool, and performance insight.
+              {detail.description ??
+                "Keep your Free access, or unlock every practice set, mock exam, course, AI tool, and performance insight."}
             </DialogDescription>
           </DialogHeader>
         </div>
@@ -104,13 +133,15 @@ export function SubscriptionPromptModal() {
               price={PLANS.pro.price}
               features={PLANS.pro.features}
               onChoose={() => choosePlan("/plans/checkout?plan=pro")}
+              emphasized={detail.requiredPlan === "pro"}
             />
             <PlanOption
               name={PLANS.pro_plus.label}
               price={PLANS.pro_plus.price}
               features={PLANS.pro_plus.features}
               onChoose={() => choosePlan("/plans/checkout?plan=pro_plus")}
-              featured
+              featured={detail.requiredPlan !== "pro"}
+              emphasized={detail.requiredPlan === "pro_plus"}
             />
           </div>
 
@@ -129,17 +160,19 @@ function PlanOption({
   features,
   onChoose,
   featured = false,
+  emphasized = false,
 }: {
   name: string;
   price: number;
   features: readonly string[];
   onChoose: () => void;
   featured?: boolean;
+  emphasized?: boolean;
 }) {
   return (
     <div
       className={
-        featured
+        featured || emphasized
           ? "rounded-xl border-2 border-brand bg-brand-50 p-4"
           : "rounded-xl border border-line bg-white p-4"
       }

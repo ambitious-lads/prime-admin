@@ -25,6 +25,7 @@ import { EmptyState } from "@/components/shared/empty-state";
 import { CardGridSkeleton } from "@/components/shared/loading";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { openSubscriptionPrompt } from "@/components/student/subscription-prompt-modal";
 import {
   Dialog,
   DialogContent,
@@ -126,7 +127,11 @@ export default function TopicSetsPage() {
                   type="button"
                   onClick={() =>
                     locked
-                      ? window.location.assign("/plans")
+                      ? openSubscriptionPrompt({
+                          requiredPlan: set.minPlan === "pro_plus" ? "pro_plus" : "pro",
+                          title: `Unlock ${set.title}`,
+                          description: `Upgrade to ${set.minPlanLabel ?? "Pro"} to open this practice set and continue your UAT preparation.`,
+                        })
                       : setSelectedSet(set)
                   }
                   className="group block w-full cursor-pointer text-left"

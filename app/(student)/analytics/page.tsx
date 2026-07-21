@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   Activity,
@@ -54,6 +53,7 @@ import { analyticsApi } from "@/lib/api/endpoints";
 import { qk } from "@/lib/query/keys";
 import { usePlan } from "@/hooks/use-plan";
 import { toastApiError } from "@/hooks/use-api-error";
+import { openSubscriptionPrompt } from "@/components/student/subscription-prompt-modal";
 import { ANALYTICS_UNLOCK_PLAN, planLabel } from "@/lib/utils/plans";
 import {
   formatDate,
@@ -102,8 +102,12 @@ function AnalyticsLocked() {
                 Upgrade to {planLabel(ANALYTICS_UNLOCK_PLAN)} to unlock advanced
                 performance analytics and your UAT score calculator.
               </p>
-              <Button asChild>
-                <Link href="/plans">Upgrade to {planLabel(ANALYTICS_UNLOCK_PLAN)}</Link>
+              <Button onClick={() => openSubscriptionPrompt({
+                requiredPlan: "pro_plus",
+                title: "Unlock advanced UAT analytics",
+                description: "Upgrade to see detailed performance trends, topic mastery, mock standing, and the UAT score calculator.",
+              })}>
+                Upgrade to {planLabel(ANALYTICS_UNLOCK_PLAN)}
               </Button>
             </CardContent>
           </Card>

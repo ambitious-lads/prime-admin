@@ -67,7 +67,6 @@ function NavSection({ label, routes, collapsed }: { label: string; routes: strin
                   <Icon className="h-5 w-5" />
                 </span>
                 <span className={cn("flex min-w-0 items-center whitespace-nowrap transition-[max-width,opacity] duration-200", collapsed ? "max-w-0 opacity-0" : "max-w-[160px] opacity-100")}>{item.label}</span>
-                <span className={cn("absolute right-3 top-1/2 h-1.5 w-1.5 -translate-y-1/2 rounded-full bg-white/80 transition-opacity", active && !collapsed ? "opacity-100" : "opacity-0")} />
               </Link>
             </TooltipTrigger>
             {collapsed ? <TooltipContent side="right">{item.label}</TooltipContent> : null}
