@@ -47,7 +47,7 @@ function CompleteProfileForm() {
         details.whereDidYouHearAboutUs?.trim(),
     );
     if (complete) {
-      router.replace("/plans");
+      router.replace("/practice?subscription=1");
       return;
     }
     setSchoolName(details.schoolName ?? "");
@@ -71,7 +71,7 @@ function CompleteProfileForm() {
       const updated = await profileApi.update(form);
       queryClient.setQueryData(qk.profile, updated);
       toast.success("Profile completed.");
-      router.replace("/plans?onboarding=1");
+      router.replace("/practice?onboarding=1");
     } catch (error) {
       toastApiError(error);
     } finally {
@@ -80,24 +80,24 @@ function CompleteProfileForm() {
   }
 
   return (
-    <main className="min-h-screen bg-surface px-5 py-8 sm:px-8">
-      <div className="mx-auto flex min-h-[calc(100vh-4rem)] w-full max-w-xl flex-col">
-        <Brand href="/" />
-        <div className="flex flex-1 items-center py-10">
-          <div className="w-full">
+    <main className="min-h-screen bg-[#F8F9FE] px-4 py-5 sm:px-8 sm:py-8">
+      <div className="mx-auto flex min-h-[calc(100vh-2.5rem)] w-full max-w-xl flex-col sm:min-h-[calc(100vh-4rem)]">
+        <div className="flex justify-center sm:justify-start"><Brand href="/" className="[&_img]:h-10 [&_img]:w-10" /></div>
+        <div className="flex flex-1 items-center py-6 sm:py-10">
+          <div className="mobile-onboarding-panel w-full">
             <header className="text-center">
               <p className="text-xs font-bold uppercase tracking-[0.16em] text-brand">
                 One last step
               </p>
-              <h1 className="mt-3 font-display text-3xl font-black text-ink sm:text-4xl">
+              <h1 className="mt-2 font-display text-2xl font-black text-ink sm:mt-3 sm:text-4xl">
                 Complete Profile
               </h1>
-              <p className="mx-auto mt-3 max-w-md text-sm leading-7 text-muted sm:text-base">
+              <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-muted sm:mt-3 sm:text-base sm:leading-7">
                 Tell us a bit more about yourself to personalize your experience.
               </p>
             </header>
 
-            <div className="mt-10 space-y-6">
+            <div className="mt-6 space-y-5 rounded-2xl border border-[#E5E7EB] bg-white p-5 shadow-[0_12px_36px_rgba(15,23,42,0.07)] sm:mt-10 sm:space-y-6 sm:rounded-none sm:border-0 sm:bg-transparent sm:p-0 sm:shadow-none">
               <Field id="schoolName" label="School Name" icon={GraduationCap} value={schoolName} onChange={setSchoolName} placeholder="Enter your school name" />
               <Field id="region" label="Town / Region" icon={MapPin} value={region} onChange={setRegion} placeholder="Enter your town or region" />
 
@@ -151,7 +151,7 @@ function ChoiceButton({ active, onClick, children }: { active: boolean; onClick:
       type="button"
       onClick={onClick}
       className={cn(
-        "min-h-12 rounded-lg border px-3 text-sm font-medium capitalize transition-colors",
+        "min-h-12 rounded-xl border px-3 text-sm font-medium capitalize transition-colors sm:rounded-lg",
         active
           ? "border-brand bg-brand-50 font-bold text-brand"
           : "border-line bg-white text-muted hover:border-brand/40",

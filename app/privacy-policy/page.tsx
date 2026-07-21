@@ -143,8 +143,8 @@ export default function PrivacyPolicyPage() {
             This Privacy Policy explains how Prime UAT collects, uses, shares,
             stores, and protects information when you use the Prime UAT mobile
             application, web application, API, and related services. Prime UAT is an
-            educational service for students preparing for Ethiopian university
-            entrance and aptitude exams.
+            educational service for students preparing for Addis Ababa University
+            UAT.
           </p>
           <p className="text-base leading-8 text-muted sm:text-lg">
             By creating an account or using Prime UAT, you acknowledge the

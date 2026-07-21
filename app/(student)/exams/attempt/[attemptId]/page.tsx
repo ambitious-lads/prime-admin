@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
 import { FullPageSpinner } from "@/components/shared/loading";
 import { EmptyState } from "@/components/shared/empty-state";
 import { Button } from "@/components/ui/button";
@@ -17,9 +17,11 @@ import { FlagButton } from "@/components/exams/flag-button";
 import { QuestionPalette } from "@/components/exams/question-palette";
 import { QuestionView } from "@/components/exams/question-view";
 import { SubmitDialog } from "@/components/exams/submit-dialog";
+import { LeaveSessionDialog } from "@/components/shared/leave-session-dialog";
 import { examsApi } from "@/lib/api/endpoints";
 import { qk } from "@/lib/query/keys";
 import { toastApiError } from "@/hooks/use-api-error";
+import { useSessionLeaveGuard } from "@/hooks/use-session-leave-guard";
 import type { ExamAnswer, Question } from "@/lib/api/types";
 
 type AnswerMap = Record<string, ExamAnswer>;
@@ -131,6 +133,7 @@ export default function ExamAttemptPage() {
 
   const registerIntegrityViolation = useCallback(
     (_reason: IntegrityReason) => {
+      void _reason;
       if (submittedRef.current) return;
       const next = Math.min(3, integrityStrikeRef.current + 1);
       integrityStrikeRef.current = next;
@@ -141,6 +144,15 @@ export default function ExamAttemptPage() {
   );
 
   const ready = questions.length > 0 && secondsLeft !== null;
+  const syncBeforeLeave = useCallback(async () => {
+    await examsApi.sync(attemptId, buildSyncBody()).catch(() => undefined);
+  }, [attemptId, buildSyncBody]);
+  const leaveGuard = useSessionLeaveGuard({
+    enabled:
+      ready && securityAccepted && !submitting,
+    fallbackHref: "/exams",
+    onBeforeLeave: syncBeforeLeave,
+  });
 
   useEffect(() => {
     if (!ready || !securityAccepted) return;
@@ -233,16 +245,8 @@ export default function ExamAttemptPage() {
       document.removeEventListener("contextmenu", onContextMenu);
       document.removeEventListener("keydown", onKeyDown);
     };
-  }, [ready, registerIntegrityViolation]);
+  }, [ready, securityAccepted, registerIntegrityViolation]);
 
-  useEffect(() => {
-    if (!ready || !securityAccepted) return;
-    const handler = () => {
-      examsApi.sync(attemptId, buildSyncBody()).catch(() => {});
-    };
-    window.addEventListener("beforeunload", handler);
-    return () => window.removeEventListener("beforeunload", handler);
-  }, [ready, securityAccepted, attemptId, buildSyncBody]);
 
   const goTo = useCallback(
     (index: number) => {
@@ -316,7 +320,17 @@ export default function ExamAttemptPage() {
         onAccepted={() => setSecurityAccepted(true)}
       />
       <div className="flex flex-col gap-3 lg:hidden">
-        <ExamTimer seconds={secondsLeft ?? 0} />
+        <div className="flex items-center justify-between gap-3">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => leaveGuard.requestLeave("/exams")}
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Exit
+          </Button>
+          <ExamTimer seconds={secondsLeft ?? 0} />
+        </div>
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
@@ -366,6 +380,14 @@ export default function ExamAttemptPage() {
         </div>
 
         <div className="space-y-4 lg:col-span-1">
+          <Button
+            className="hidden w-full lg:flex"
+            variant="ghost"
+            onClick={() => leaveGuard.requestLeave("/exams")}
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Exit exam
+          </Button>
           <div className="hidden lg:block">
             <ExamTimer seconds={secondsLeft ?? 0} />
           </div>
@@ -391,6 +413,17 @@ export default function ExamAttemptPage() {
           </Card>
         </div>
       </div>
+      <LeaveSessionDialog
+        open={leaveGuard.open}
+        title="Leave this exam?"
+        description={`You still have ${unanswered} unanswered ${
+          unanswered === 1 ? "question" : "questions"
+        }. Your current answers will be saved before you leave.`}
+        leaving={leaveGuard.leaving}
+        onCancel={leaveGuard.cancelLeave}
+        onConfirm={leaveGuard.confirmLeave}
+      />
+
     </div>
   );
 }

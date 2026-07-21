@@ -171,7 +171,7 @@ export default function ExamsPage() {
     <div className="space-y-6">
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <Tabs value={tab} onValueChange={setTab}>
+        <div className="max-w-full overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"><Tabs value={tab} onValueChange={setTab}>
           <TabsList className="flex-wrap">
             {TABS.map((item) => (
               <TabsTrigger key={item.value} value={item.value}>
@@ -179,7 +179,7 @@ export default function ExamsPage() {
               </TabsTrigger>
             ))}
           </TabsList>
-        </Tabs>
+        </Tabs></div>
 
         <Select value={difficulty} onValueChange={setDifficulty}>
           <SelectTrigger className="w-full sm:w-44">

@@ -20,7 +20,7 @@ export function QuestionView({
 }) {
   const options = question.options ?? [];
   return (
-    <div className="space-y-6">
+    <div className="protected-content space-y-6" onCopy={(event) => event.preventDefault()} onCut={(event) => event.preventDefault()} onContextMenu={(event) => event.preventDefault()} onDragStart={(event) => event.preventDefault()}>
       <div className="space-y-2">
         <p className="text-xs font-semibold uppercase tracking-wide text-muted">
           Question {index + 1} of {total}

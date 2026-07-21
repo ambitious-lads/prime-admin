@@ -1,10 +1,24 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { ChevronLeft, ChevronRight, Flame, LogOut, Menu, Send, Settings, Smartphone, User, X } from "lucide-react";
+import {
+  BarChart3,
+  Bell,
+  BookOpen,
+  PanelLeft,
+  Timer,
+  Flame,
+  LogOut,
+  Send,
+  Settings,
+  Smartphone,
+  User,
+  BookOpenCheck,
+} from "lucide-react";
 import { studentNav } from "@/config/nav";
 import { profileApi, streaksApi } from "@/lib/api/endpoints";
 import { qk } from "@/lib/query/keys";
@@ -12,29 +26,55 @@ import { useAuth } from "@/hooks/use-auth";
 import { usePlan } from "@/hooks/use-plan";
 import { cn } from "@/lib/utils/cn";
 import { initialsOf } from "@/lib/utils/format";
-import { Brand } from "@/components/shared/brand";
 import { PlanBadge } from "@/components/shared/plan-badge";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { SubscriptionPromptModal } from "@/components/student/subscription-prompt-modal";
 
 const studyRoutes = ["/practice", "/exams", "/courses", "/analytics"];
 const workspaceRoutes = ["/dashboard", "/saved", "/notes", "/notifications", "/plans"];
+const mobileTabs = [
+  { href: "/practice", label: "Practice", icon: BookOpenCheck },
+  { href: "/exams", label: "Mock Tests", icon: Timer },
+  { href: "/courses", label: "Courses", icon: BookOpen },
+  { href: "/analytics", label: "Analytics", icon: BarChart3 },
+];
 
-function NavSection({ label, routes, collapsed, onNavigate }: { label: string; routes: string[]; collapsed: boolean; onNavigate?: () => void }) {
+function NavSection({ label, routes, collapsed }: { label: string; routes: string[]; collapsed: boolean }) {
   const pathname = usePathname();
   const items = studentNav.filter((item) => routes.includes(item.href));
+
   return <div>
-    {!collapsed ? <p className="mb-2 px-3 text-[11px] font-bold uppercase tracking-[0.14em] text-muted/70">{label}</p> : null}
-    <div className="space-y-1">{items.map((item) => {
-      const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
-      const Icon = item.icon;
-      return <Link key={item.href} href={item.href} onClick={onNavigate} title={collapsed ? item.label : undefined} className={cn("relative flex min-h-11 items-center gap-3 rounded-lg px-3 text-sm font-semibold transition-colors", collapsed && "justify-center px-0", active ? "bg-ink text-white" : "text-muted hover:bg-surface hover:text-ink")}>
-        <Icon className="h-[18px] w-[18px] shrink-0" />
-        {!collapsed ? <span className="whitespace-nowrap">{item.label}</span> : null}
-        {active && !collapsed ? <span className="ml-auto h-1.5 w-1.5 rounded-full bg-brand" /> : null}
-      </Link>;
-    })}</div>
+    {label !== "Study" ? <p className={cn("mb-2 h-4 px-0 text-[11px] font-bold uppercase leading-4 tracking-[0.14em] text-muted/70 transition-opacity duration-200", collapsed && "pointer-events-none opacity-0")} aria-hidden={collapsed}>{label}</p> : null}
+    <div className="space-y-1">
+      {items.map((item) => {
+        const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
+        const Icon = item.icon;
+        return (
+          <Tooltip key={item.href}>
+            <TooltipTrigger asChild>
+              <Link
+                href={item.href}
+                aria-current={active ? "page" : undefined}
+                className={cn(
+                  "relative flex h-11 min-w-0 overflow-hidden rounded-lg text-sm font-semibold transition-colors",
+                  active ? "bg-brand text-white shadow-sm" : "text-muted hover:bg-surface hover:text-ink",
+                )}
+              >
+                <span className="flex h-11 w-[60px] shrink-0 items-center justify-center">
+                  <Icon className="h-5 w-5" />
+                </span>
+                <span className={cn("flex min-w-0 items-center whitespace-nowrap transition-[max-width,opacity] duration-200", collapsed ? "max-w-0 opacity-0" : "max-w-[160px] opacity-100")}>{item.label}</span>
+                <span className={cn("absolute right-3 top-1/2 h-1.5 w-1.5 -translate-y-1/2 rounded-full bg-white/80 transition-opacity", active && !collapsed ? "opacity-100" : "opacity-0")} />
+              </Link>
+            </TooltipTrigger>
+            {collapsed ? <TooltipContent side="right">{item.label}</TooltipContent> : null}
+          </Tooltip>
+        );
+      })}
+    </div>
   </div>;
 }
 
@@ -63,60 +103,88 @@ export function StudentShell({ children }: { children: React.ReactNode }) {
   const { plan } = usePlan();
   const streak = useQuery({ queryKey: qk.streak, queryFn: streaksApi.me });
   const profile = useQuery({ queryKey: qk.profile, queryFn: profileApi.me });
-  const [mobileOpen, setMobileOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
   const [hydrated, setHydrated] = useState(false);
+  const [showSplash, setShowSplash] = useState(true);
 
   useEffect(() => { setCollapsed(window.localStorage.getItem("prime-web-sidebar") === "collapsed"); setHydrated(true); }, []);
-  useEffect(() => setMobileOpen(false), [pathname]);
+  useEffect(() => {
+    if (!window.matchMedia("(max-width: 1023px)").matches || window.sessionStorage.getItem("prime.mobile-splash-seen")) {
+      setShowSplash(false);
+      return;
+    }
+    const timer = window.setTimeout(() => {
+      window.sessionStorage.setItem("prime.mobile-splash-seen", "1");
+      setShowSplash(false);
+    }, 800);
+    return () => window.clearTimeout(timer);
+  }, []);
 
   const currentLabel = useMemo(() => studentNav.find((item) => pathname === item.href || pathname.startsWith(`${item.href}/`))?.label ?? "Prime UAT", [pathname]);
+  const isPracticePage = pathname === "/practice" || pathname.startsWith("/practice/");
+  const isPracticeDetailPage =
+    pathname.startsWith("/practice/topic/") || pathname.startsWith("/practice/set/");
   const name = profile.data?.fullName ?? user?.fullName ?? "Student";
   const avatarUrl = profile.data?.profile?.avatarUrl ?? user?.avatarUrl ?? null;
 
   function toggleSidebar() { setCollapsed((current) => { const next = !current; window.localStorage.setItem("prime-web-sidebar", next ? "collapsed" : "open"); return next; }); }
 
   const nav = <div className="flex h-full flex-col">
-    <div className={cn("flex h-[72px] items-center border-b border-line px-4", collapsed ? "justify-center" : "justify-start")}>
-      {collapsed ? <Link href="/dashboard" className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand font-black text-white" title="Prime UAT">P</Link> : <Brand href="/dashboard" />}
+    <div className="flex h-[72px] items-center overflow-hidden border-b border-line px-3">
+      <div className={cn("min-w-0 overflow-hidden transition-[max-width,opacity] duration-250 ease-[cubic-bezier(0.4,0,0.2,1)]", collapsed ? "pointer-events-none max-w-0 opacity-0" : "max-w-[180px] opacity-100")} aria-hidden={collapsed}>
+        <Link href="/dashboard" aria-label="Prime UAT dashboard" className="flex h-10 items-center"><Image src="/images/prime.png" alt="Prime UAT" width={150} height={40} className="h-9 w-auto max-w-[145px] object-contain object-left" priority /></Link>
+      </div>
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={toggleSidebar}
+        className={cn("h-10 w-10 shrink-0 cursor-pointer rounded-lg text-muted transition-[margin,transform,background-color,color] duration-250 ease-[cubic-bezier(0.4,0,0.2,1)] hover:bg-brand-50 hover:text-brand", collapsed ? "mx-auto" : "ml-auto")}
+        title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+        aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+        aria-expanded={!collapsed}
+        aria-controls="student-sidebar-menu"
+      >
+        <PanelLeft className="h-[22px] w-[22px]" />
+      </Button>
     </div>
-    <div className={cn("flex-1 space-y-7 overflow-y-auto py-5", collapsed ? "px-2.5" : "px-3")}>
+    <div id="student-sidebar-menu" className="flex-1 space-y-7 overflow-y-auto px-3 py-5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
       <NavSection label="Study" routes={studyRoutes} collapsed={collapsed} />
       <NavSection label="Workspace" routes={workspaceRoutes} collapsed={collapsed} />
     </div>
     <div className={cn("border-t border-line p-3", collapsed && "px-2.5")}>
-      <a href="https://t.me/PrimeUAT" target="_blank" rel="noreferrer" title={collapsed ? "@PrimeUAT" : undefined} className={cn("mb-2 flex min-h-10 items-center gap-3 rounded-lg px-3 text-sm font-semibold text-muted transition-colors hover:bg-surface hover:text-brand", collapsed && "justify-center px-0")}><Send className="h-[18px] w-[18px]" />{!collapsed ? "@PrimeUAT" : null}</a>
+      <a href="https://t.me/prime_uat" target="_blank" rel="noreferrer" title={collapsed ? "@prime_uat" : undefined} className={cn("mb-2 flex min-h-10 items-center gap-3 rounded-lg px-3 text-sm font-semibold text-muted transition-colors hover:bg-surface hover:text-brand", collapsed && "justify-center px-0")}><Send className="h-[18px] w-[18px]" />{!collapsed ? "@prime_uat" : null}</a>
       <div className={cn("flex items-center gap-3 rounded-lg bg-surface p-2.5", collapsed && "justify-center bg-transparent p-0")}><Avatar className="h-9 w-9 shrink-0">{avatarUrl ? <AvatarImage src={avatarUrl} alt={name} /> : null}<AvatarFallback>{initialsOf(name) || "S"}</AvatarFallback></Avatar>{!collapsed ? <div className="min-w-0"><p className="truncate text-sm font-bold text-ink">{name}</p><p className="text-xs text-muted">{plan === "pro_plus" ? "Pro Plus" : plan === "pro" ? "Pro" : "Free"} plan</p></div> : null}</div>
     </div>
   </div>;
 
   return <div className="min-h-screen bg-[#f7f8fb]">
-    <aside className={cn("group/sidebar fixed inset-y-0 left-0 z-30 hidden border-r border-line bg-white lg:block", hydrated && "transition-[width] duration-200 ease-out", collapsed ? "w-[84px]" : "w-[264px]")}>
+    <SubscriptionPromptModal />
+    {showSplash ? <div className="fixed inset-0 z-[70] flex items-center justify-center bg-white lg:hidden" aria-label="Loading Prime UAT"><Image src="/images/prime.png" alt="Prime UAT" width={210} height={48} priority className="h-auto w-[210px] animate-pulse object-contain" /></div> : null}
+    <aside className={cn("group/sidebar fixed inset-y-0 left-0 z-30 hidden border-r border-line bg-white lg:block", hydrated && "transition-[width] duration-250 ease-[cubic-bezier(0.4,0,0.2,1)]", collapsed ? "w-[84px]" : "w-[264px]")}>
       {nav}
-      <Button
-        variant="outline"
-        size="icon"
-        onClick={toggleSidebar}
-        className="absolute -right-4 top-24 z-10 h-8 w-8 rounded-full bg-white opacity-0 shadow-sm transition-[opacity,box-shadow,transform] duration-150 hover:scale-105 hover:shadow-md focus-visible:opacity-100 group-hover/sidebar:opacity-100"
-        title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-        aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-      >
-        {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
-      </Button>
     </aside>
-    {mobileOpen ? <div className="fixed inset-0 z-50 lg:hidden"><button className="absolute inset-0 bg-ink/40" onClick={() => setMobileOpen(false)} aria-label="Close navigation" /><aside className="absolute inset-y-0 left-0 w-[286px] bg-white shadow-2xl"><div className="absolute right-3 top-3 z-10"><Button variant="ghost" size="icon" onClick={() => setMobileOpen(false)}><X className="h-5 w-5" /></Button></div><div className="flex h-full flex-col">
-              <div className="flex h-[72px] items-center border-b border-line px-5"><Brand href="/dashboard" /></div>
-              <div className="flex-1 space-y-7 overflow-y-auto px-3 py-5">
-                <NavSection label="Study" routes={studyRoutes} collapsed={false} onNavigate={() => setMobileOpen(false)} />
-                <NavSection label="Workspace" routes={workspaceRoutes} collapsed={false} onNavigate={() => setMobileOpen(false)} />
-              </div>
-              <div className="border-t border-line p-3">
-                <a href="https://t.me/PrimeUAT" target="_blank" rel="noreferrer" className="flex min-h-11 items-center gap-3 rounded-lg px-3 text-sm font-semibold text-muted hover:bg-surface hover:text-brand"><Send className="h-[18px] w-[18px]" />@PrimeUAT</a>
-              </div>
-            </div></aside></div> : null}
-    <div className={cn(hydrated && "transition-[padding] duration-200", collapsed ? "lg:pl-[84px]" : "lg:pl-[264px]")}>
-      <header className="sticky top-0 z-20 flex h-16 items-center border-b border-line bg-white/95 px-4 backdrop-blur sm:px-6"><Button variant="ghost" size="icon" className="mr-2 lg:hidden" onClick={() => setMobileOpen(true)} aria-label="Open navigation"><Menu className="h-5 w-5" /></Button><p className="text-sm font-bold text-ink">{currentLabel}</p><div className="ml-auto flex items-center gap-2 sm:gap-3"><span className="hidden items-center gap-1.5 rounded-full border border-amber-200 bg-amber-50 px-3 py-1.5 text-xs font-bold text-amber-700 sm:flex"><Flame className="h-3.5 w-3.5" />{streak.data?.currentStreak ?? 0} day streak</span><PlanBadge plan={plan} /><AccountMenu /></div></header>
-      <main className="mx-auto w-full max-w-[1440px] px-4 py-6 sm:px-6 lg:px-8 lg:py-8">{children}</main>
+    <div className={cn(hydrated && "transition-[padding] duration-250 ease-[cubic-bezier(0.4,0,0.2,1)]", collapsed ? "lg:pl-[84px]" : "lg:pl-[264px]")}>
+      <header className="mobile-app-header sticky top-0 z-30 flex h-[60px] items-center justify-between border-b border-[#E5E7EB] bg-white px-4 lg:hidden">
+        <Link href="/dashboard" aria-label="Prime UAT dashboard" className="flex min-w-0 items-center">
+          <Image src="/images/prime.png" alt="Prime UAT" width={150} height={40} priority className="h-9 w-auto max-w-[145px] object-contain object-left" />
+        </Link>
+        <div className="flex items-center gap-1.5">
+          <span className="flex h-8 min-w-11 items-center justify-center gap-1 rounded-full border border-amber-200 bg-amber-50 px-2 text-xs font-extrabold text-amber-700"><Flame className="h-4 w-4 fill-amber-500 text-amber-500" />{streak.data?.currentStreak ?? 0}</span>
+          <Link href="/notifications" className="relative flex h-9 w-9 items-center justify-center rounded-full text-[#374151] transition-colors active:bg-[#EDF2FF]" aria-label="Notifications"><Bell className="h-[21px] w-[21px]" /></Link>
+          <AccountMenu />
+        </div>
+      </header>
+      {!isPracticeDetailPage ? <header className={cn("z-40 hidden h-16 items-center px-4 sm:px-6 lg:flex", isPracticePage ? "relative border-transparent bg-transparent" : "sticky top-0 border-b border-line bg-white/95 backdrop-blur")}>{!isPracticePage ? <p className="text-sm font-bold text-ink">{currentLabel}</p> : null}<div className="ml-auto translate-y-1 flex items-center gap-2 sm:gap-3"><span className="hidden items-center gap-1.5 rounded-full border border-amber-200 bg-amber-50 px-3 py-1.5 text-xs font-bold text-amber-700 sm:flex"><Flame className="h-3.5 w-3.5" />{streak.data?.currentStreak ?? 0} day streak</span><PlanBadge plan={plan} /><span className="max-w-32 truncate text-sm font-semibold text-ink">{name}</span><AccountMenu /></div></header> : null}
+      <main className="mobile-app-content mx-auto w-full max-w-[1440px] px-4 py-5 pb-28 sm:px-6 lg:px-8 lg:py-8 lg:pb-8">{children}</main>
+      <nav className="mobile-tab-bar fixed inset-x-0 bottom-0 z-40 grid grid-cols-4 border-t border-[#E5E7EB] bg-white px-1 pb-[env(safe-area-inset-bottom)] lg:hidden" aria-label="Primary navigation">
+        {mobileTabs.map(({ href, label, icon: Icon }) => {
+          const active = pathname === href || pathname.startsWith(`${href}/`);
+          return <Link key={href} href={href} className={cn("flex min-w-0 flex-col items-center justify-center gap-1 text-[11px] font-semibold transition-colors", active ? "text-[#2D5BFF]" : "text-[#6B7280]")} aria-current={active ? "page" : undefined}>
+            <span className={cn("flex h-7 w-10 items-center justify-center rounded-xl", active && "bg-[#EDF2FF]")}><Icon className="h-5 w-5" strokeWidth={active ? 2.5 : 2} /></span>
+            <span className="truncate">{label}</span>
+          </Link>;
+        })}
+      </nav>
     </div>
   </div>;
 }

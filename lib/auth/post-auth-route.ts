@@ -14,7 +14,7 @@ export async function resolvePostAuthRoute(user: SessionUser) {
         profile?.whereDidYouHearAboutUs?.trim(),
     );
 
-    return isComplete ? "/dashboard" : "/complete-profile";
+    return isComplete ? "/practice?subscription=1" : "/complete-profile";
   } catch {
     return "/complete-profile";
   }

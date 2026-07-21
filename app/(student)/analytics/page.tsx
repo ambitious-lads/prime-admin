@@ -7,6 +7,7 @@ import {
   Activity,
   BarChart3,
   Calculator,
+  ChevronRight,
   CheckCircle2,
   Clock,
   Lock,
@@ -128,8 +129,13 @@ function AnalyticsDashboard() {
 
   return (
     <div className="space-y-6">
+      <a href="#score-calculator" className="flex min-h-16 items-center gap-3 rounded-2xl border border-[#E5E7EB] bg-white px-4 shadow-[0_2px_10px_rgba(15,23,42,0.045)] lg:hidden">
+        <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#EDF2FF] text-[#2D5BFF]"><Calculator className="h-5 w-5" /></span>
+        <span className="min-w-0 flex-1"><span className="block text-sm font-bold text-[#1A1A1A]">Score Calculator</span><span className="block text-xs text-[#6B7280]">Estimate your UAT net score</span></span>
+        <ChevronRight className="h-5 w-5 text-[#9CA3AF]" />
+      </a>
 
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
         {overview.isLoading || !o ? (
           Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-24" />)
         ) : (
@@ -411,7 +417,7 @@ function ScoreCalculator() {
   }
 
   return (
-    <Card>
+    <Card id="score-calculator" className="scroll-mt-24">
       <CardHeader className="flex-row items-center gap-2 space-y-0 pb-2">
         <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-brand-50 text-brand">
           <Calculator className="h-4 w-4" />

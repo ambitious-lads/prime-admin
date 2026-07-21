@@ -150,8 +150,15 @@ export type PracticeSet = {
   iconColor: string | null;
   iconBackground: string | null;
   orderIndex: number | null;
+  totalQuestions?: number;
   questionCount?: number;
+  status?: "completed" | "start" | "locked" | null;
+  score?: number | null;
+  progressPercentage?: number | null;
   completionPercentage?: number;
+  minPlan?: PlanKey;
+  minPlanLabel?: string;
+  isLocked?: boolean;
 };
 
 export type RichImage = {
@@ -191,6 +198,35 @@ export type Question = {
   orderIndex?: number | null;
 };
 
+export type QuestionAiAction =
+  | "explain"
+  | "similar_questions"
+  | "formulas"
+  | "summary"
+  | "youtube_video";
+
+export type QuestionReportReason =
+  | "incorrect_answer"
+  | "needs_correction"
+  | "unclear_question"
+  | "bad_explanation"
+  | "other";
+
+export type QuestionAiHelpResult = {
+  questionId: string;
+  action: QuestionAiAction;
+  reply: string;
+};
+
+export type QuestionAiChatMessage = {
+  role: "user" | "assistant";
+  text: string;
+};
+
+export type QuestionAiChatResult = {
+  questionId: string;
+  reply: string;
+};
 export type QuestionReport = {
   id: string;
   userId: string;
@@ -368,6 +404,14 @@ export type CourseMaterial = {
   duration?: string | null;
   durationSeconds: number | null;
   videoDurationSeconds?: number | null;
+  instructor?: string | null;
+  color?: string | null;
+  summaryData?: {
+    coreObjective?: string;
+    strategies?: string[];
+    warnings?: string[];
+    formulas?: string[];
+  } | null;
   isLocked: boolean;
   progressPercentage?: number;
   progress?: number;
@@ -543,6 +587,11 @@ export type Profile = {
   role: Role;
   plan: PlanKey;
   planLabel: string;
+  username?: string | null;
+  planActivatedAt?: string | null;
+  createdAt?: string;
+  streak?: Pick<StreakSummary, "currentStreak" | "longestStreak">;
+  allowScreenshots?: boolean;
   profile: {
     userId: string;
     schoolName: string | null;

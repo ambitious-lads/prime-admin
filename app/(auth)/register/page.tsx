@@ -61,7 +61,7 @@ function RegisterForm() {
           Create your account
         </h1>
         <p className="text-sm text-muted">
-          Start practicing for the University Entrance Exam in minutes.
+          Start practicing for Addis Ababa University UAT in minutes.
         </p>
       </div>
 

@@ -39,7 +39,7 @@ function InlineContent({ children }: { children: RichInline[] }) {
 
 function Block({ block }: { block: RichContentBlock }) {
   if (block.type === "paragraph") {
-    return <p className="text-base leading-7 text-ink"><InlineContent children={block.children} /></p>;
+    return <p className="text-base leading-7 text-ink"><InlineContent>{block.children}</InlineContent></p>;
   }
   if (block.type === "figure") {
     return (
@@ -71,5 +71,5 @@ function Block({ block }: { block: RichContentBlock }) {
 
 export function RichDocumentView({ document }: { document?: RichDocument | null }) {
   if (!document?.blocks?.length) return null;
-  return <div className="space-y-3">{document.blocks.map((block, index) => <Block key={`rich-block-${index}`} block={block} />)}</div>;
+  return <div className="protected-content space-y-3" onCopy={(event) => event.preventDefault()} onCut={(event) => event.preventDefault()} onContextMenu={(event) => event.preventDefault()} onDragStart={(event) => event.preventDefault()}>{document.blocks.map((block, index) => <Block key={`rich-block-${index}`} block={block} />)}</div>;
 }

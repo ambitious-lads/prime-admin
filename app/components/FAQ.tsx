@@ -19,7 +19,7 @@ const faqs = [
   },
   {
     q: "Which exam does Prime UAT prepare me for?",
-    a: "Prime UAT is built specifically for the Ethiopian University Entrance Exam, with curated questions, mock exams, and courses aligned to the curriculum.",
+    a: "Prime UAT is built specifically for Addis Ababa University UAT, with curated questions, mock exams, and courses aligned to the test.",
   },
 ];
 

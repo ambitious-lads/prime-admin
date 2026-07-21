@@ -27,7 +27,12 @@ export default function PlansPage() {
   const showRejected = latest?.status === "rejected";
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5 sm:space-y-6">
+      <div className="lg:hidden">
+        <p className="text-xs font-bold uppercase text-[#2D5BFF]">Choose your access</p>
+        <h1 className="mt-1 text-2xl font-black text-[#1A1A1A]">Prime UAT Plans</h1>
+        <p className="mt-2 text-sm leading-6 text-[#6B7280]">One payment unlocks focused preparation across web and mobile.</p>
+      </div>
 
       {onboarding ? (
         <div className="rounded-lg border border-brand/20 bg-brand-50 px-5 py-4 text-sm leading-6 text-ink">
@@ -62,13 +67,13 @@ export default function PlansPage() {
       ) : null}
 
       {isLoading ? (
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-3 sm:gap-4 lg:grid-cols-3">
           {Array.from({ length: 3 }).map((_, i) => (
             <Skeleton key={i} className="h-80" />
           ))}
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-3 sm:gap-4 lg:grid-cols-3">
           {PLAN_LIST.map((p) => {
             const isCurrent = p.key === currentPlan;
             const isPaid = p.key !== "free";
@@ -83,8 +88,8 @@ export default function PlansPage() {
               <Card
                 key={p.key}
                 className={cn(
-                  "flex flex-col",
-                  highlight && "border-brand/40 shadow-md",
+                  "flex flex-col overflow-hidden",
+                  highlight && "border-brand/40 shadow-[0_10px_30px_rgba(45,91,255,0.12)] lg:shadow-md",
                 )}
               >
                 <CardHeader>

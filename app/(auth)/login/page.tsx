@@ -32,7 +32,8 @@ function LoginForm() {
     try {
       const user = await login(values.phone, values.password);
       if (next) {
-        router.push(next);
+        const separator = next.includes("?") ? "&" : "?";
+        router.push(`${next}${separator}subscription=1`);
       } else {
         router.replace(await resolvePostAuthRoute(user));
       }

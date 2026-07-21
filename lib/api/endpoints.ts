@@ -33,7 +33,12 @@ import type {
   PracticeSet,
   Profile,
   Question,
+  QuestionAiAction,
+  QuestionAiChatMessage,
+  QuestionAiChatResult,
+  QuestionAiHelpResult,
   QuestionReport,
+  QuestionReportReason,
   QuestionReportStatus,
   ScoreCalculatorResult,
   Settings,
@@ -263,6 +268,7 @@ export const practiceApi = {
     api.get<Topic[]>("/practice/topics", grouping ? { grouping } : undefined),
   sets: (topicId: string) =>
     api.get<PracticeSet[]>(`/practice/topics/${topicId}/sets`),
+  set: (setId: string) => api.get<PracticeSet>(`/practice/sets/${setId}`),
   questions: (setId: string) =>
     api.get<Question[]>(`/practice/sets/${setId}/questions`),
   topicStats: (topicId: string) =>
@@ -271,6 +277,27 @@ export const practiceApi = {
     api.post<SubmitAnswerResult>(`/practice/sets/${setId}/submit-answer`, b),
   complete: (setId: string, b: unknown) =>
     api.post(`/practice/sets/${setId}/complete`, b),
+  saveQuestion: (questionId: string) =>
+    api.post(`/practice/questions/${questionId}/save`),
+  unsaveQuestion: (questionId: string) =>
+    api.del(`/practice/questions/${questionId}/save`),
+  reportQuestion: (
+    questionId: string,
+    body: { reason: QuestionReportReason; comment: string },
+  ) => api.post(`/practice/questions/${questionId}/report`, body),
+  questionAiHelp: (questionId: string, action: QuestionAiAction) =>
+    api.post<QuestionAiHelpResult>(`/practice/questions/${questionId}/ai-help`, {
+      action,
+    }),
+  questionAiChat: (
+    questionId: string,
+    message: string,
+    history: QuestionAiChatMessage[],
+  ) =>
+    api.post<QuestionAiChatResult>(`/practice/questions/${questionId}/ai-chat`, {
+      message,
+      history,
+    }),
   createCategory: (b: unknown) => api.post<Category>("/practice/categories", b),
   createTopic: (form: FormData) => api.upload<Topic>("/practice/topics", form),
   createSet: (b: unknown) => api.post<PracticeSet>("/practice/sets", b),

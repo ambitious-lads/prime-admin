@@ -33,6 +33,21 @@ type MaterialReaderProps = {
   onProgress: (percentage: number) => void;
 };
 
+function MaterialList({ title, items, emphasized = false }: { title: string; items: string[]; emphasized?: boolean }) {
+  return (
+    <section>
+      <h2 className="font-display text-lg font-bold text-ink">{title}</h2>
+      <ul className="mt-3 space-y-2.5">
+        {items.map((item, index) => (
+          <li key={`${title}-${index}`} className="flex gap-3 text-sm leading-7 text-ink/80">
+            <span className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-brand" />
+            <span className={emphasized ? "font-semibold text-ink" : undefined}>{item}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
 export const MaterialReader = forwardRef<HTMLDivElement, MaterialReaderProps>(
   function MaterialReader({ material, onProgress }, ref) {
     const innerRef = useRef<HTMLDivElement>(null);
@@ -143,7 +158,7 @@ export const MaterialReader = forwardRef<HTMLDivElement, MaterialReaderProps>(
               src={source}
               title={material.title}
               className="h-full w-full"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allow="autoplay; encrypted-media"
               allowFullScreen
             />
           </div>
@@ -208,7 +223,12 @@ export const MaterialReader = forwardRef<HTMLDivElement, MaterialReaderProps>(
     return (
       <div
         ref={innerRef}
-        className="h-full overflow-y-auto px-6 py-8 sm:px-10"
+        className="protected-content protected-watermark h-full overflow-y-auto px-4 py-6 sm:px-10 sm:py-8"
+        data-watermark="Prime UAT protected material"
+        onCopy={(event) => event.preventDefault()}
+        onCut={(event) => event.preventDefault()}
+        onContextMenu={(event) => event.preventDefault()}
+        onDragStart={(event) => event.preventDefault()}
       >
         <div className="mx-auto max-w-2xl">
           <p className="text-xs font-semibold uppercase tracking-wide text-brand">
@@ -221,6 +241,25 @@ export const MaterialReader = forwardRef<HTMLDivElement, MaterialReaderProps>(
             {material.title}
           </h1>
           <div className="mt-6">{renderBody()}</div>
+          {material.summaryData || material.description ? (
+            <div className="mt-8 space-y-7 border-t border-line pt-7">
+              <section>
+                <h2 className="font-display text-lg font-bold text-ink">Lesson summary</h2>
+                <p className="mt-2 text-sm leading-7 text-ink/80">
+                  {material.summaryData?.coreObjective ?? material.description}
+                </p>
+              </section>
+              {material.summaryData?.strategies?.length ? (
+                <MaterialList title="Main points" items={material.summaryData.strategies} />
+              ) : null}
+              {material.summaryData?.formulas?.length ? (
+                <MaterialList title="Important formulas and rules" items={material.summaryData.formulas} emphasized />
+              ) : null}
+              {material.summaryData?.warnings?.length ? (
+                <MaterialList title="Keep in mind" items={material.summaryData.warnings} />
+              ) : null}
+            </div>
+          ) : null}
           <div className="h-32" aria-hidden />
         </div>
       </div>

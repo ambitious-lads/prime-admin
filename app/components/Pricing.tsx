@@ -160,27 +160,6 @@ export default function Pricing() {
             </div>
           ))}
         </div>
-
-        {/* Local payment note */}
-        <div className="mx-auto mt-10 flex max-w-2xl items-center justify-center gap-3 rounded-lg border border-line bg-surface px-5 py-4 text-center">
-          <svg
-            className="h-5 w-5 shrink-0 text-brand"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M3 10h18M7 15h2m4 0h4M5 6h14a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2z"
-            />
-          </svg>
-          <p className="text-sm font-medium text-muted">
-            Pay with mobile money or bank transfer. Verified receipts activate
-            instantly through Odit Verify with duplicate receipt protection.
-          </p>
-        </div>
       </div>
     </section>
   );

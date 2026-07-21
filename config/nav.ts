@@ -1,7 +1,8 @@
 import {
   LayoutDashboard,
-  Dumbbell,
+  BookOpenCheck,
   FileQuestion,
+  Timer,
   GraduationCap,
   StickyNote,
   LineChart,
@@ -27,8 +28,8 @@ export type NavItem = {
 
 export const studentNav: NavItem[] = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { label: "Practice", href: "/practice", icon: Dumbbell },
-  { label: "Mock Exams", href: "/exams", icon: FileQuestion },
+  { label: "Practice", href: "/practice", icon: BookOpenCheck },
+  { label: "Mock Tests", href: "/exams", icon: Timer },
   { label: "Courses", href: "/courses", icon: GraduationCap },
   { label: "Notes", href: "/notes", icon: StickyNote },
   { label: "Saved Library", href: "/saved", icon: BookOpen },

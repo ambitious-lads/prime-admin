@@ -94,7 +94,7 @@ const structuredData = {
       url: absoluteUrl("/"),
       logo: absoluteUrl("/images/logo.png"),
       description: "An independent preparation platform for Ethiopian students. Prime UAT is not affiliated with Addis Ababa University.",
-      sameAs: ["https://t.me/PrimeUAT"],
+      sameAs: ["https://t.me/prime_uat"],
     },
     {
       "@type": "FAQPage",

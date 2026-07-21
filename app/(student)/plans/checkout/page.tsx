@@ -142,7 +142,7 @@ function CheckoutInner() {
   }
 
   return (
-    <div className="mx-auto max-w-2xl space-y-6">
+    <div className="mx-auto max-w-2xl space-y-5 sm:space-y-6">
       <PageHeader
         title="Secure checkout"
         subtitle={`Subscribe to ${planInfo.label}`}
@@ -220,7 +220,7 @@ function CheckoutInner() {
         </CardContent>
       </Card>
 
-      <Card className="overflow-hidden border-brand/20">
+      <Card className="overflow-hidden border-brand/20 shadow-[0_10px_30px_rgba(45,91,255,0.08)] lg:shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
         <div className="border-b border-brand/15 bg-brand-50 px-6 py-5">
           <div className="flex items-start gap-3">
             <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-brand shadow-sm shadow-brand/10">
@@ -304,7 +304,7 @@ function CheckoutInner() {
 
             <Button
               type="submit"
-              className="w-full"
+              className="h-[52px] w-full rounded-xl"
               disabled={submitting || !receiptReady}
             >
               {submitting ? <Spinner /> : <Flashlight className="h-4 w-4" />}

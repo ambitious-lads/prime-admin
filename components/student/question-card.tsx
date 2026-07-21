@@ -14,6 +14,7 @@ export function QuestionCard({
   total,
   selected,
   result,
+  revealResult = true,
   pending,
   onSelect,
 }: {
@@ -22,6 +23,7 @@ export function QuestionCard({
   total: number;
   selected: string | null;
   result: SubmitAnswerResult | null;
+  revealResult?: boolean;
   pending: boolean;
   onSelect: (label: string) => void;
 }) {
@@ -31,6 +33,7 @@ export function QuestionCard({
 
   function stateFor(label: string): OptionState {
     if (answered) {
+      if (!revealResult) return label === selected ? "selected" : "idle";
       // Free/gated attempts never reveal the correct answer — keep the picked
       // option highlighted as "selected" without grading it.
       if (gated) return label === selected ? "selected" : "idle";
@@ -42,7 +45,7 @@ export function QuestionCard({
   }
 
   return (
-    <Card>
+    <Card className="protected-content" onCopy={(event) => event.preventDefault()} onCut={(event) => event.preventDefault()} onContextMenu={(event) => event.preventDefault()} onDragStart={(event) => event.preventDefault()}>
       <CardContent className="space-y-6 p-6">
         <div className="space-y-2">
           <div className="flex items-center justify-between text-xs font-medium text-muted">
@@ -76,7 +79,7 @@ export function QuestionCard({
           ))}
         </div>
 
-        {answered ? (
+        {answered && revealResult ? (
           gated ? (
             <div className="rounded-xl border border-brand-100 bg-brand-50 p-4">
               <p className="text-sm font-semibold text-brand">
