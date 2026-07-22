@@ -426,6 +426,13 @@ export type CourseMaterial = {
   videoDurationSeconds?: number | null;
   instructor?: string | null;
   color?: string | null;
+  icon?: string | null;
+  difficulty?: string | null;
+  extra?: string | null;
+  isFree?: boolean;
+  minPlan?: PlanKey;
+  minPlanLabel?: string;
+  status?: "start" | "completed" | "locked";
   summaryData?: {
     coreObjective?: string;
     strategies?: string[];

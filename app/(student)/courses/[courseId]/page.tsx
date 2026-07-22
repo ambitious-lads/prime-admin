@@ -145,7 +145,17 @@ function MaterialRow({
               <p className="truncate text-sm font-semibold text-ink">
                 {material.title}
               </p>
-              <div className="mt-1.5 flex items-center gap-2">
+              {material.description ? (
+                <p className="mt-1 line-clamp-2 text-xs leading-5 text-muted">
+                  {material.description}
+                </p>
+              ) : null}
+              <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-[11px] font-semibold text-muted">
+                {material.difficulty ? <span>{material.difficulty} level</span> : null}
+                {material.duration ? <span>{material.duration} length</span> : null}
+                {material.extra ? <span>{material.extra} size</span> : null}
+              </div>
+              <div className="mt-2 flex items-center gap-2">
                 <Progress value={progress} className="h-1.5 max-w-[180px]" />
                 <span className="text-xs text-muted">{formatPercent(progress)}</span>
               </div>

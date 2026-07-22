@@ -185,6 +185,14 @@ export const MaterialReader = forwardRef<HTMLDivElement, MaterialReaderProps>(
         );
       }
 
+      if (material.htmlContent && /<\/?[a-z][\s\S]*>/i.test(material.htmlContent)) {
+        return (
+          <article
+            className="course-html max-w-none"
+            dangerouslySetInnerHTML={{ __html: material.htmlContent }}
+          />
+        );
+      }
       if (sourceIsUrl) {
         return (
           <div className="flex flex-col items-center gap-4 rounded-2xl border border-dashed border-line bg-surface/50 px-6 py-14 text-center">
