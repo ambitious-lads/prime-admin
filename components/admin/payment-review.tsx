@@ -25,6 +25,7 @@ import { Spinner } from "@/components/shared/loading";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -50,6 +51,9 @@ export function PaymentReview({
   onResolved: () => void;
 }) {
   const qc = useQueryClient();
+  const [approvalNote, setApprovalNote] = useState("");
+  const [approvalConfirmed, setApprovalConfirmed] = useState(false);
+  const [approveOpen, setApproveOpen] = useState(false);
   const [reason, setReason] = useState("");
   const [rejectOpen, setRejectOpen] = useState(false);
   const [lightbox, setLightbox] = useState(false);
@@ -60,14 +64,17 @@ export function PaymentReview({
   }
 
   const approve = useMutation({
-    mutationFn: () => plansApi.approve(payment.id),
+    mutationFn: () => plansApi.approve(payment.id, approvalNote.trim()),
     onSuccess: () => {
       invalidate();
       toast.success(
-        `Legacy record approved — ${planLabel(payment.plan)} activated for ${
+        `Payment approved — ${planLabel(payment.plan)} activated for ${
           user?.fullName ?? "user"
         }.`,
       );
+      setApproveOpen(false);
+      setApprovalNote("");
+      setApprovalConfirmed(false);
       onResolved();
     },
     onError: toastApiError,
@@ -77,7 +84,7 @@ export function PaymentReview({
     mutationFn: () => plansApi.reject(payment.id, reason.trim()),
     onSuccess: () => {
       invalidate();
-      toast.success("Legacy payment record rejected.");
+      toast.success("Payment rejected.");
       setRejectOpen(false);
       setReason("");
       onResolved();
@@ -89,6 +96,8 @@ export function PaymentReview({
   const busy = approve.isPending || reject.isPending;
   const isOditVerified = payment.verificationMethod === "odit";
   const isOditPending = payment.verificationMethod?.startsWith("odit_") ?? false;
+  const isManual =
+    payment.verificationMethod?.startsWith("manual_admin:") ?? false;
 
   return (
     <div className="flex h-full flex-col gap-4 overflow-auto rounded-2xl border border-line bg-white p-5">
@@ -144,13 +153,25 @@ export function PaymentReview({
           <ShieldCheck className="size-3.5" /> Verification
         </p>
         <p className="mt-1 text-sm font-semibold text-ink">
-          {isOditVerified ? "Auto-verified by Odit" : isOditPending ? "Odit delayed — awaiting review" : "Manual review"}
+          {isOditVerified
+            ? "Auto-verified by Odit"
+            : isOditPending
+              ? "Automatic verification unavailable"
+              : isManual
+                ? "Manually verified by admin"
+                : "Manual review"}
         </p>
         <p className="mt-1 text-xs text-muted">
           {payment.receiptProvider ? `Provider: ${payment.receiptProvider}` : null}
           {payment.receiptReference ? ` · Receipt: ${payment.receiptReference}` : null}
           {!payment.receiptProvider && !payment.receiptReference ? "No verifier metadata." : null}
         </p>
+        {isOditPending ? (
+          <p className="mt-2 text-xs font-medium text-amber-700">
+            Open the submitted receipt and confirm its status, amount, receiver,
+            and transaction reference before resolving it.
+          </p>
+        ) : null}
       </div>
 
       <div>
@@ -198,31 +219,95 @@ export function PaymentReview({
         )}
       </div>
 
-      {payment.status === "rejected" && payment.reviewNote ? (
-        <div className="rounded-xl border border-red-100 bg-red-50 p-3 text-sm text-red-700">
-          <p className="font-semibold">Rejection reason</p>
+      {payment.reviewNote ? (
+        <div
+          className={
+            payment.status === "rejected"
+              ? "rounded-xl border border-red-100 bg-red-50 p-3 text-sm text-red-700"
+              : "rounded-xl border border-line bg-surface/50 p-3 text-sm text-ink"
+          }
+        >
+          <p className="font-semibold">
+            {payment.status === "rejected" ? "Rejection reason" : "Admin review note"}
+          </p>
           <p className="mt-1">{payment.reviewNote}</p>
         </div>
       ) : null}
 
       {isPending ? (
         <div className="mt-auto flex gap-3 pt-2">
-          <Button
-            className="flex-1 bg-emerald-600 hover:bg-emerald-700"
-            onClick={() => approve.mutate()}
-            disabled={busy}
-          >
-            {approve.isPending ? <Spinner /> : <Check />} Approve legacy
-          </Button>
-          <Dialog open={rejectOpen} onOpenChange={setRejectOpen}>
+          <Dialog open={approveOpen} onOpenChange={setApproveOpen}>
             <DialogTrigger asChild>
-              <Button variant="destructive" className="flex-1" disabled={busy}>
-                <X /> Reject legacy
+              <Button
+                className="flex-1 bg-emerald-600 hover:bg-emerald-700"
+                disabled={busy}
+              >
+                <Check /> Approve payment
               </Button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Reject legacy payment</DialogTitle>
+                <DialogTitle>Approve payment</DialogTitle>
+                <DialogDescription>
+                  Confirm the official receipt is completed, paid to Prime UAT,
+                  covers the required amount, and matches the reference shown.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-2">
+                <Textarea
+                  placeholder="Record what you verified, including amount and receiver"
+                  value={approvalNote}
+                  onChange={(e) => setApprovalNote(e.target.value)}
+                  maxLength={500}
+                  rows={4}
+                />
+                <p className="text-right text-xs text-muted">
+                  {approvalNote.length}/500
+                </p>
+                <label className="flex cursor-pointer items-start gap-3 rounded-lg border border-line p-3 text-sm text-ink">
+                  <input
+                    type="checkbox"
+                    checked={approvalConfirmed}
+                    onChange={(event) =>
+                      setApprovalConfirmed(event.target.checked)
+                    }
+                    className="mt-0.5 size-4 accent-emerald-600"
+                  />
+                  <span>
+                    I verified the completed status, required amount, Prime UAT
+                    receiver, and transaction reference.
+                  </span>
+                </label>
+              </div>
+              <DialogFooter>
+                <Button
+                  className="bg-emerald-600 hover:bg-emerald-700"
+                  onClick={() => approve.mutate()}
+                  disabled={
+                    approvalNote.trim().length < 10 ||
+                    approvalNote.trim().length > 500 ||
+                    !approvalConfirmed ||
+                    approve.isPending
+                  }
+                >
+                  {approve.isPending ? <Spinner /> : <Check />}
+                  Confirm approval
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+          <Dialog open={rejectOpen} onOpenChange={setRejectOpen}>
+            <DialogTrigger asChild>
+              <Button variant="destructive" className="flex-1" disabled={busy}>
+                <X /> Reject payment
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Reject payment</DialogTitle>
+                <DialogDescription>
+                  Explain the mismatch so the student knows what to correct.
+                </DialogDescription>
               </DialogHeader>
               <div className="space-y-2">
                 <Textarea

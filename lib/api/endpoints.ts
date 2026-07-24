@@ -203,8 +203,11 @@ export const plansApi = {
     api.post<SubscribeResult>("/plans/subscribe", body),
   payments: (status?: string) =>
     api.get<PlanPayment[]>("/plans/payments", status ? { status } : undefined),
-  approve: (id: string) =>
-    api.post<{ payment: PlanPayment }>(`/plans/payments/${id}/approve`),
+  approve: (id: string, reviewNote: string) =>
+    api.post<{ payment: PlanPayment }>(`/plans/payments/${id}/approve`, {
+      confirmed: true,
+      reviewNote,
+    }),
   reject: (id: string, reason: string) =>
     api.post<{ payment: PlanPayment }>(`/plans/payments/${id}/reject`, { reason }),
 };

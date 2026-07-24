@@ -63,8 +63,8 @@ export default function PaymentsPage() {
   return (
     <div className="flex h-[calc(100vh-9rem)] flex-col gap-5">
       <PageHeader
-        title="Payment history"
-        subtitle="Automated receipts activate plans. Legacy pending records remain available for audit and fallback resolution."
+        title="Payment verification"
+        subtitle="Review receipts that could not be verified automatically, then approve or reject them."
       />
 
       <Tabs

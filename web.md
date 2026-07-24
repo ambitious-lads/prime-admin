@@ -427,7 +427,7 @@ relative to it. Auth column legend: **Public**, **User** (any logged-in),
 | GET | `/plans/me` | User | — | `{ plan, planLabel, planActivatedAt, planExpiresAt, latestPayment }` |
 | POST | `/plans/subscribe` | User | multipart: `proof` file (optional, image ≤ 5MB) + `{ plan, transactionRef?, note? }` | `{ status, plan, ... }` |
 | GET | `/plans/payments` | Admin | `?status=pending\|approved\|rejected` | `PlanPayment[]` |
-| POST | `/plans/payments/:id/approve` | Admin | — | `{ payment, user }` |
+| POST | `/plans/payments/:id/approve` | Admin | `{ confirmed: true, reviewNote }` (10–500 chars) | `{ payment, user }` |
 | POST | `/plans/payments/:id/reject` | Admin | `{ reason }` (1–500 chars) | `{ payment }` |
 
 **Plan catalog (mirror in `lib/utils/plans.ts` for UX only):**
@@ -1110,7 +1110,11 @@ export const plansApi = {
   subscribe: (form: FormData) => api.upload<{ status: string }>("/plans/subscribe", form),
   payments: (status?: string) =>
     api.get<PlanPayment[]>("/plans/payments", status ? { status } : undefined),
-  approve: (id: string) => api.post<{ payment: PlanPayment }>(`/plans/payments/${id}/approve`),
+  approve: (id: string, reviewNote: string) =>
+    api.post<{ payment: PlanPayment }>(`/plans/payments/${id}/approve`, {
+      confirmed: true,
+      reviewNote,
+    }),
   reject: (id: string, reason: string) =>
     api.post<{ payment: PlanPayment }>(`/plans/payments/${id}/reject`, { reason }),
 };
@@ -1257,10 +1261,10 @@ import { plansApi } from "@/lib/api/endpoints";
 import { qk } from "@/lib/query/keys";
 import { toast } from "sonner";
 
-export function useApprovePayment() {
+export function useApprovePayment(reviewNote: string) {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (id: string) => plansApi.approve(id),
+    mutationFn: (id: string) => plansApi.approve(id, reviewNote),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["payments"] });
       qc.invalidateQueries({ queryKey: qk.users });
@@ -1997,13 +2001,14 @@ A **split view**:
   - Large **proof image** preview (zoomable; opens in a lightbox).
   - User details + their current plan.
   - `transactionRef` and `note` shown prominently.
-  - Two big buttons: **Approve** (green) and **Reject** (red, opens a reason
-    dialog).
+  - Two big buttons: **Approve** (green, requires an audit note) and **Reject**
+    (red, opens a reason dialog).
 
 ### 16.3 Approve
 
-`POST /plans/payments/:id/approve` → backend sets payment `approved` **and**
-updates the user's `plan` (transactional). On success:
+`POST /plans/payments/:id/approve { confirmed: true, reviewNote }` → backend
+records the manual verification note, sets payment `approved`, and updates the
+user's `plan` (transactional). On success:
 
 - Toast "Approved — {plan} activated for {name}".
 - Invalidate `["payments"]` and `users` queries.
@@ -2074,7 +2079,8 @@ export function PaymentReview({ payment }: { payment: PlanPayment }) {
   const [reason, setReason] = useState("");
 
   const approve = useMutation({
-    mutationFn: () => plansApi.approve(payment.id),
+    mutationFn: () =>
+      plansApi.approve(payment.id, "Confirmed status, amount, receiver, and reference."),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["payments"] });
       qc.invalidateQueries({ queryKey: ["users"] });
@@ -2808,7 +2814,7 @@ PLANS
   GET    /plans/me
   POST   /plans/subscribe           (multipart proof)
   GET    /plans/payments?status=    (admin)
-  POST   /plans/payments/:id/approve (admin)
+  POST   /plans/payments/:id/approve (admin) { confirmed: true, reviewNote }
   POST   /plans/payments/:id/reject  (admin) { reason }
 
 PRACTICE
@@ -3040,4 +3046,3 @@ export type AnalyticsDashboard = Record<string, unknown>;
 
 *End of `web.md`. Build from the top. Honor the screenshot for visuals, honor the
 backend for behavior, and keep the code modular and comment-free.*
-
