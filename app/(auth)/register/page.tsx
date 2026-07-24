@@ -15,12 +15,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/shared/loading";
 import { clearPendingReferralCode, getPendingReferralCode, normalizeReferralCode, savePendingReferralCode } from "@/lib/referrals/attribution";
+import { isSafaricomEthiopiaPhone } from "@/lib/auth/phone-network";
+import { EthioTelecomRequiredDialog } from "@/components/auth/ethio-telecom-required-dialog";
 
 function RegisterForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const next = searchParams.get("next");
   const [submitting, setSubmitting] = useState(false);
+  const [ethioTelecomDialogOpen, setEthioTelecomDialogOpen] = useState(false);
 
   const form = useForm<RegisterInput>({
     resolver: zodResolver(registerSchema),
@@ -39,6 +42,10 @@ function RegisterForm() {
     }
   }, [form, searchParams]);
   async function onSubmit(values: RegisterInput) {
+    if (isSafaricomEthiopiaPhone(values.phone)) {
+      setEthioTelecomDialogOpen(true);
+      return;
+    }
     setSubmitting(true);
     captureEvent("web_register_attempt");
     try {
@@ -60,6 +67,10 @@ function RegisterForm() {
 
   return (
     <div className="space-y-7">
+      <EthioTelecomRequiredDialog
+        open={ethioTelecomDialogOpen}
+        onOpenChange={setEthioTelecomDialogOpen}
+      />
       <div className="space-y-2">
         <h1 className="font-display text-2xl font-bold text-ink">
           Create your account

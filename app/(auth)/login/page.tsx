@@ -14,6 +14,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/shared/loading";
 import { resolvePostAuthRoute } from "@/lib/auth/post-auth-route";
+import { isSafaricomEthiopiaPhone } from "@/lib/auth/phone-network";
+import { EthioTelecomRequiredDialog } from "@/components/auth/ethio-telecom-required-dialog";
 
 function LoginForm() {
   const router = useRouter();
@@ -21,6 +23,7 @@ function LoginForm() {
   const next = params.get("next");
   const { login } = useAuth();
   const [submitting, setSubmitting] = useState(false);
+  const [ethioTelecomDialogOpen, setEthioTelecomDialogOpen] = useState(false);
 
   const form = useForm<LoginInput>({
     resolver: zodResolver(loginSchema),
@@ -28,6 +31,10 @@ function LoginForm() {
   });
 
   async function onSubmit(values: LoginInput) {
+    if (isSafaricomEthiopiaPhone(values.phone)) {
+      setEthioTelecomDialogOpen(true);
+      return;
+    }
     setSubmitting(true);
     try {
       const user = await login(values.phone, values.password);
@@ -57,6 +64,10 @@ function LoginForm() {
 
   return (
     <div className="space-y-7">
+      <EthioTelecomRequiredDialog
+        open={ethioTelecomDialogOpen}
+        onOpenChange={setEthioTelecomDialogOpen}
+      />
       <div className="space-y-2">
         <h1 className="font-display text-2xl font-bold text-ink">Welcome back</h1>
         <p className="text-sm text-muted">
