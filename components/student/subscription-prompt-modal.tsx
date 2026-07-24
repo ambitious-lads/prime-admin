@@ -180,8 +180,8 @@ function PlanOption({
       <div className="flex items-center justify-between gap-2">
         <p className="font-display text-lg font-bold text-ink">{name}</p>
         {featured ? (
-          <span className="rounded-full bg-brand px-2 py-1 text-[10px] font-bold uppercase text-white">
-            Best value
+          <span className="inline-flex whitespace-nowrap rounded-full bg-brand px-2.5 py-1 text-[10px] font-bold uppercase text-white">
+            Best Value
           </span>
         ) : null}
       </div>

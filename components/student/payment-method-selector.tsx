@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Banknote, Check, Copy, Smartphone } from "lucide-react";
+import Image from "next/image";
+import { Check, Copy } from "lucide-react";
 import { toast } from "sonner";
 import { site } from "@/config/site";
 import { cn } from "@/lib/utils/cn";
@@ -46,12 +47,11 @@ export function PaymentMethodSelector({
     >
       {site.paymentAccounts.map((account) => {
         const active = selected === account.id;
-        const Icon = account.id === "telebirr" ? Smartphone : Banknote;
         return (
           <div
             key={account.id}
             className={cn(
-              "relative flex min-w-0 items-center gap-3 rounded-lg border bg-white p-4 transition-colors",
+              "relative flex min-w-0 cursor-pointer items-center gap-3 rounded-lg border bg-white p-4 transition-colors",
               active
                 ? "border-brand bg-brand-50/50"
                 : "border-line hover:border-brand/40",
@@ -62,7 +62,7 @@ export function PaymentMethodSelector({
               role="radio"
               aria-checked={active}
               onClick={() => onSelect(account.id)}
-              className="absolute inset-0 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40 focus-visible:ring-offset-2"
+              className="absolute inset-0 cursor-pointer rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40 focus-visible:ring-offset-2"
               aria-label={`Pay with ${account.method}`}
             />
             <span
@@ -74,7 +74,23 @@ export function PaymentMethodSelector({
             >
               {active ? <span className="h-2.5 w-2.5 rounded-full bg-brand" /> : null}
             </span>
-            <Icon className="relative h-5 w-5 shrink-0 text-brand" />
+            <span
+              className={cn(
+                "relative flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-lg border",
+                account.id === "telebirr"
+                  ? "border-sky-100 bg-sky-50"
+                  : "border-violet-100 bg-violet-50",
+              )}
+              aria-hidden="true"
+            >
+              <Image
+                src={`/images/payments/${account.id}.png`}
+                alt=""
+                width={36}
+                height={36}
+                className="h-8 w-8 object-contain"
+              />
+            </span>
             <div className="relative min-w-0 flex-1">
               <div className="flex items-center gap-2">
                 <p className="text-sm font-bold text-ink">{account.method}</p>
@@ -93,7 +109,7 @@ export function PaymentMethodSelector({
               type="button"
               variant="ghost"
               size="icon"
-              className="relative z-10 h-9 w-9 shrink-0"
+              className="relative z-10 h-9 w-9 shrink-0 cursor-pointer"
               title={`Copy ${account.method} account number`}
               aria-label={`Copy ${account.method} account number`}
               onClick={() => void copyAccount(account.id, account.account)}
