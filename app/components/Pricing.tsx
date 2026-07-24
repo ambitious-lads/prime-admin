@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { PLANS } from "@/lib/utils/plans";
 import SectionHeading from "./SectionHeading";
 
 type Plan = {
@@ -18,11 +19,7 @@ const plans: Plan[] = [
     price: "0",
     period: "birr",
     tagline: "Everything you need to get started, zero risk.",
-    features: [
-      "1 free practice set",
-      "1 free course resource: note, PDF, or video",
-      "Web & mobile access",
-    ],
+    features: [...PLANS.free.features],
     cta: "Start for free",
     href: "/register",
   },
@@ -31,11 +28,7 @@ const plans: Plan[] = [
     price: "299",
     period: "birr",
     tagline: "Practice and mock exams without limits.",
-    features: [
-      "All practice sets",
-      "All mock exams",
-      "Leaderboards & exam reports",
-    ],
+    features: [...PLANS.pro.features],
     cta: "Get Pro",
     href: "/register",
     featured: true,
@@ -45,12 +38,7 @@ const plans: Plan[] = [
     price: "499",
     period: "birr",
     tagline: "The complete premium experience.",
-    features: [
-      "Everything in Pro",
-      "All courses: notes, PDFs, and videos",
-      "AI tutor and smart features",
-      "Advanced analytics and UAT calculator",
-    ],
+    features: [...PLANS.pro_plus.features],
     cta: "Get Pro Plus",
     href: "/register",
   },

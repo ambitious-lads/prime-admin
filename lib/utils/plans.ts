@@ -7,9 +7,9 @@ export const PLANS = {
     price: 0,
     rank: 0,
     features: [
-      "1 free practice set",
-      "1 free course resource: note, PDF, or video",
-      "Web & mobile access",
+      "Limited practice sets to get started",
+      "Selected course lessons and study resources",
+      "Basic progress tracking",
     ],
   },
   pro: {
@@ -18,9 +18,11 @@ export const PLANS = {
     price: 299,
     rank: 1,
     features: [
-      "All practice sets",
-      "All mock exams",
-      "Leaderboards and exam reports",
+      "Full access to every practice set",
+      "New practice sets added regularly",
+      "All realistic mock exams",
+      "Leaderboards and detailed exam reports",
+      "Limited course lessons and selected resources",
     ],
   },
   pro_plus: {
@@ -29,10 +31,11 @@ export const PLANS = {
     price: 499,
     rank: 2,
     features: [
-      "Everything in Pro",
-      "All courses and resources",
-      "AI tutor and smart features",
-      "Advanced analytics and UAT calculator",
+      "Everything included in Pro",
+      "Full access to every course and new learning materials",
+      "AI tutor and smart study tools",
+      "Advanced analytics and UAT score calculator",
+      "The complete Prime UAT preparation experience",
     ],
   },
 } as const satisfies Record<
