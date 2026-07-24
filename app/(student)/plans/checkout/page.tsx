@@ -172,7 +172,7 @@ function CheckoutInner() {
         <div>
           <h2 className="text-sm font-bold text-ink">Choose where to pay</h2>
           <p className="mt-1 text-xs leading-5 text-muted">
-            Pay {formatMoney(amountDue)} or more to the selected account.
+            Pay {formatMoney(amountDue)} to the selected account.
           </p>
         </div>
         <PaymentMethodSelector
