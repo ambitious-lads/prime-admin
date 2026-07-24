@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ArrowRight, GraduationCap, MapPin, Megaphone } from "lucide-react";
 import { toast } from "sonner";
@@ -28,6 +28,9 @@ export default function CompleteProfilePage() {
 
 function CompleteProfileForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const next = searchParams.get("next");
+  const validNext = next?.startsWith("/") && !next.startsWith("//") ? next : null;
   const queryClient = useQueryClient();
   const profile = useQuery({ queryKey: qk.profile, queryFn: profileApi.me });
   const [schoolName, setSchoolName] = useState("");
@@ -47,13 +50,13 @@ function CompleteProfileForm() {
         details.whereDidYouHearAboutUs?.trim(),
     );
     if (complete) {
-      router.replace("/practice?subscription=1");
+      router.replace(validNext || "/practice?subscription=1");
       return;
     }
     setSchoolName(details.schoolName ?? "");
     setRegion(details.region ?? "");
     setStream(details.stream ?? "natural");
-  }, [profile.data, router]);
+  }, [profile.data, router, validNext]);
 
   async function completeProfile() {
     const source = hearOption === "Other" ? hearOther.trim() : hearOption;
@@ -71,7 +74,7 @@ function CompleteProfileForm() {
       const updated = await profileApi.update(form);
       queryClient.setQueryData(qk.profile, updated);
       toast.success("Profile completed.");
-      router.replace("/practice?onboarding=1");
+      router.replace(validNext || "/practice?onboarding=1");
     } catch (error) {
       toastApiError(error);
     } finally {

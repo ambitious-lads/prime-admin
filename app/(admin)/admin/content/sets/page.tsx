@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/select";
 import { toast } from "sonner";
 import type { PracticeSet } from "@/lib/api/types";
+import { CommunityShareActions } from "@/components/admin/community-share-actions";
 
 const difficultyVariant = {
   easy: "success",
@@ -127,6 +128,18 @@ export default function SetsPage() {
         header: "Questions",
         cell: ({ row }) => (
           <Badge variant="secondary">{row.original.questionCount ?? 0}</Badge>
+        ),
+      },
+      {
+        id: "share",
+        header: "Community",
+        cell: ({ row }) => (
+          <CommunityShareActions
+            kind="practice"
+            id={row.original.id}
+            title={row.original.title}
+            compact
+          />
         ),
       },
     ],

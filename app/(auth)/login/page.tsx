@@ -31,9 +31,8 @@ function LoginForm() {
     setSubmitting(true);
     try {
       const user = await login(values.phone, values.password);
-      if (next) {
-        const separator = next.includes("?") ? "&" : "?";
-        router.push(`${next}${separator}subscription=1`);
+      if (next?.startsWith("/") && !next.startsWith("//")) {
+        router.replace(next);
       } else {
         router.replace(await resolvePostAuthRoute(user));
       }
@@ -103,7 +102,7 @@ function LoginForm() {
 
       <p className="text-center text-sm text-muted">
         New to Prime UAT?{" "}
-        <Link href="/register" className="font-semibold text-brand hover:underline">
+        <Link href={next ? `/register?next=${encodeURIComponent(next)}` : "/register"} className="font-semibold text-brand hover:underline">
           Create an account
         </Link>
       </p>

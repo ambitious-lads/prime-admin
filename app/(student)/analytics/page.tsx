@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   Activity,
@@ -9,6 +10,7 @@ import {
   ChevronRight,
   CheckCircle2,
   Clock,
+  Bookmark,
   Lock,
   Target,
   Trophy,
@@ -51,10 +53,8 @@ import { Spinner } from "@/components/shared/loading";
 import { Skeleton } from "@/components/ui/skeleton";
 import { analyticsApi } from "@/lib/api/endpoints";
 import { qk } from "@/lib/query/keys";
-import { usePlan } from "@/hooks/use-plan";
 import { toastApiError } from "@/hooks/use-api-error";
 import { openSubscriptionPrompt } from "@/components/student/subscription-prompt-modal";
-import { ANALYTICS_UNLOCK_PLAN, planLabel } from "@/lib/utils/plans";
 import {
   formatDate,
   formatDuration,
@@ -66,55 +66,7 @@ const BRAND = "#0c5bfe";
 const GRID = "#e8ebf3";
 
 export default function AnalyticsPage() {
-  const { can } = usePlan();
-  if (!can(ANALYTICS_UNLOCK_PLAN)) return <AnalyticsLocked />;
   return <AnalyticsDashboard />;
-}
-
-function AnalyticsLocked() {
-  return (
-    <div className="space-y-6">
-      <div className="relative overflow-hidden rounded-2xl border border-line">
-        <div className="pointer-events-none select-none blur-sm" aria-hidden>
-          <div className="space-y-4 p-6">
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-              {Array.from({ length: 4 }).map((_, i) => (
-                <Skeleton key={i} className="h-24" />
-              ))}
-            </div>
-            <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-              {Array.from({ length: 4 }).map((_, i) => (
-                <Skeleton key={i} className="h-64" />
-              ))}
-            </div>
-          </div>
-        </div>
-        <div className="absolute inset-0 flex items-center justify-center bg-white/40">
-          <Card className="max-w-sm text-center">
-            <CardContent className="flex flex-col items-center gap-4 p-8">
-              <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-50 text-brand">
-                <Lock className="h-7 w-7" />
-              </span>
-              <h2 className="font-display text-xl font-bold text-ink">
-                Analytics is a {planLabel(ANALYTICS_UNLOCK_PLAN)} feature
-              </h2>
-              <p className="text-sm text-muted">
-                Upgrade to {planLabel(ANALYTICS_UNLOCK_PLAN)} to unlock advanced
-                performance analytics and your UAT score calculator.
-              </p>
-              <Button onClick={() => openSubscriptionPrompt({
-                requiredPlan: "pro_plus",
-                title: "Unlock advanced UAT analytics",
-                description: "Upgrade to see detailed performance trends, topic mastery, mock standing, and the UAT score calculator.",
-              })}>
-                Upgrade to {planLabel(ANALYTICS_UNLOCK_PLAN)}
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-    </div>
-  );
 }
 
 function AnalyticsDashboard() {
@@ -138,6 +90,11 @@ function AnalyticsDashboard() {
         <span className="min-w-0 flex-1"><span className="block text-sm font-bold text-[#1A1A1A]">Score Calculator</span><span className="block text-xs text-[#6B7280]">Estimate your UAT net score</span></span>
         <ChevronRight className="h-5 w-5 text-[#9CA3AF]" />
       </a>
+      <Link href="/saved" className="flex min-h-16 items-center gap-3 rounded-2xl border border-[#E5E7EB] bg-white px-4 shadow-[0_2px_10px_rgba(15,23,42,0.045)] lg:hidden">
+        <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#EDF2FF] text-[#2D5BFF]"><Bookmark className="h-5 w-5" /></span>
+        <span className="min-w-0 flex-1"><span className="block text-sm font-bold text-[#1A1A1A]">Saved Library</span><span className="block text-xs text-[#6B7280]">Review saved questions and notes</span></span>
+        <ChevronRight className="h-5 w-5 text-[#9CA3AF]" />
+      </Link>
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
         {overview.isLoading || !o ? (
@@ -145,24 +102,24 @@ function AnalyticsDashboard() {
         ) : (
           <>
             <StatCard
-              label="Accuracy"
-              value={formatPercent(o.accuracy ?? 0)}
-              icon={<Target className="text-brand" />}
-            />
-            <StatCard
-              label="Questions solved"
-              value={formatNumber(o.questionsSolved ?? 0)}
+              label="Total Solved"
+              value={formatNumber(kpis?.totalSolved ?? o.questionsSolved ?? 0)}
               icon={<CheckCircle2 className="text-emerald-600" />}
             />
             <StatCard
+              label="Accuracy"
+              value={formatPercent(kpis?.accuracy ?? o.accuracy ?? 0)}
+              icon={<Target className="text-brand" />}
+            />
+            <StatCard
               label="Study time"
-              value={formatDuration(o.studyTimeSeconds ?? 0)}
+              value={kpis ? `${kpis.studyTimeHours}h` : formatDuration(o.studyTimeSeconds ?? 0)}
               icon={<Clock className="text-sky-600" />}
             />
             <StatCard
-              label="Rank"
-              value={o.rank != null ? `#${formatNumber(o.rank)}` : "—"}
-              icon={<Trophy className="text-amber-600" />}
+              label="Streak"
+              value={`${kpis?.currentStreakDays ?? 0} Days`}
+              icon={<Activity className="text-amber-600" />}
             />
           </>
         )}
@@ -209,6 +166,27 @@ function AnalyticsDashboard() {
         </div>
       ) : null}
 
+      {d?.detailedLocked ? (
+        <Card>
+          <CardContent className="flex flex-col items-center gap-3 p-6 text-center">
+            <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-50 text-brand">
+              <Lock className="h-7 w-7" />
+            </span>
+            <h2 className="text-lg font-extrabold text-ink">Unlock Detailed Analytics</h2>
+            <p className="max-w-sm text-sm leading-6 text-muted">
+              Upgrade to Pro Plus for performance trends, topic mastery, mock standing, and the UAT score calculator.
+            </p>
+            <Button onClick={() => openSubscriptionPrompt({
+              requiredPlan: "pro_plus",
+              title: "Unlock detailed analytics",
+              description: "Upgrade to see detailed performance trends, topic mastery, mock standing, and the UAT score calculator.",
+            })}>
+              View Pro Plus
+            </Button>
+          </CardContent>
+        </Card>
+      ) : (
+      <>
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <ChartCard
           title="Accuracy over time"
@@ -346,6 +324,8 @@ function AnalyticsDashboard() {
       </div>
 
       <ScoreCalculator />
+      </>
+      )}
     </div>
   );
 }

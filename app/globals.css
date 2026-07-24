@@ -197,7 +197,7 @@ body {
   }
 
   .mobile-tab-bar {
-    height: calc(68px + env(safe-area-inset-bottom));
+    height: calc(65px + env(safe-area-inset-bottom));
     box-shadow: 0 -4px 16px rgba(15, 23, 42, 0.055);
   }
 }

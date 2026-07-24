@@ -19,6 +19,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 import type { Exam, ExamAdminQuestion, ExamEditorInput, ExamQuestionEditorInput, PlanKey, QuestionOption } from "@/lib/api/types";
+import { CommunityShareActions } from "@/components/admin/community-share-actions";
 
 const emptyExam: ExamEditorInput = {
   title: "",
@@ -78,6 +79,7 @@ export default function AdminExamsPage() {
       id: "actions",
       header: "",
       cell: ({ row }) => <div className="flex justify-end gap-1">
+        <CommunityShareActions kind="mock" id={row.original.id} title={row.original.title} compact />
         <Button variant="ghost" size="icon" title="Manage questions" onClick={() => setQuestionExam(row.original)}><FileQuestion /></Button>
         <Button variant="ghost" size="icon" title="Edit exam" onClick={() => setEditingExam(row.original)}><Edit3 /></Button>
         <Button variant="ghost" size="icon" title="Delete exam" disabled={removeExam.isPending} onClick={() => { if (window.confirm(`Delete ${row.original.title}? This is only allowed before students attempt it.`)) removeExam.mutate(row.original.id); }}><Trash2 className="text-red-500" /></Button>

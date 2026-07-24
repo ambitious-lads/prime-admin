@@ -18,6 +18,7 @@ export function MobileAppPrompt() {
   const [isIos, setIsIos] = useState(false);
 
   useEffect(() => {
+    if (pathname.startsWith("/open/")) return;
     if (window.matchMedia("(display-mode: standalone)").matches) return;
     const mobileBrowser = window.matchMedia("(max-width: 768px)").matches || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
     if (!mobileBrowser) return;

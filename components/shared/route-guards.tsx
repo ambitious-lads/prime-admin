@@ -26,8 +26,11 @@ export function RequireUser({
   });
 
   useEffect(() => {
-    if (ready && !user) router.replace("/login");
-  }, [ready, user, router]);
+    if (ready && !user) {
+      const next = pathname ? `?next=${encodeURIComponent(pathname)}` : "";
+      router.replace(`/login${next}`);
+    }
+  }, [pathname, ready, user, router]);
 
   useEffect(() => {
     if (!enforceProfile || !profile.data || pathname === "/complete-profile") {

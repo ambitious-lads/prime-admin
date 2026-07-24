@@ -125,6 +125,8 @@ export type Topic = {
   setCount?: number;
   totalSets?: number;
   completedSets?: number;
+  totalQuestions?: number;
+  totalAnswered?: number;
   minPlan?: PlanKey;
   minPlanLabel?: string;
   isLocked?: boolean;

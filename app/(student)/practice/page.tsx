@@ -90,8 +90,8 @@ export default function PracticePage() {
           <Button variant="outline" className="w-full" onClick={() => setSubscriptionOpen(false)}>Continue with Free</Button>
         </DialogContent>
       </Dialog>
-      <div className="relative z-50 lg:-mt-[76px] lg:mb-3 lg:w-fit lg:max-w-[calc(100%-360px)]">
-        <div className="flex max-w-full snap-x overflow-x-auto rounded-xl border border-line bg-white p-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div className="relative z-50 -mx-3 border-b border-line bg-white px-3 py-2.5 sm:mx-0 sm:border-0 sm:bg-transparent sm:px-0 sm:py-0 lg:-mt-[76px] lg:mb-3 lg:w-fit lg:max-w-[calc(100%-360px)]">
+        <div className="flex max-w-full snap-x gap-2 overflow-x-auto bg-white [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:gap-0 sm:rounded-xl sm:border sm:border-line sm:p-1">
           {practiceFilters.map((group) => {
             const active = activeGrouping === group.key;
             const Icon = groupIcons[group.key];
@@ -101,11 +101,11 @@ export default function PracticePage() {
                 type="button"
                 onClick={() => setActiveGrouping(group.key)}
                 className={cn(
-                  "flex min-h-10 shrink-0 snap-start items-center gap-2 rounded-lg px-4 text-sm font-semibold transition-colors",
-                  active ? "bg-brand text-white shadow-sm" : "text-muted hover:bg-surface hover:text-ink",
+                  "flex min-h-9 shrink-0 snap-start items-center gap-2 rounded-[14px] px-3 text-sm font-bold transition-colors sm:min-h-10 sm:rounded-lg sm:px-4 sm:font-semibold",
+                  active ? "bg-ink text-white sm:bg-brand sm:shadow-sm" : "bg-surface text-ink hover:bg-brand-50 sm:bg-transparent sm:text-muted sm:hover:bg-surface sm:hover:text-ink",
                 )}
               >
-                <Icon className="h-4 w-4" />
+                <Icon className="hidden h-4 w-4 sm:block" />
                 {group.label}
               </button>
             );
@@ -118,7 +118,62 @@ export default function PracticePage() {
       ) : orderedTopics.length === 0 ? (
         <EmptyState icon={<Layers />} title="No topics yet" message="Practice topics will appear here once they are published." />
       ) : (
-        <section className="grid gap-4 xl:grid-cols-2">
+        <>
+        <section className="grid grid-cols-2 gap-2.5 pt-3 sm:hidden">
+          {orderedTopics.map((topic) => {
+            const total = topic.totalQuestions ?? topic.totalSets ?? topic.setCount ?? 0;
+            const solved = topic.totalAnswered ?? topic.completedSets ?? 0;
+            const accent = topic.accentColor ?? activeGroup.accentColor;
+            const href = topic.isLocked ? "/plans" : `/practice/topic/${topic.id}`;
+            return (
+              <Link
+                key={topic.id}
+                href={href}
+                onClick={(event) => {
+                  if (topic.isLocked) {
+                    event.preventDefault();
+                    setSubscriptionOpen(true);
+                  }
+                }}
+                className="min-w-0 overflow-hidden rounded-[14px] border border-[#E5E7EB] bg-white shadow-[0_4px_12px_rgba(15,23,42,0.08)] active:opacity-95"
+              >
+                <div className="relative aspect-[1.28/1] overflow-hidden bg-surface">
+                  {topic.imageUrl ? (
+                    <Image src={topic.imageUrl} alt={topic.name} fill unoptimized className="object-cover" />
+                  ) : (
+                    <div className="flex h-full items-center justify-center" style={{ color: accent }}>
+                      <Layers className="h-10 w-10" />
+                    </div>
+                  )}
+                  {topic.isLocked ? (
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/45">
+                      <LockKeyhole className="h-6 w-6 text-white" />
+                    </div>
+                  ) : null}
+                </div>
+                <div className="p-3">
+                  <h2 className="line-clamp-2 min-h-10 text-[15px] font-extrabold leading-5 text-ink">{topic.name}</h2>
+                  <div className="mt-2 flex items-center justify-between gap-2">
+                    <span className="flex min-w-0 items-center gap-2 text-xs font-bold text-muted">
+                      <span className="h-3 w-3 shrink-0 rounded-full" style={{ backgroundColor: topic.isLocked ? "#9CA3AF" : accent }} />
+                      <span className="truncate">{solved}/{total}</span>
+                    </span>
+                    <span
+                      className={cn(
+                        "shrink-0 rounded-lg px-2.5 py-1.5 text-[11px] font-bold",
+                        topic.isLocked ? "bg-surface text-muted" : "text-white",
+                      )}
+                      style={topic.isLocked ? undefined : { backgroundColor: accent }}
+                    >
+                      {topic.isLocked ? topic.minPlanLabel ?? "Unlock" : "Practice"}
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            );
+          })}
+        </section>
+        <section className="hidden gap-4 sm:grid xl:grid-cols-2">
           {orderedTopics.map((topic) => {
             const totalSets = topic.totalSets ?? topic.setCount ?? 0;
             const completedSets = topic.completedSets ?? 0;
@@ -175,6 +230,7 @@ export default function PracticePage() {
             );
           })}
         </section>
+        </>
       )}
     </div>
   );

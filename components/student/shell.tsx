@@ -8,16 +8,16 @@ import { useQuery } from "@tanstack/react-query";
 import {
   BarChart3,
   Bell,
-  BookOpen,
+  Layers3,
   PanelLeft,
-  Timer,
+  FileText,
   Flame,
   LogOut,
   Send,
   Settings,
   Smartphone,
   User,
-  BookOpenCheck,
+  Zap,
 } from "lucide-react";
 import { studentNav } from "@/config/nav";
 import { profileApi, streaksApi } from "@/lib/api/endpoints";
@@ -37,9 +37,9 @@ import { site } from "@/config/site";
 const studyRoutes = ["/practice", "/exams", "/courses", "/analytics"];
 const workspaceRoutes = ["/dashboard", "/saved", "/notes", "/notifications", "/plans"];
 const mobileTabs = [
-  { href: "/practice", label: "Practice", icon: BookOpenCheck },
-  { href: "/exams", label: "Mock Tests", icon: Timer },
-  { href: "/courses", label: "Courses", icon: BookOpen },
+  { href: "/practice", label: "Practice", icon: Zap },
+  { href: "/exams", label: "Mock Tests", icon: FileText },
+  { href: "/courses", label: "Courses", icon: Layers3 },
   { href: "/analytics", label: "Analytics", icon: BarChart3 },
 ];
 
@@ -162,12 +162,12 @@ export function StudentShell({ children }: { children: React.ReactNode }) {
         </div>
       </header>
       {!isPracticeDetailPage ? <header className={cn("z-40 hidden h-16 items-center px-4 sm:px-6 lg:flex", isPracticePage ? "relative border-transparent bg-transparent" : "sticky top-0 border-b border-line bg-white/95 backdrop-blur")}>{!isPracticePage ? <p className="text-sm font-bold text-ink">{currentLabel}</p> : null}<div className="ml-auto translate-y-1 flex items-center gap-2 sm:gap-3"><span className="hidden items-center gap-1.5 rounded-full border border-amber-200 bg-amber-50 px-3 py-1.5 text-xs font-bold text-amber-700 sm:flex"><Flame className="h-3.5 w-3.5" />{streak.data?.currentStreak ?? 0} day streak</span><PlanBadge plan={plan} /><span className="max-w-32 truncate text-sm font-semibold text-ink">{name}</span><AccountMenu /></div></header> : null}
-      <main className="mobile-app-content mx-auto w-full max-w-[1440px] px-4 py-5 pb-28 sm:px-6 lg:px-8 lg:py-8 lg:pb-8">{children}</main>
+      <main className="mobile-app-content mx-auto w-full max-w-[1440px] px-3 py-0 pb-24 sm:px-6 sm:py-5 lg:px-8 lg:py-8 lg:pb-8">{children}</main>
       <nav className="mobile-tab-bar fixed inset-x-0 bottom-0 z-40 grid grid-cols-4 border-t border-[#E5E7EB] bg-white px-1 pb-[env(safe-area-inset-bottom)] lg:hidden" aria-label="Primary navigation">
         {mobileTabs.map(({ href, label, icon: Icon }) => {
           const active = pathname === href || pathname.startsWith(`${href}/`);
-          return <Link key={href} href={href} className={cn("flex min-w-0 flex-col items-center justify-center gap-1 text-[11px] font-semibold transition-colors", active ? "text-[#2D5BFF]" : "text-[#6B7280]")} aria-current={active ? "page" : undefined}>
-            <span className={cn("flex h-7 w-10 items-center justify-center rounded-xl", active && "bg-[#EDF2FF]")}><Icon className="h-5 w-5" strokeWidth={active ? 2.5 : 2} /></span>
+          return <Link key={href} href={href} className={cn("flex min-w-0 flex-col items-center justify-center gap-0.5 text-[11px] font-medium transition-colors", active ? "text-[#2D5BFF]" : "text-[#6B7280]")} aria-current={active ? "page" : undefined}>
+            <span className="flex h-7 w-10 items-center justify-center"><Icon className="h-[22px] w-[22px]" strokeWidth={active ? 2.6 : 2} fill={active && href === "/practice" ? "currentColor" : "none"} /></span>
             <span className="truncate">{label}</span>
           </Link>;
         })}

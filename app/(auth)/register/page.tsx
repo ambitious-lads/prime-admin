@@ -19,6 +19,7 @@ import { clearPendingReferralCode, getPendingReferralCode, normalizeReferralCode
 function RegisterForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const next = searchParams.get("next");
   const [submitting, setSubmitting] = useState(false);
 
   const form = useForm<RegisterInput>({
@@ -45,7 +46,10 @@ function RegisterForm() {
       clearPendingReferralCode();
       captureEvent("web_register_success");
       toast.success("Account created. Verify your phone to continue.");
-      router.push(`/verify?phone=${encodeURIComponent(values.phone)}`);
+      const nextParam = next?.startsWith("/") && !next.startsWith("//")
+        ? `&next=${encodeURIComponent(next)}`
+        : "";
+      router.push(`/verify?phone=${encodeURIComponent(values.phone)}${nextParam}`);
     } catch (e) {
       captureEvent("web_register_failure");
       toastApiError(e);
@@ -135,7 +139,7 @@ function RegisterForm() {
 
       <p className="text-center text-sm text-muted">
         Already have an account?{" "}
-        <Link href="/login" className="font-semibold text-brand hover:underline">
+        <Link href={next ? `/login?next=${encodeURIComponent(next)}` : "/login"} className="font-semibold text-brand hover:underline">
           Sign in
         </Link>
       </p>

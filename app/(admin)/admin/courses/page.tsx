@@ -9,6 +9,7 @@ import { EmptyState } from "@/components/shared/empty-state";
 import { CardGridSkeleton } from "@/components/shared/loading";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { CommunityShareActions } from "@/components/admin/community-share-actions";
 
 export default function AdminCoursesPage() {
   const { data: courses = [], isLoading } = useQuery({
@@ -38,8 +39,10 @@ export default function AdminCoursesPage() {
         />
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {courses.map((course) => (
-            <Card key={course.id ?? course.courseId}>
+          {courses.map((course) => {
+            const courseId = course.id ?? course.courseId;
+            return (
+            <Card key={courseId}>
               <CardHeader>
                 <CardTitle className="flex items-center justify-between gap-2">
                   <span className="line-clamp-1">{course.title}</span>
@@ -56,9 +59,16 @@ export default function AdminCoursesPage() {
                   <Layers className="h-4 w-4" />
                   {course.materialCount ?? course.materialsCount ?? 0} materials
                 </div>
+                {courseId ? (
+                  <CommunityShareActions
+                    kind="course"
+                    id={courseId}
+                    title={course.title}
+                  />
+                ) : null}
               </CardContent>
             </Card>
-          ))}
+          )})}
         </div>
       )}
     </div>

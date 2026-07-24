@@ -2,8 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo, useState } from "react";
-import { useParams } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
+import { useParams, useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import {
   ArrowLeft,
@@ -44,6 +44,8 @@ const difficultyStyle: Record<Difficulty, { label: string; color: string; backgr
 export default function TopicSetsPage() {
   const params = useParams<{ topicId: string }>();
   const topicId = params.topicId;
+  const searchParams = useSearchParams();
+  const openSetId = searchParams.get("openSetId");
   const [selectedSet, setSelectedSet] = useState<PracticeSet | null>(null);
 
   const topics = useQuery({
@@ -66,6 +68,24 @@ export default function TopicSetsPage() {
   const totalQuestions = setList.reduce((total, set) => total + (set.totalQuestions ?? set.questionCount ?? 0), 0);
   const topicProgress = setList.length ? Math.round((completedSets / setList.length) * 100) : 0;
   const accent = topic?.accentColor ?? "#2D5BFF";
+
+  useEffect(() => {
+    if (!openSetId || sets.isLoading || selectedSet) return;
+    const linkedSet = setList.find((item) => item.id === openSetId);
+    if (!linkedSet) return;
+    const timer = window.setTimeout(() => {
+      if (linkedSet.isLocked || linkedSet.status === "locked") {
+        openSubscriptionPrompt({
+          requiredPlan: linkedSet.minPlan === "pro_plus" ? "pro_plus" : "pro",
+          title: `Unlock ${linkedSet.title}`,
+          description: `Upgrade to ${linkedSet.minPlanLabel ?? "Pro"} to open this practice set and continue your UAT preparation.`,
+        });
+      } else {
+        setSelectedSet(linkedSet);
+      }
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, [openSetId, selectedSet, setList, sets.isLoading]);
 
   return (
     <div className="mx-auto max-w-5xl space-y-7">

@@ -28,6 +28,7 @@ function VerifyForm() {
   const router = useRouter();
   const params = useSearchParams();
   const phone = params.get("phone") ?? "";
+  const next = params.get("next");
   const { setSession } = useAuth();
 
   const [digits, setDigits] = useState<string[]>(Array(OTP_LENGTH).fill(""));
@@ -85,7 +86,13 @@ function VerifyForm() {
       const session = await authApi.verifyOtp({ phone, otpCode: code });
       setSession(session);
       captureEvent("web_otp_verify_success", { role: session.user.role });
-      router.replace(await resolvePostAuthRoute(session.user));
+      const defaultRoute = await resolvePostAuthRoute(session.user);
+      const validNext = next?.startsWith("/") && !next.startsWith("//") ? next : null;
+      if (validNext && defaultRoute === "/complete-profile") {
+        router.replace(`/complete-profile?next=${encodeURIComponent(validNext)}`);
+      } else {
+        router.replace(validNext || defaultRoute);
+      }
     } catch (e) {
       captureEvent("web_otp_verify_failure");
       if (e instanceof DeviceConflictError) {
