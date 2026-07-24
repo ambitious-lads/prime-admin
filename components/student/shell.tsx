@@ -32,6 +32,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { SubscriptionPromptModal } from "@/components/student/subscription-prompt-modal";
+import { site } from "@/config/site";
 
 const studyRoutes = ["/practice", "/exams", "/courses", "/analytics"];
 const workspaceRoutes = ["/dashboard", "/saved", "/notes", "/notifications", "/plans"];
@@ -104,20 +105,8 @@ export function StudentShell({ children }: { children: React.ReactNode }) {
   const profile = useQuery({ queryKey: qk.profile, queryFn: profileApi.me });
   const [collapsed, setCollapsed] = useState(false);
   const [hydrated, setHydrated] = useState(false);
-  const [showSplash, setShowSplash] = useState(true);
 
   useEffect(() => { setCollapsed(window.localStorage.getItem("prime-web-sidebar") === "collapsed"); setHydrated(true); }, []);
-  useEffect(() => {
-    if (!window.matchMedia("(max-width: 1023px)").matches || window.sessionStorage.getItem("prime.mobile-splash-seen")) {
-      setShowSplash(false);
-      return;
-    }
-    const timer = window.setTimeout(() => {
-      window.sessionStorage.setItem("prime.mobile-splash-seen", "1");
-      setShowSplash(false);
-    }, 800);
-    return () => window.clearTimeout(timer);
-  }, []);
 
   const currentLabel = useMemo(() => studentNav.find((item) => pathname === item.href || pathname.startsWith(`${item.href}/`))?.label ?? "Prime UAT", [pathname]);
   const isPracticePage = pathname === "/practice" || pathname.startsWith("/practice/");
@@ -151,14 +140,13 @@ export function StudentShell({ children }: { children: React.ReactNode }) {
       <NavSection label="Workspace" routes={workspaceRoutes} collapsed={collapsed} />
     </div>
     <div className={cn("border-t border-line p-3", collapsed && "px-2.5")}>
-      <a href="https://t.me/prime_uat" target="_blank" rel="noreferrer" title={collapsed ? "@prime_uat" : undefined} className={cn("mb-2 flex min-h-10 items-center gap-3 rounded-lg px-3 text-sm font-semibold text-muted transition-colors hover:bg-surface hover:text-brand", collapsed && "justify-center px-0")}><Send className="h-[18px] w-[18px]" />{!collapsed ? "@prime_uat" : null}</a>
+      <a href={site.supportTelegramUrl} target="_blank" rel="noopener noreferrer" title={collapsed ? site.supportTelegram : undefined} className={cn("mb-2 flex min-h-10 items-center gap-3 rounded-lg px-3 text-sm font-semibold text-muted transition-colors hover:bg-surface hover:text-brand", collapsed && "justify-center px-0")}><Send className="h-[18px] w-[18px]" />{!collapsed ? site.supportTelegram : null}</a>
       <div className={cn("flex items-center gap-3 rounded-lg bg-surface p-2.5", collapsed && "justify-center bg-transparent p-0")}><Avatar className="h-9 w-9 shrink-0">{avatarUrl ? <AvatarImage src={avatarUrl} alt={name} /> : null}<AvatarFallback>{initialsOf(name) || "S"}</AvatarFallback></Avatar>{!collapsed ? <div className="min-w-0"><p className="truncate text-sm font-bold text-ink">{name}</p><p className="text-xs text-muted">{plan === "pro_plus" ? "Pro Plus" : plan === "pro" ? "Pro" : "Free"} plan</p></div> : null}</div>
     </div>
   </div>;
 
   return <div className="min-h-screen bg-[#f7f8fb]">
     <SubscriptionPromptModal />
-    {showSplash ? <div className="fixed inset-0 z-[70] flex items-center justify-center bg-white lg:hidden" aria-label="Loading Prime UAT"><Image src="/images/prime.png" alt="Prime UAT" width={210} height={48} priority className="h-auto w-[210px] animate-pulse object-contain" /></div> : null}
     <aside className={cn("group/sidebar fixed inset-y-0 left-0 z-30 hidden border-r border-line bg-white lg:block", hydrated && "transition-[width] duration-250 ease-[cubic-bezier(0.4,0,0.2,1)]", collapsed ? "w-[84px]" : "w-[264px]")}>
       {nav}
     </aside>

@@ -13,11 +13,18 @@ import type { PlanKey } from "@/lib/api/types";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
+import { FullPageSpinner } from "@/components/shared/loading";
+import {
+  PaymentMethodSelector,
+  type PaymentMethodId,
+} from "@/components/student/payment-method-selector";
 import { site } from "@/config/site";
+import { useState } from "react";
 
 export default function PlansPage() {
   const searchParams = useSearchParams();
+  const [paymentMethod, setPaymentMethod] =
+    useState<PaymentMethodId>("telebirr");
   const onboarding = searchParams.get("onboarding") === "1";
   const { data, isLoading } = useQuery({ queryKey: qk.plan, queryFn: plansApi.me });
 
@@ -66,12 +73,22 @@ export default function PlansPage() {
         </div>
       ) : null}
 
-      {isLoading ? (
-        <div className="grid grid-cols-1 gap-3 sm:gap-4 lg:grid-cols-3">
-          {Array.from({ length: 3 }).map((_, i) => (
-            <Skeleton key={i} className="h-80" />
-          ))}
+      <section className="space-y-3 border-y border-line py-5">
+        <div>
+          <h2 className="text-sm font-bold text-ink">Choose a payment account</h2>
+          <p className="mt-1 text-xs leading-5 text-muted">
+            Select where you plan to send the payment. Both account numbers stay
+            visible so you can check them before choosing a plan.
+          </p>
         </div>
+        <PaymentMethodSelector
+          selected={paymentMethod}
+          onSelect={setPaymentMethod}
+        />
+      </section>
+
+      {isLoading ? (
+        <FullPageSpinner />
       ) : (
         <div className="grid grid-cols-1 gap-3 sm:gap-4 lg:grid-cols-3">
           {PLAN_LIST.map((p) => {
@@ -136,7 +153,7 @@ export default function PlansPage() {
                   ) : isPaid ? (
                     <Button asChild>
                       <Link
-                        href={`/plans/checkout?plan=${p.key as Exclude<PlanKey, "free">}`}
+                        href={`/plans/checkout?plan=${p.key as Exclude<PlanKey, "free">}&method=${paymentMethod}`}
                       >
                         {ctaLabel}
                       </Link>

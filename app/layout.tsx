@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Sora, Plus_Jakarta_Sans, Archivo_Black } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/providers";
+import { InitialLoadingScreen } from "@/components/shared/initial-loading-screen";
 import { seo } from "@/lib/seo";
 
 const display = Sora({
@@ -66,6 +67,7 @@ export default function RootLayout({
       className={`${display.variable} ${body.variable} ${accent.variable} h-full antialiased`}
     >
       <body className="min-h-full bg-background text-ink">
+        <InitialLoadingScreen />
         <Providers>{children}</Providers>
       </body>
     </html>

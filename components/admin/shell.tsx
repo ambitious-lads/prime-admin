@@ -20,6 +20,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { site } from "@/config/site";
 
 function pageTitle(pathname: string) {
   const match = [...adminNav]
@@ -91,13 +92,13 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
             </p>
           </div>
           <a
-            href="https://t.me/prime_uat"
+            href={site.supportTelegramUrl}
             target="_blank"
-            rel="noreferrer"
+            rel="noopener noreferrer"
             className="mt-2 flex items-center gap-2 px-3 py-2 text-xs font-semibold text-muted hover:text-brand"
           >
             <Send className="size-4" />
-            @prime_uat
+            {site.supportTelegram}
           </a>
         </div>
       </aside>

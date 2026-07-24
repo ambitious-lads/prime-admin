@@ -8,13 +8,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   ArrowLeft,
-  Banknote,
   CheckCircle2,
   Clock3,
   Link2,
   LockKeyhole,
   Phone,
-  Smartphone,
 } from "lucide-react";
 import { plansApi } from "@/lib/api/endpoints";
 import { qk } from "@/lib/query/keys";
@@ -30,6 +28,11 @@ import { FullPageSpinner, Spinner } from "@/components/shared/loading";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  isPaymentMethodId,
+  PaymentMethodSelector,
+  type PaymentMethodId,
+} from "@/components/student/payment-method-selector";
 
 type PaidPlan = Exclude<PlanKey, "free">;
 
@@ -42,8 +45,12 @@ function CheckoutInner() {
   const searchParams = useSearchParams();
   const queryClient = useQueryClient();
   const planParam = searchParams.get("plan");
+  const methodParam = searchParams.get("method");
   const plan: PaidPlan = isPaidPlan(planParam) ? planParam : "pro";
   const planInfo = PLANS[plan];
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethodId>(
+    isPaymentMethodId(methodParam) ? methodParam : "telebirr",
+  );
   const [submitting, setSubmitting] = useState(false);
   const [verified, setVerified] = useState(false);
   const [pendingReview, setPendingReview] = useState(false);
@@ -162,23 +169,17 @@ function CheckoutInner() {
       </section>
 
       <section className="space-y-3">
-        <h2 className="text-sm font-bold text-ink">Pay to either account</h2>
-        <div className="divide-y divide-line border-y border-line">
-          {site.paymentAccounts.map((account) => {
-            const Icon = account.method === "Telebirr" ? Smartphone : Banknote;
-            return (
-              <div key={account.method} className="flex items-center gap-3 py-4">
-                <Icon className="h-5 w-5 shrink-0 text-brand" />
-                <div className="min-w-0 flex-1">
-                  <p className="text-sm font-bold text-ink">{account.method}</p>
-                  <p className="mt-0.5 break-all text-sm text-muted">
-                    {account.account} · {account.name}
-                  </p>
-                </div>
-              </div>
-            );
-          })}
+        <div>
+          <h2 className="text-sm font-bold text-ink">Choose where to pay</h2>
+          <p className="mt-1 text-xs leading-5 text-muted">
+            Pay {formatMoney(amountDue)} or more to the selected account.
+          </p>
         </div>
+        <PaymentMethodSelector
+          selected={paymentMethod}
+          onSelect={setPaymentMethod}
+          compact
+        />
       </section>
 
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -200,8 +201,9 @@ function CheckoutInner() {
             </p>
           ) : (
             <p className="text-xs leading-5 text-muted">
-              Paste the full receipt link from your bank. Telebirr references
-              can also be entered directly.
+              Paste the full receipt URL from Telebirr, CBE, Zemen, Bank of
+              Abyssinia, or Awash. A Telebirr reference can also be entered
+              directly, including when you paid from another supported bank.
             </p>
           )}
         </div>
