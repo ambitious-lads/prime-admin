@@ -1,14 +1,12 @@
-import Link from "next/link";
+"use client";
+
+import { StoreInstallButton } from "@/components/shared/store-install-button";
 
 type StoreBadgesProps = {
   /** Visual theme — "dark" badges on light backgrounds, "light" badges on dark backgrounds. */
   variant?: "dark" | "light";
   className?: string;
 };
-
-const APP_STORE_URL = "https://apps.apple.com/app/prime";
-const PLAY_STORE_URL =
-  "https://play.google.com/store/apps/details?id=com.primely.app";
 
 export default function StoreBadges({
   variant = "dark",
@@ -23,11 +21,9 @@ export default function StoreBadges({
 
   return (
     <div className={`flex flex-col sm:flex-row gap-4 ${className}`}>
-      <Link
-        href={APP_STORE_URL}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Download Prime UAT on the App Store"
+      <StoreInstallButton
+        platform="ios"
+        ariaLabel="Download Prime UAT on the App Store"
         className={`${base} ${styles}`}
       >
         <svg
@@ -44,13 +40,11 @@ export default function StoreBadges({
           </span>
           <span className="text-lg font-semibold font-display">App Store</span>
         </span>
-      </Link>
+      </StoreInstallButton>
 
-      <Link
-        href={PLAY_STORE_URL}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Get Prime UAT on Google Play"
+      <StoreInstallButton
+        platform="android"
+        ariaLabel="Get Prime UAT on Google Play"
         className={`${base} ${styles}`}
       >
         <svg
@@ -73,7 +67,7 @@ export default function StoreBadges({
           <span className="text-[0.65rem] font-medium opacity-70">GET IT ON</span>
           <span className="text-lg font-semibold font-display">Google Play</span>
         </span>
-      </Link>
+      </StoreInstallButton>
     </div>
   );
 }

@@ -4,10 +4,7 @@ import { useEffect, useMemo } from "react";
 import { useParams } from "next/navigation";
 import { Download, ExternalLink, Globe2 } from "lucide-react";
 import { savePendingReferralCode } from "@/lib/referrals/attribution";
-
-const PLAY_STORE_URL =
-  process.env.NEXT_PUBLIC_GOOGLE_PLAY_URL ||
-  "https://play.google.com/store/apps/details?id=com.primely.app";
+import { ANDROID_DOWNLOAD_URL } from "@/lib/mobile-release";
 
 export default function ReferralRedirectPage() {
   const params = useParams<{ code: string }>();
@@ -43,8 +40,8 @@ export default function ReferralRedirectPage() {
           <a href={`/register?referralCode=${encodeURIComponent(code)}`} className="inline-flex h-12 items-center justify-center gap-2 rounded-lg border border-line bg-white px-5 text-sm font-bold text-ink">
             <Globe2 className="h-4 w-4" /> Continue on web
           </a>
-          <a href={PLAY_STORE_URL} className="inline-flex h-12 items-center justify-center gap-2 rounded-lg border border-line bg-white px-5 text-sm font-bold text-ink">
-            <Download className="h-4 w-4" /> Get it on Google Play
+          <a href={ANDROID_DOWNLOAD_URL} className="inline-flex h-12 items-center justify-center gap-2 rounded-lg border border-line bg-white px-5 text-sm font-bold text-ink">
+            <Download className="h-4 w-4" /> Download Android app
           </a>
         </div>
       </section>

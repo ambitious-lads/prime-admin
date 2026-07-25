@@ -5,9 +5,9 @@ import { usePathname } from "next/navigation";
 import { ExternalLink, Smartphone, X } from "lucide-react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { ANDROID_DOWNLOAD_URL } from "@/lib/mobile-release";
 
 const SESSION_PROMPT_KEY = "prime.mobile-app-prompt-shown";
-const PLAY_STORE_URL = process.env.NEXT_PUBLIC_GOOGLE_PLAY_URL || "https://play.google.com/store/apps/details?id=com.primely.app";
 const APP_STORE_URL = process.env.NEXT_PUBLIC_APP_STORE_URL || "";
 const APP_URL = "primely://";
 
@@ -40,12 +40,12 @@ export function MobileAppPrompt() {
     window.location.assign(APP_URL);
     window.setTimeout(() => {
       if (document.hidden || Date.now() - startedAt < 1000) return;
-      const storeUrl = isIos ? APP_STORE_URL : PLAY_STORE_URL;
+      const storeUrl = isIos ? APP_STORE_URL : ANDROID_DOWNLOAD_URL;
       if (storeUrl) window.location.assign(storeUrl);
     }, 1200);
   }
 
-  const storeUrl = isIos ? APP_STORE_URL : PLAY_STORE_URL;
+  const storeUrl = isIos ? APP_STORE_URL : ANDROID_DOWNLOAD_URL;
   const inStudentApp = /^\/(dashboard|practice|exams|courses|analytics|saved|notes|notifications|plans|profile|settings|device)(\/|$)/.test(pathname);
 
   return <>

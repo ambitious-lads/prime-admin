@@ -10,10 +10,8 @@ import {
   type CommunityContentKind,
 } from "@/lib/community-links";
 import { Button } from "@/components/ui/button";
+import { ANDROID_DOWNLOAD_URL } from "@/lib/mobile-release";
 
-const PLAY_STORE_URL =
-  process.env.NEXT_PUBLIC_GOOGLE_PLAY_URL ||
-  "https://play.google.com/store/apps/details?id=com.primely.app";
 const APP_STORE_URL = process.env.NEXT_PUBLIC_APP_STORE_URL || "";
 
 export function CommunityLinkGateway({
@@ -42,7 +40,7 @@ export function CommunityLinkGateway({
     return () => window.clearTimeout(timer);
   }, [appUrl, router, webUrl]);
 
-  const storeUrl = isIos ? APP_STORE_URL : PLAY_STORE_URL;
+  const storeUrl = isIos ? APP_STORE_URL : ANDROID_DOWNLOAD_URL;
 
   if (mobile === false || mobile === null) {
     return (
