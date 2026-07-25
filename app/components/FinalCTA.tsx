@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import DownloadModal from "./DownloadModal";
+import StoreBadges from "./StoreBadges";
 import { getPublicCommunity } from "@/lib/public-community";
 
 export default async function FinalCTA() {
@@ -50,6 +51,10 @@ export default async function FinalCTA() {
                 className="inline-flex w-full items-center justify-center rounded-xl border border-white/40 px-6 py-3.5 text-base font-semibold text-white transition-colors hover:bg-white/10 sm:w-auto"
               />
             </div>
+            <StoreBadges
+              variant="light"
+              className="mt-4 justify-center [&>button]:w-full [&>button]:justify-center sm:[&>button]:w-auto"
+            />
           </div>
         </div>
       </div>

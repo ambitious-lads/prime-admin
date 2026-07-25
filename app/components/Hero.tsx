@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, CheckCircle2, Smartphone } from "lucide-react";
 import DownloadModal from "./DownloadModal";
+import StoreBadges from "./StoreBadges";
 import { getPublicCommunity } from "@/lib/public-community";
 
 export default async function Hero() {
@@ -23,6 +24,7 @@ export default async function Hero() {
             </Link>
             <DownloadModal label={<><Smartphone className="h-4 w-4" /> Get the app</>} className="inline-flex min-h-[52px] items-center justify-center gap-2 rounded-xl border border-[#DCE4FF] bg-white px-4 text-sm font-bold text-[#2D5BFF] shadow-sm active:scale-[0.98]" />
           </div>
+          <StoreBadges className="mt-4 [&>button]:w-full [&>button]:justify-center" />
 
           <div className="relative mx-auto mt-10 h-[320px] w-full max-w-[390px] overflow-hidden" aria-label="Prime UAT mobile app preview">
             <div className="absolute inset-x-8 bottom-4 h-20 rounded-full bg-[#2D5BFF]/12 blur-2xl" />
@@ -58,6 +60,7 @@ export default async function Hero() {
                 <Link href="/register" className="group inline-flex min-w-0 items-center justify-center gap-2 rounded-2xl bg-brand px-7 py-4 text-base font-semibold text-white transition-all duration-200 animate-pulse-glow hover:scale-[1.02] hover:bg-brand-600 hover:shadow-xl hover:shadow-brand/20"><span>Start Preparing Free</span><svg className="h-5 w-5 transition-transform duration-200 group-hover:translate-x-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg></Link>
                 <DownloadModal label="Download the app" className="inline-flex min-w-0 items-center justify-center rounded-2xl border-2 border-brand/80 bg-white px-7 py-4 text-base font-semibold text-brand shadow-sm transition-all duration-200 hover:scale-[1.02] hover:border-brand hover:bg-brand-50/50" />
               </div>
+              <StoreBadges className="[&>button]:min-w-[190px] [&>button]:justify-center" />
               <div className="hidden flex-col items-center gap-3 border-t border-line/40 pt-5 md:flex md:flex-row md:items-center md:gap-4 md:pt-6">
                 <div className="flex -space-x-3">{community.recentMembers.map((member) => <div key={member.id} className="relative h-10 w-10 overflow-hidden rounded-full border-2 border-white shadow-md transition-all duration-200 hover:z-10 hover:scale-110"><Image src={member.avatarUrl} alt={member.displayName} fill unoptimized sizes="40px" className="object-cover" /></div>)}</div>
                 <div className="text-center text-sm font-medium text-muted sm:text-left sm:text-base">Join <span className="relative inline-block font-bold text-brand">{community.displayedCommunitySize.toLocaleString()}+</span> students preparing with Prime UAT</div>
