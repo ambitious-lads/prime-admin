@@ -27,7 +27,7 @@ export default async function FinalCTA() {
             <p className="mt-5 text-base sm:text-lg text-white/85 font-medium leading-relaxed">
               Join {community.displayedCommunitySize.toLocaleString()}+ Ethiopian
               students studying smarter with Prime UAT.
-              Start free today with web access or scan the app QR from your phone.
+              Start free today on the web or install the Android app.
             </p>
 
             <div className="mt-9 flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -47,7 +47,7 @@ export default async function FinalCTA() {
                 </svg>
               </Link>
               <DownloadModal
-                label="Scan app QR"
+                label="Download Android app"
                 className="inline-flex w-full items-center justify-center rounded-xl border border-white/40 px-6 py-3.5 text-base font-semibold text-white transition-colors hover:bg-white/10 sm:w-auto"
               />
             </div>
