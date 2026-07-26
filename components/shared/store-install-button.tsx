@@ -3,7 +3,10 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { CalendarDays, X } from "lucide-react";
 import { createPortal } from "react-dom";
-import { fetchMobileRelease } from "@/lib/mobile-release";
+import {
+  ANDROID_DOWNLOAD_URL,
+  fetchMobileRelease,
+} from "@/lib/mobile-release";
 
 type StoreInstallButtonProps = {
   platform: "android" | "ios";
@@ -52,6 +55,11 @@ export function StoreInstallButton({
 
   async function handleClick() {
     if (loading) return;
+    if (platform === "android") {
+      window.location.assign(ANDROID_DOWNLOAD_URL);
+      return;
+    }
+
     setLoading(true);
     try {
       const config = await fetchMobileRelease();

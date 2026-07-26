@@ -2,7 +2,8 @@ export const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL ||
   "https://primely-api.onrender.com/api/v1";
 
-export const ANDROID_DOWNLOAD_URL = `${API_BASE_URL}/public/mobile-release/android/download`;
+export const ANDROID_DOWNLOAD_URL =
+  "https://play.google.com/store/apps/details?id=com.primely.app";
 export const MOBILE_RELEASE_URL = `${API_BASE_URL}/public/mobile-release`;
 
 export type PlatformRelease = {
