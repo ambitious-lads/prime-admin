@@ -274,6 +274,16 @@ export default function ExamReportPage() {
                       <p className="text-xs font-semibold uppercase tracking-wide text-muted">
                         Question {index + 1}
                       </p>
+                      {question.passage ? (
+                        <div className="rounded-lg border border-line bg-surface/70 p-3.5">
+                          <p className="mb-1.5 text-xs font-bold uppercase text-muted">
+                            Passage
+                          </p>
+                          <p className="whitespace-pre-wrap text-sm leading-6 text-ink">
+                            {question.passage}
+                          </p>
+                        </div>
+                      ) : null}
                       <p className="font-medium leading-relaxed text-ink">
                         {question.questionText}
                       </p>

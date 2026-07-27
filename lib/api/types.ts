@@ -182,8 +182,29 @@ export type RichContentBlock =
 
 export type RichDocument = { version: 1; blocks: RichContentBlock[] };
 
+export type CoordinatePoint = {
+  x: number;
+  y: number;
+  label?: string;
+  color?: string;
+};
+
 export type QuestionVisual =
-  | { type: "coordinate_graph"; title?: string; xMin: number; xMax: number; yMin: number; yMax: number; lines?: unknown[]; points?: unknown[] }
+  | {
+      type: "coordinate_graph";
+      title?: string;
+      xMin: number;
+      xMax: number;
+      yMin: number;
+      yMax: number;
+      lines?: {
+        label?: string;
+        through: [CoordinatePoint, CoordinatePoint];
+        color?: string;
+        dashed?: boolean;
+      }[];
+      points?: CoordinatePoint[];
+    }
   | ({ type: "image" } & RichImage)
   | { type: "rich_document"; prompt: RichDocument; explanation?: RichDocument };
 
@@ -193,6 +214,7 @@ export type Question = {
   practiceSetId?: string;
   text?: string;
   questionText: string;
+  passage?: string | null;
   options: QuestionOption[];
   visual?: QuestionVisual | null;
   correctOption?: string;
@@ -382,6 +404,7 @@ export type ExamReport = {
   questions: {
     questionId: string;
     questionText: string;
+    passage?: string | null;
     options: QuestionOption[];
     selectedOption: string | null;
     correctOption: string;

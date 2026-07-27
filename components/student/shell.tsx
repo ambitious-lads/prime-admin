@@ -109,6 +109,7 @@ export function StudentShell({ children }: { children: React.ReactNode }) {
   useEffect(() => { setCollapsed(window.localStorage.getItem("prime-web-sidebar") === "collapsed"); setHydrated(true); }, []);
 
   const currentLabel = useMemo(() => studentNav.find((item) => pathname === item.href || pathname.startsWith(`${item.href}/`))?.label ?? "Prime UAT", [pathname]);
+  const isExamAttemptPage = /^\/exams\/attempt\/[^/]+$/.test(pathname);
   const isPracticePage = pathname === "/practice" || pathname.startsWith("/practice/");
   const isPracticeDetailPage =
     pathname.startsWith("/practice/topic/") || pathname.startsWith("/practice/set/");
@@ -116,6 +117,16 @@ export function StudentShell({ children }: { children: React.ReactNode }) {
   const avatarUrl = profile.data?.profile?.avatarUrl ?? user?.avatarUrl ?? null;
 
   function toggleSidebar() { setCollapsed((current) => { const next = !current; window.localStorage.setItem("prime-web-sidebar", next ? "collapsed" : "open"); return next; }); }
+
+  if (isExamAttemptPage) {
+    return (
+      <div className="min-h-dvh bg-[#f7f8fb]">
+        <main className="mx-auto min-h-dvh w-full max-w-[1440px] px-3 py-4 sm:px-6 sm:py-6 lg:px-8">
+          {children}
+        </main>
+      </div>
+    );
+  }
 
   const nav = <div className="flex h-full flex-col">
     <div className="flex h-[72px] items-center overflow-hidden border-b border-line px-3">

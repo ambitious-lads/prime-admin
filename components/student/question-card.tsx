@@ -7,6 +7,7 @@ import { OptionButton, type OptionState } from "@/components/student/option-butt
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { RichDocumentView } from "@/components/student/rich-document-view";
+import { QuestionVisualView } from "@/components/student/question-visual-view";
 
 export function QuestionCard({
   question,
@@ -66,6 +67,8 @@ export function QuestionCard({
         {question.visual?.type === "rich_document" ? (
           <RichDocumentView document={question.visual.prompt} />
         ) : null}
+
+        <QuestionVisualView visual={question.visual} />
 
         <div className="space-y-3">
           {(question.options ?? []).map((opt) => (
