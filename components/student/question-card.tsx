@@ -8,6 +8,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { RichDocumentView } from "@/components/student/rich-document-view";
 import { QuestionVisualView } from "@/components/student/question-visual-view";
+import { QuestionPrompt } from "@/components/student/question-prompt";
+import { QuestionExplanationView } from "@/components/student/question-explanation-view";
 
 export function QuestionCard({
   question,
@@ -59,9 +61,10 @@ export function QuestionCard({
         </div>
 
         {question.visual?.type !== "rich_document" ? (
-          <h2 className="text-lg font-semibold font-display text-ink">
-            {question.questionText}
-          </h2>
+          <QuestionPrompt
+            text={question.questionText}
+            className="text-lg font-semibold font-display"
+          />
         ) : null}
 
         {question.visual?.type === "rich_document" ? (
@@ -109,10 +112,17 @@ export function QuestionCard({
               >
                 {result.isCorrect ? "Correct!" : "Not quite."}
               </p>
-              {result.explanation ? (
+              {result.explanation ||
+              (question.visual?.type === "rich_document" &&
+                question.visual.explanation) ? (
                 <div className="mt-2 flex gap-2">
                   <Lightbulb className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
-                  <p className="text-sm text-ink">{result.explanation}</p>
+                  <div className="min-w-0 flex-1">
+                    <QuestionExplanationView
+                      explanation={result.explanation}
+                      visual={question.visual}
+                    />
+                  </div>
                 </div>
               ) : null}
             </div>

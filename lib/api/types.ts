@@ -263,6 +263,7 @@ export type QuestionReport = {
   userFullName: string | null;
   userPhone: string | null;
   questionText: string;
+  visual?: QuestionVisual | null;
   correctOption: string;
   explanation: string | null;
   practiceSetId: string;
@@ -588,6 +589,7 @@ export type SavedQuestion = {
   questionId: string;
   questionText: string;
   options: QuestionOption[];
+  visual?: QuestionVisual | null;
   correctOption: string;
   explanation: string | null;
   orderIndex: number;

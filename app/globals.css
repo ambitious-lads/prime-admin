@@ -232,7 +232,21 @@ body {
   border: 1px solid var(--line);
   border-radius: 8px;
 }
-.course-html table { width: 100%; min-width: 520px; border-collapse: collapse; }
+.course-html table {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+}
+.course-html thead,
+.course-html tbody {
+  display: table;
+  width: 100%;
+  min-width: 520px;
+  table-layout: auto;
+}
 .course-html td,
 .course-html th { border: 1px solid var(--line); padding: 0.65rem; text-align: left; vertical-align: top; }
 .course-html img { max-width: 100%; height: auto; }

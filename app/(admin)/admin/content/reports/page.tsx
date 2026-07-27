@@ -33,6 +33,10 @@ import type {
   QuestionReport,
   QuestionReportStatus,
 } from "@/lib/api/types";
+import { RichDocumentView } from "@/components/student/rich-document-view";
+import { QuestionVisualView } from "@/components/student/question-visual-view";
+import { QuestionPrompt } from "@/components/student/question-prompt";
+import { QuestionExplanationView } from "@/components/student/question-explanation-view";
 
 type ReportFilter = QuestionReportStatus | "all";
 
@@ -157,13 +161,29 @@ export default function QuestionReportsPage() {
                 {sorted.map((report) => (
                   <TableRow key={report.id} className="hover:bg-surface/50">
                     <TableCell className="max-w-[28rem]">
-                      <p className="whitespace-pre-wrap break-words font-medium leading-relaxed">
-                        {report.questionText}
-                      </p>
-                      {report.explanation ? (
-                        <p className="mt-2 whitespace-pre-wrap break-words text-xs leading-relaxed text-muted">
-                          Explanation: {report.explanation}
-                        </p>
+                      {report.visual?.type === "rich_document" ? (
+                        <RichDocumentView document={report.visual.prompt} />
+                      ) : (
+                        <QuestionPrompt
+                          text={report.questionText}
+                          className="font-medium"
+                        />
+                      )}
+                      <div className="mt-3">
+                        <QuestionVisualView visual={report.visual} />
+                      </div>
+                      {report.explanation ||
+                      (report.visual?.type === "rich_document" &&
+                        report.visual.explanation) ? (
+                        <div className="mt-3 rounded-lg bg-surface p-3">
+                          <p className="mb-1 text-xs font-bold uppercase text-muted">
+                            Explanation
+                          </p>
+                          <QuestionExplanationView
+                            explanation={report.explanation}
+                            visual={report.visual}
+                          />
+                        </div>
                       ) : null}
                       <p className="mt-2 text-xs text-muted">
                         Correct answer: {report.correctOption}

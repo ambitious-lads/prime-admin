@@ -2,6 +2,7 @@
 
 import {
   forwardRef,
+  type CSSProperties,
   useEffect,
   useImperativeHandle,
   useRef,
@@ -31,6 +32,8 @@ function paragraphsFrom(content: string) {
 type MaterialReaderProps = {
   material: CourseMaterial;
   onProgress: (percentage: number) => void;
+  fontSize?: number;
+  readingTheme?: "light" | "sepia" | "dark";
 };
 
 function MaterialList({ title, items, emphasized = false }: { title: string; items: string[]; emphasized?: boolean }) {
@@ -49,7 +52,15 @@ function MaterialList({ title, items, emphasized = false }: { title: string; ite
   );
 }
 export const MaterialReader = forwardRef<HTMLDivElement, MaterialReaderProps>(
-  function MaterialReader({ material, onProgress }, ref) {
+  function MaterialReader(
+    {
+      material,
+      onProgress,
+      fontSize = 15,
+      readingTheme = "light",
+    },
+    ref,
+  ) {
     const innerRef = useRef<HTMLDivElement>(null);
     const videoRef = useRef<HTMLVideoElement>(null);
     useImperativeHandle(ref, () => innerRef.current as HTMLDivElement);
@@ -92,6 +103,24 @@ export const MaterialReader = forwardRef<HTMLDivElement, MaterialReaderProps>(
     const sourceIsUrl = Boolean(source) && isUrl(source);
     const isVideo = materialType === "video";
     const isPdf = materialType === "pdf";
+    const themeStyle = {
+      "--ink": readingTheme === "dark" ? "#f3f4f6" : readingTheme === "sepia" ? "#3f3426" : "#111827",
+      "--muted": readingTheme === "dark" ? "#9ca3af" : readingTheme === "sepia" ? "#76654d" : "#6b7280",
+      "--line": readingTheme === "dark" ? "#374151" : readingTheme === "sepia" ? "#dfd2ba" : "#e5e7eb",
+      "--surface": readingTheme === "dark" ? "#1f2937" : readingTheme === "sepia" ? "#f5eddf" : "#f7f8fb",
+      backgroundColor:
+        readingTheme === "dark"
+          ? "#111827"
+          : readingTheme === "sepia"
+            ? "#faf6ee"
+            : "#ffffff",
+      color:
+        readingTheme === "dark"
+          ? "#d1d5db"
+          : readingTheme === "sepia"
+            ? "#4a3c2a"
+            : "#374151",
+    } as CSSProperties;
 
     useEffect(() => {
       const video = videoRef.current;
@@ -189,6 +218,7 @@ export const MaterialReader = forwardRef<HTMLDivElement, MaterialReaderProps>(
         return (
           <article
             className="course-html max-w-none"
+            style={{ fontSize }}
             dangerouslySetInnerHTML={{ __html: material.htmlContent }}
           />
         );
@@ -232,6 +262,7 @@ export const MaterialReader = forwardRef<HTMLDivElement, MaterialReaderProps>(
       <div
         ref={innerRef}
         className="protected-content protected-watermark h-full overflow-y-auto px-4 py-6 sm:px-10 sm:py-8"
+        style={themeStyle}
         data-watermark="Prime UAT protected material"
         onCopy={(event) => event.preventDefault()}
         onCut={(event) => event.preventDefault()}

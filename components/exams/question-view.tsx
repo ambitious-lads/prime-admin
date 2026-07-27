@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils/cn";
 import type { Question } from "@/lib/api/types";
 import { RichDocumentView } from "@/components/student/rich-document-view";
 import { QuestionVisualView } from "@/components/student/question-visual-view";
+import { QuestionPrompt } from "@/components/student/question-prompt";
 
 export function QuestionView({
   question,
@@ -37,9 +38,10 @@ export function QuestionView({
           </div>
         ) : null}
         {question.visual?.type !== "rich_document" ? (
-          <p className="text-lg font-medium leading-relaxed text-ink">
-            {question.questionText}
-          </p>
+          <QuestionPrompt
+            text={question.questionText}
+            className="text-lg font-medium"
+          />
         ) : null}
 
         {question.visual?.type === "rich_document" ? (

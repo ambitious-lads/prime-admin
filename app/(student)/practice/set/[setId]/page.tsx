@@ -22,6 +22,7 @@ import { ExamTimer } from "@/components/exams/exam-timer";
 import { SubmitDialog } from "@/components/exams/submit-dialog";
 import { usePlan } from "@/hooks/use-plan";
 import { Button } from "@/components/ui/button";
+import { PracticeAnswerReview } from "@/components/student/practice-answer-review";
 
 export default function PracticeRunnerPage() {
   const params = useParams<{ setId: string }>();
@@ -50,6 +51,10 @@ export default function PracticeRunnerPage() {
   const [selected, setSelected] = useState<string | null>(null);
   const [result, setResult] = useState<SubmitAnswerResult | null>(null);
   const [examAnswers, setExamAnswers] = useState<Record<string, string>>({});
+  const [reviewAnswers, setReviewAnswers] = useState<Record<string, string>>({});
+  const [reviewResults, setReviewResults] = useState<
+    Record<string, SubmitAnswerResult>
+  >({});
   const [secondsLeft, setSecondsLeft] = useState<number | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [finishing, setFinishing] = useState(false);
@@ -129,6 +134,8 @@ export default function PracticeRunnerPage() {
       totalTimeRef.current += elapsed;
       setTotalTime(totalTimeRef.current);
       setResult(res);
+      setReviewAnswers((answers) => ({ ...answers, [current.id]: label }));
+      setReviewResults((results) => ({ ...results, [current.id]: res }));
       if (res.gated) setGated(true);
       if (res.isCorrect) setCorrectCount((count) => count + 1);
     } catch (error) {
@@ -185,20 +192,31 @@ export default function PracticeRunnerPage() {
         1,
         Math.round(totalTimeRef.current / Math.max(1, answeredCount)),
       );
+      const submissions = questions.flatMap((question) => {
+        const selectedOption = examAnswers[question.id];
+        return selectedOption ? [{ question, selectedOption }] : [];
+      });
       const results = await Promise.all(
-        questions.flatMap((question) => {
-          const selectedOption = examAnswers[question.id];
-          if (!selectedOption) return [];
-          return practiceApi.submitAnswer(setId, {
+        submissions.map(({ question, selectedOption }) =>
+          practiceApi.submitAnswer(setId, {
             questionId: question.id,
             selectedOption,
             timeSpentSeconds: elapsedPerAnswer,
-          });
-        }),
+          }),
+        ),
       );
 
       setCorrectCount(results.filter((answer) => answer.isCorrect).length);
       setGated(results.some((answer) => answer.gated));
+      setReviewAnswers(examAnswers);
+      setReviewResults(
+        Object.fromEntries(
+          submissions.map(({ question }, index) => [
+            question.id,
+            results[index],
+          ]),
+        ),
+      );
       await completeSession(answeredCount);
     } catch (error) {
       examSubmittedRef.current = false;
@@ -235,12 +253,19 @@ export default function PracticeRunnerPage() {
       return <SubscribeWall total={total} backHref="/practice" />;
     }
     return (
-      <SetSummary
-        correct={correctCount}
-        total={total}
-        timeSpentSeconds={totalTime}
-        backHref="/practice"
-      />
+      <div className="mx-auto max-w-4xl space-y-8">
+        <SetSummary
+          correct={correctCount}
+          total={total}
+          timeSpentSeconds={totalTime}
+          backHref="/practice"
+        />
+        <PracticeAnswerReview
+          questions={questions}
+          answers={reviewAnswers}
+          results={reviewResults}
+        />
+      </div>
     );
   }
 

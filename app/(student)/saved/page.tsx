@@ -27,6 +27,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils/cn";
+import { RichDocumentView } from "@/components/student/rich-document-view";
+import { QuestionVisualView } from "@/components/student/question-visual-view";
+import { QuestionPrompt } from "@/components/student/question-prompt";
+import { QuestionExplanationView } from "@/components/student/question-explanation-view";
 
 export default function SavedLibraryPage() {
   const [tab, setTab] = useState("questions");
@@ -87,8 +91,24 @@ export default function SavedLibraryPage() {
             {questions.data.map((question) => (
               <article key={question.id} className="rounded-2xl border border-line bg-white p-4 shadow-[0_2px_8px_rgba(15,23,42,0.03)] sm:p-5">
                 <div className="flex items-start justify-between gap-4">
-                  <div className="min-w-0"><p className="text-xs font-bold text-brand">{question.practiceSetTitle} · Question {question.orderIndex + 1}</p><h2 className="mt-2 font-bold leading-7 text-ink">{question.questionText}</h2><p className="mt-2 text-xs font-medium text-muted">{question.categoryName} / {question.topicName}</p></div>
+                  <div className="min-w-0">
+                    <p className="text-xs font-bold text-brand">{question.practiceSetTitle} · Question {question.orderIndex + 1}</p>
+                    {question.visual?.type === "rich_document" ? (
+                      <div className="mt-3">
+                        <RichDocumentView document={question.visual.prompt} />
+                      </div>
+                    ) : (
+                      <QuestionPrompt
+                        text={question.questionText}
+                        className="mt-2 font-bold"
+                      />
+                    )}
+                    <p className="mt-2 text-xs font-medium text-muted">{question.categoryName} / {question.topicName}</p>
+                  </div>
                   <Button variant="ghost" size="icon" className="shrink-0 cursor-pointer" onClick={() => removeQuestion.mutate(question.questionId)} disabled={removeQuestion.isPending}><Bookmark className="fill-brand text-brand" /></Button>
+                </div>
+                <div className="mt-4">
+                  <QuestionVisualView visual={question.visual} />
                 </div>
                 <div className="mt-4 grid gap-2 sm:grid-cols-2">
                   {question.options.map((option) => {
@@ -96,7 +116,17 @@ export default function SavedLibraryPage() {
                     return <div key={option.label} className={cn("flex items-start gap-2 rounded-xl border px-3 py-2.5 text-sm", correct ? "border-emerald-200 bg-emerald-50 text-emerald-800" : "border-line bg-surface/40 text-ink")}><span className={cn("flex h-6 w-6 shrink-0 items-center justify-center rounded-md text-xs font-black", correct ? "bg-emerald-100 text-emerald-700" : "bg-white text-muted")}>{option.label}</span><span className="min-w-0 flex-1 leading-6">{option.text}</span>{correct ? <Check className="mt-1 h-4 w-4 shrink-0 text-emerald-600" /> : null}</div>;
                   })}
                 </div>
-                {question.explanation ? <div className="mt-4 rounded-xl border-l-2 border-brand bg-brand-50/50 px-4 py-3"><p className="text-xs font-black uppercase text-brand">Explanation</p><p className="mt-1 text-sm leading-6 text-ink/80">{question.explanation}</p></div> : null}
+                {question.explanation ||
+                (question.visual?.type === "rich_document" &&
+                  question.visual.explanation) ? (
+                  <div className="mt-4 rounded-xl border-l-2 border-brand bg-brand-50/50 px-4 py-3">
+                    <p className="mb-1 text-xs font-black uppercase text-brand">Explanation</p>
+                    <QuestionExplanationView
+                      explanation={question.explanation}
+                      visual={question.visual}
+                    />
+                  </div>
+                ) : null}
               </article>
             ))}
           </div>
