@@ -15,17 +15,22 @@ export const site = {
       id: "telebirr",
       method: "Telebirr",
       account: process.env.NEXT_PUBLIC_TELEBIRR_ACCOUNT ?? "0969617341",
-      name: process.env.NEXT_PUBLIC_PAYMENT_ACCOUNT_NAME ?? "Yordanos Bogale Sime",
+      name:
+        process.env.NEXT_PUBLIC_TELEBIRR_ACCOUNT_NAME ??
+        "Yordanos",
     },
     {
       id: "cbe",
       method: "CBE",
       account: process.env.NEXT_PUBLIC_CBE_ACCOUNT ?? "1000540521399",
-      name: process.env.NEXT_PUBLIC_PAYMENT_ACCOUNT_NAME ?? "Yordanos Bogale Sime",
+      name:
+        process.env.NEXT_PUBLIC_CBE_ACCOUNT_NAME ??
+        process.env.NEXT_PUBLIC_PAYMENT_ACCOUNT_NAME ??
+        "Yordanos Bogale Sime",
     },
   ] as const,
   paymentAccount:
     process.env.NEXT_PUBLIC_PAYMENT_ACCOUNT ??
-    "Telebirr · 0969617341 · Yordanos Bogale Sime / CBE · 1000540521399 · Yordanos Bogale Sime",
+    "Telebirr · 0969617341 · Yordanos / CBE · 1000540521399 · Yordanos Bogale Sime",
   description: "Ace your exams. Study smarter with Prime UAT.",
 };
