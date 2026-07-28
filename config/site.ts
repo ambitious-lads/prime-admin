@@ -1,8 +1,18 @@
+const STABLE_API_BASE_URL = "https://api.primeuat.app/api/v1";
+const configuredApiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL?.replace(
+  /\/+$/,
+  "",
+);
+
+export const apiBaseUrl =
+  configuredApiBaseUrl &&
+  !configuredApiBaseUrl.includes(".onrender.com")
+    ? configuredApiBaseUrl
+    : STABLE_API_BASE_URL;
+
 export const site = {
   name: process.env.NEXT_PUBLIC_APP_NAME ?? "Prime UAT",
-  apiBaseUrl:
-    process.env.NEXT_PUBLIC_API_BASE_URL ??
-    "https://primely-api.onrender.com/api/v1",
+  apiBaseUrl,
   supportPhone: process.env.NEXT_PUBLIC_SUPPORT_PHONE ?? "@prime_uat",
   supportEmail:
     process.env.NEXT_PUBLIC_SUPPORT_EMAIL ?? "@prime_uat",

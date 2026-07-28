@@ -14,7 +14,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "primely-api.onrender.com",
+        hostname: "api.primeuat.app",
       },
       {
         protocol: "https",

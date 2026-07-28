@@ -1,6 +1,6 @@
-export const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL ||
-  "https://primely-api.onrender.com/api/v1";
+import { apiBaseUrl } from "@/config/site";
+
+export const API_BASE_URL = apiBaseUrl;
 
 export const ANDROID_DOWNLOAD_URL =
   "https://play.google.com/store/apps/details?id=com.primely.app";
