@@ -90,6 +90,28 @@ type RawAttemptQuestions =
       savedAnswers?: Partial<ExamAnswer>[];
     };
 
+type RawExamReport = Omit<Partial<ExamReport>, "questions"> & {
+  attempt?: {
+    id?: string;
+    score?: number;
+    timeSpentSeconds?: number;
+  };
+  exam?: {
+    id?: string;
+    title?: string;
+    totalQuestions?: number;
+  };
+  questions?: (Partial<ExamReport["questions"][number]> & {
+    id?: string;
+    text?: string;
+  })[];
+  topicWiseAccuracy?: {
+    topic?: string;
+    accuracy?: number;
+    total?: number;
+  }[];
+};
+
 type SubscribeResult = {
   status: "active" | "pending";
   plan: PlanKey;
@@ -168,6 +190,45 @@ function normalizeAttemptQuestions(
   };
 }
 
+function normalizeExamReport(data: RawExamReport): ExamReport {
+  const questions = (data.questions ?? []).map((question) => ({
+    questionId: question.questionId ?? question.id ?? "",
+    questionText: question.questionText ?? question.text ?? "",
+    passage: question.passage ?? null,
+    options: question.options ?? [],
+    selectedOption: question.selectedOption ?? null,
+    correctOption: question.correctOption ?? "",
+    isCorrect: Boolean(question.isCorrect),
+    explanation: question.explanation ?? null,
+  }));
+  const correctCount =
+    data.correctCount ?? questions.filter((question) => question.isCorrect).length;
+  const totalQuestions =
+    data.totalQuestions ?? data.exam?.totalQuestions ?? questions.length;
+
+  return {
+    attemptId: data.attemptId ?? data.attempt?.id ?? "",
+    examId: data.examId ?? data.exam?.id ?? "",
+    examTitle: data.examTitle ?? data.exam?.title ?? "Mock exam",
+    score: data.score ?? data.attempt?.score ?? 0,
+    totalQuestions,
+    correctCount,
+    accuracy:
+      data.accuracy ??
+      (totalQuestions > 0 ? (correctCount / totalQuestions) * 100 : 0),
+    timeSpentSeconds:
+      data.timeSpentSeconds ?? data.attempt?.timeSpentSeconds ?? 0,
+    topicBreakdown: (data.topicBreakdown ?? data.topicWiseAccuracy ?? []).map(
+      (topic) => ({
+        topic: topic.topic ?? "General",
+        accuracy: topic.accuracy ?? 0,
+        total: topic.total ?? 0,
+      }),
+    ),
+    questions,
+  };
+}
+
 export const authApi = {
   register: (b: { phone: string; password: string; fullName: string; referralCode?: string }) =>
     api.public.post<{ userId: string; phone: string; message: string }>(
@@ -243,7 +304,9 @@ export const examsApi = {
   submit: (attemptId: string) =>
     api.post<ExamReport>(`/exams/attempts/${attemptId}/submit`),
   report: (attemptId: string) =>
-    api.get<ExamReport>(`/exams/attempts/${attemptId}/report`),
+    api
+      .get<RawExamReport>(`/exams/attempts/${attemptId}/report`)
+      .then(normalizeExamReport),
   performance: () => api.get<AnalyticsOverview>("/user/performance"),
 };
 

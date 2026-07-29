@@ -75,7 +75,9 @@ export function QuestionView({
               >
                 {isSelected ? <Check className="h-4 w-4" /> : option.label}
               </span>
-              <span className="text-sm text-ink">{option.text}</span>
+              <span className="min-w-0 whitespace-pre-wrap break-words text-sm text-ink">
+                {option.text}
+              </span>
             </button>
           );
         })}

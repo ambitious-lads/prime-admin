@@ -109,7 +109,7 @@ export function StudentShell({ children }: { children: React.ReactNode }) {
   useEffect(() => { setCollapsed(window.localStorage.getItem("prime-web-sidebar") === "collapsed"); setHydrated(true); }, []);
 
   const currentLabel = useMemo(() => studentNav.find((item) => pathname === item.href || pathname.startsWith(`${item.href}/`))?.label ?? "Prime UAT", [pathname]);
-  const isExamAttemptPage = /^\/exams\/attempt\/[^/]+$/.test(pathname);
+  const isExamAttemptPage = pathname.startsWith("/exams/attempt/");
   const isPracticePage = pathname === "/practice" || pathname.startsWith("/practice/");
   const isPracticeDetailPage =
     pathname.startsWith("/practice/topic/") || pathname.startsWith("/practice/set/");

@@ -284,7 +284,7 @@ export default function ExamReportPage() {
                           </p>
                         </div>
                       ) : null}
-                      <p className="font-medium leading-relaxed text-ink">
+                      <p className="whitespace-pre-wrap break-words font-medium leading-relaxed text-ink">
                         {question.questionText}
                       </p>
                     </div>
@@ -318,7 +318,9 @@ export default function ExamReportPage() {
                           >
                             {option.label}
                           </span>
-                          <span className="flex-1">{option.text}</span>
+                          <span className="min-w-0 flex-1 whitespace-pre-wrap break-words">
+                            {option.text}
+                          </span>
                           {isAnswerCorrect ? (
                             <span className="text-xs font-semibold text-emerald-600">
                               Correct
@@ -343,7 +345,7 @@ export default function ExamReportPage() {
                       <p className="text-xs font-semibold uppercase tracking-wide text-muted">
                         Explanation
                       </p>
-                      <p className="mt-1 text-sm leading-relaxed text-ink">
+                      <p className="mt-1 whitespace-pre-wrap break-words text-sm leading-relaxed text-ink">
                         {question.explanation}
                       </p>
                     </div>
