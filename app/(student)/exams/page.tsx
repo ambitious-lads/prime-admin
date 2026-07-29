@@ -7,7 +7,6 @@ import {
   Bookmark,
   Diamond,
   FileQuestion,
-  Flame,
   LockKeyhole,
   Play,
   RefreshCw,
@@ -209,8 +208,6 @@ function ExamCard({ exam, saving, onSave, onStart }: { exam: Exam; saving: boole
   const countdown = useExamCountdown(exam);
   const solved = Boolean(exam.userProgress?.isSolved);
   const locked = Boolean(exam.isLocked);
-  const participants = exam.totalParticipants ?? exam.participantsCount ?? 0;
-  const activity = participants === 0 ? "New" : participants < 10 ? "Growing" : participants < 50 ? "Popular" : "Community pick";
 
   const metadata = solved
     ? [
@@ -235,7 +232,7 @@ function ExamCard({ exam, saving, onSave, onStart }: { exam: Exam; saving: boole
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
             <span className="text-[10px] font-black uppercase tracking-[0.1em]" style={{ color }}>{exam.type || exam.category || "Mock exam"}</span>
-            {exam.isPremium ? <Badge color={color} icon={<Diamond />}>Pro</Badge> : exam.isRecommended ? <Badge color={color} icon={<Sparkles />}>Recommended</Badge> : <span className="inline-flex items-center gap-1 rounded-full border bg-white px-2 py-1 text-[10px] font-bold text-muted"><Flame className="h-3 w-3" />{activity}</span>}
+            {exam.isPremium ? <Badge color={color} icon={<Diamond />}>Pro</Badge> : exam.isRecommended ? <Badge color={color} icon={<Sparkles />}>Recommended</Badge> : null}
           </div>
           <h2 className="mt-1 text-base font-black leading-6 text-ink sm:text-lg">{exam.title}</h2>
         </div>

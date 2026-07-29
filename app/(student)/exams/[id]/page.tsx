@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -44,6 +44,36 @@ import { EXAM_UNLOCK_PLAN, planLabel } from "@/lib/utils/plans";
 import type { ExamAttempt } from "@/lib/api/types";
 
 const PAGE_SIZE = 50;
+
+function useExamCountdown(scheduledAt?: string | null, restricted?: boolean) {
+  const [label, setLabel] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!scheduledAt || !restricted) {
+      setLabel(null);
+      return;
+    }
+
+    const update = () => {
+      const remaining = new Date(scheduledAt).getTime() - Date.now();
+      if (remaining <= 0) {
+        setLabel(null);
+        return false;
+      }
+      const hours = Math.floor(remaining / 3_600_000);
+      const minutes = Math.floor((remaining % 3_600_000) / 60_000);
+      const seconds = Math.floor((remaining % 60_000) / 1_000);
+      setLabel(`${hours}h ${minutes}m ${seconds}s`);
+      return true;
+    };
+
+    if (!update()) return;
+    const timer = window.setInterval(update, 1_000);
+    return () => window.clearInterval(timer);
+  }, [restricted, scheduledAt]);
+
+  return label;
+}
 
 function difficultyLabel(value: string | null | undefined) {
   if (!value) return null;
@@ -96,6 +126,10 @@ export default function ExamDetailPage() {
 
   const exam = examQuery.data;
   const locked = Boolean(exam?.isLocked);
+  const countdown = useExamCountdown(
+    exam?.scheduledAt,
+    exam?.isScheduleRestricted,
+  );
 
   const leaderboard = leaderboardQuery.data;
   const entries = leaderboard?.entries ?? [];
@@ -218,7 +252,14 @@ export default function ExamDetailPage() {
                 </div>
               ) : null}
 
-              {locked ? (
+              {countdown ? (
+                <div className="rounded-xl border border-line bg-surface p-4 text-center">
+                  <p className="text-xs font-semibold text-muted">Starts in</p>
+                  <p className="mt-1 text-xl font-black tabular-nums text-brand">
+                    {countdown}
+                  </p>
+                </div>
+              ) : locked ? (
                 <Card className="border-brand-100 bg-brand-50/60">
                   <CardContent className="space-y-3 p-4 text-center">
                     <div className="mx-auto flex h-11 w-11 items-center justify-center rounded-2xl bg-white text-brand">
