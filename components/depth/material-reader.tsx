@@ -19,7 +19,29 @@ function isUrl(value: string) {
 }
 
 function isDirectVideoUrl(value: string) {
-  return /\.(mp4|webm|ogg)(?:[?#].*)?$/i.test(value.trim());
+  const normalized = value.trim();
+  if (/\.(mp4|webm|ogg)(?:[?#].*)?$/i.test(normalized)) return true;
+  try {
+    const url = new URL(normalized);
+    return (
+      url.hostname === "drive.usercontent.google.com" &&
+      url.pathname === "/download" &&
+      url.searchParams.has("id")
+    );
+  } catch {
+    return false;
+  }
+}
+
+function googleDriveShareUrl(value: string) {
+  try {
+    const url = new URL(value);
+    if (url.hostname !== "drive.usercontent.google.com") return null;
+    const id = url.searchParams.get("id");
+    return id ? `https://drive.google.com/file/d/${id}/view` : null;
+  } catch {
+    return null;
+  }
 }
 
 function paragraphsFrom(content: string) {
@@ -67,6 +89,7 @@ export const MaterialReader = forwardRef<HTMLDivElement, MaterialReaderProps>(
     const lastReported = useRef(0);
     const lastVideoReported = useRef(0);
     const [embedFailed, setEmbedFailed] = useState(false);
+    const [videoFailed, setVideoFailed] = useState(false);
 
     useEffect(() => {
       const el = innerRef.current;
@@ -103,6 +126,7 @@ export const MaterialReader = forwardRef<HTMLDivElement, MaterialReaderProps>(
     const sourceIsUrl = Boolean(source) && isUrl(source);
     const isVideo = materialType === "video";
     const isPdf = materialType === "pdf";
+    const videoFallbackUrl = sourceIsUrl ? googleDriveShareUrl(source) : null;
     const themeStyle = {
       "--ink": readingTheme === "dark" ? "#f3f4f6" : readingTheme === "sepia" ? "#3f3426" : "#111827",
       "--muted": readingTheme === "dark" ? "#9ca3af" : readingTheme === "sepia" ? "#76654d" : "#6b7280",
@@ -160,8 +184,22 @@ export const MaterialReader = forwardRef<HTMLDivElement, MaterialReaderProps>(
 
     const renderBody = () => {
       if (isVideo && sourceIsUrl && isDirectVideoUrl(source)) {
+        if (videoFailed) {
+          return (
+            <div className="flex aspect-video flex-col items-center justify-center gap-4 rounded-lg border border-line bg-black px-6 text-center text-white">
+              <p className="text-sm font-semibold">The video could not play in this browser.</p>
+              {videoFallbackUrl ? (
+                <Button asChild variant="secondary" size="sm">
+                  <a href={videoFallbackUrl} target="_blank" rel="noreferrer">
+                    <ExternalLink className="h-4 w-4" /> Open in Google Drive
+                  </a>
+                </Button>
+              ) : null}
+            </div>
+          );
+        }
         return (
-          <div className="overflow-hidden rounded-2xl border border-line bg-black">
+          <div className="overflow-hidden rounded-lg border border-line bg-black">
             <video
               ref={videoRef}
               src={source}
@@ -173,6 +211,7 @@ export const MaterialReader = forwardRef<HTMLDivElement, MaterialReaderProps>(
               disableRemotePlayback
               onContextMenu={(event) => event.preventDefault()}
               onDragStart={(event) => event.preventDefault()}
+              onError={() => setVideoFailed(true)}
               playsInline
               preload="metadata"
             />

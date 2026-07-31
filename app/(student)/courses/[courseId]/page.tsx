@@ -152,8 +152,8 @@ function MaterialRow({
               ) : null}
               <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-[11px] font-semibold text-muted">
                 {material.difficulty ? <span>{material.difficulty} level</span> : null}
-                {material.duration ? <span>{material.duration} length</span> : null}
-                {material.extra ? <span>{material.extra} size</span> : null}
+                {material.duration ? <span>{material.duration}</span> : null}
+                {material.extra ? <span>{material.extra}</span> : null}
               </div>
               <div className="mt-2 flex items-center gap-2">
                 <Progress value={progress} className="h-1.5 max-w-[180px]" />
