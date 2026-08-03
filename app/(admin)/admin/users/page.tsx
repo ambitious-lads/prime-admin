@@ -92,41 +92,36 @@ export default function UsersPage() {
     const normalizedQuery = query.trim().toLowerCase();
     const queryDigits = normalizedQuery.replace(/\D/g, "");
 
-    return users.filter((user) => {
-      if (plan !== "all" && user.plan !== plan) return false;
-      if (
-        verification === "verified" &&
-        !user.isPhoneVerified
-      ) {
-        return false;
-      }
-      if (
-        verification === "unverified" &&
-        user.isPhoneVerified
-      ) {
-        return false;
-      }
-      if (device === "bound" && !user.boundDeviceId) return false;
-      if (device === "unbound" && user.boundDeviceId) return false;
-      if (!normalizedQuery) return true;
+    return users
+      .filter((user) => {
+        if (plan !== "all" && user.plan !== plan) return false;
+        if (verification === "verified" && !user.isPhoneVerified) return false;
+        if (verification === "unverified" && user.isPhoneVerified) return false;
+        if (device === "bound" && !user.boundDeviceId) return false;
+        if (device === "unbound" && user.boundDeviceId) return false;
+        if (!normalizedQuery) return true;
 
-      const text = [
-        user.fullName,
-        user.phone,
-        user.id,
-        user.boundDeviceName,
-        user.boundDeviceId,
-      ]
-        .filter(Boolean)
-        .join(" ")
-        .toLowerCase();
-      const phoneDigits = user.phone.replace(/\D/g, "");
+        const text = [
+          user.fullName,
+          user.phone,
+          user.id,
+          user.boundDeviceName,
+          user.boundDeviceId,
+        ]
+          .filter(Boolean)
+          .join(" ")
+          .toLowerCase();
+        const phoneDigits = user.phone.replace(/\D/g, "");
 
-      return (
-        text.includes(normalizedQuery) ||
-        (queryDigits.length >= 3 && phoneDigits.includes(queryDigits))
+        return (
+          text.includes(normalizedQuery) ||
+          (queryDigits.length >= 3 && phoneDigits.includes(queryDigits))
+        );
+      })
+      .sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
       );
-    });
   }, [device, plan, query, users, verification]);
 
   const hasFilters =
