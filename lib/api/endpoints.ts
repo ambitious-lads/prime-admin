@@ -279,8 +279,26 @@ export const referralsApi = {
       "/referrals/payouts",
       status ? { status } : undefined,
     ),
-  markPaid: (id: string) =>
-    api.post<ReferralPayout>(`/referrals/payouts/${id}/paid`),
+  approve: (id: string, body: { note: string; acceptRisk?: boolean }) =>
+    api.post<ReferralPayout>(`/referrals/payouts/${id}/approve`, body),
+  processing: (id: string, body: { note?: string }) =>
+    api.post<ReferralPayout>(`/referrals/payouts/${id}/processing`, body),
+  markPaid: (
+    id: string,
+    body: {
+      transferReference: string;
+      transferProofUrl?: string;
+      note?: string;
+    },
+  ) => api.post<ReferralPayout>(`/referrals/payouts/${id}/paid`, body),
+  reject: (id: string, body: { note: string }) =>
+    api.post<ReferralPayout>(`/referrals/payouts/${id}/reject`, body),
+  fail: (
+    id: string,
+    body: { reason: string; confirmedNoTransfer: true },
+  ) => api.post<ReferralPayout>(`/referrals/payouts/${id}/failed`, body),
+  reversePaymentReferral: (paymentId: string, reason: string) =>
+    api.post(`/referrals/payments/${paymentId}/reverse`, { reason }),
 };
 
 export const examsApi = {
@@ -448,6 +466,12 @@ export const savedApi = {
 
 export const referralsStudentApi = {
   me: () => api.get<ReferralStatus>("/referrals/me"),
-  requestPayout: (body: { payoutMethod: string; payoutAccount: string }) =>
+  requestPayout: (body: {
+    payoutMethod: "telebirr" | "cbe";
+    payoutAccount: string;
+    accountHolderName: string;
+    telegramUsername: string;
+  }) =>
     api.post("/referrals/payouts", body),
+  cancelPayout: (id: string) => api.post(`/referrals/payouts/${id}/cancel`),
 };

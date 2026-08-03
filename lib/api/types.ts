@@ -80,10 +80,27 @@ export type ReferralPayout = {
   userFullName: string;
   referralCount: number;
   amount: number;
-  status: "requested" | "approved" | "paid";
+  status:
+    | "requested"
+    | "approved"
+    | "processing"
+    | "paid"
+    | "rejected"
+    | "cancelled"
+    | "failed";
   payoutMethod: string | null;
   payoutAccount: string | null;
+  accountHolderName: string | null;
+  telegramUsername: string | null;
   note: string | null;
+  riskFlags: string[];
+  transferReference: string | null;
+  transferProofUrl: string | null;
+  statusReason: string | null;
+  approvedBy: string | null;
+  approvedAt: string | null;
+  processingBy: string | null;
+  processingAt: string | null;
   reviewedBy: string | null;
   reviewedAt: string | null;
   createdAt: string;
@@ -629,6 +646,9 @@ export type ReferralStatus = {
   paidCount: number;
   unpaidQualifiedCount: number;
   pendingQualifiedCount: number;
+  availableRewardAmount: number;
+  totalEarnedAmount: number;
+  paidRewardAmount: number;
   progress: number;
   eligible: boolean;
   openPayout: ReferralPayout | null;
