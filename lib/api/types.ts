@@ -42,6 +42,11 @@ export type AdminUser = {
   deviceBoundAt: string | null;
   createdAt: string;
   avatarUrl: string | null;
+  schoolName: string | null;
+  townName: string | null;
+  region: string | null;
+  stream: "natural" | "social" | null;
+  whereDidYouHearAboutUs: string | null;
 };
 
 export type PlanCatalogItem = {
@@ -579,6 +584,72 @@ export type AdminMarketingAnalytics = {
   regions: MarketingSlice[];
   towns: MarketingSlice[];
   schools: MarketingSlice[];
+};
+
+export type AdminDashboardInsights = {
+  generatedAt: string;
+  growth: {
+    totalUsers: number;
+    verifiedUsers: number;
+    subscribers: number;
+    newUsers7d: number;
+    newUsers30d: number;
+  };
+  profiles: {
+    totalProfiles: number;
+    completedProfiles: number;
+    completionRate: number;
+    withSchool: number;
+    withLocation: number;
+  };
+  referrals: {
+    inviteCodesIssued: number;
+    activeAdvocates: number;
+    attributedRegistrations: number;
+    qualifiedReferrals: number;
+    paidReferrals: number;
+    conversionRate: number;
+    totalRewardValue: number;
+    paidRewardValue: number;
+    openPayouts: number;
+    openPayoutAmount: number;
+    paidPayouts: number;
+  };
+  topAdvocates: {
+    userId: string;
+    fullName: string;
+    phone: string;
+    plan: PlanKey;
+    avatarUrl: string | null;
+    schoolName: string | null;
+    townName: string | null;
+    region: string | null;
+    referralCode: string | null;
+    registeredCount: number;
+    qualifiedCount: number;
+    paidCount: number;
+    rewardValue: number;
+    lastReferralAt: string | null;
+  }[];
+  recentReferrals: {
+    id: string;
+    status: "registered" | "qualified" | "reserved" | "paid" | "reversed";
+    rewardAmount: number;
+    qualifiedPlan: string | null;
+    createdAt: string;
+    qualifiedAt: string | null;
+    referrerId: string;
+    referrerName: string;
+    referrerPhone: string;
+    referrerAvatarUrl: string | null;
+    referredId: string;
+    referredName: string;
+    referredPhone: string;
+    referredAvatarUrl: string | null;
+    referredSchool: string | null;
+    referredTown: string | null;
+    referredRegion: string | null;
+  }[];
 };
 
 export type ScoreCalculatorResult = {

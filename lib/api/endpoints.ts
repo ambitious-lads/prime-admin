@@ -4,6 +4,7 @@ import type {
   AdminMarketingAnalytics,
   AppNotification,
   AnalyticsDashboard,
+  AdminDashboardInsights,
   AnalyticsOverview,
   AuthMe,
   AuthSession,
@@ -419,6 +420,8 @@ export const analyticsApi = {
   dashboard: () => api.get<AnalyticsDashboard>("/analytics/dashboard"),
   adminMarketing: () =>
     api.get<AdminMarketingAnalytics>("/analytics/admin/marketing"),
+  adminDashboard: () =>
+    api.get<AdminDashboardInsights>("/analytics/admin/dashboard"),
   overview: () => api.get<AnalyticsOverview>("/analytics/overview"),
   scoreCalculator: (b: { esslceScore?: number; esslceMax?: 600 | 700; uatScore?: number }) =>
     api.post<ScoreCalculatorResult>("/analytics/score-calculator", b),

@@ -9,6 +9,10 @@ import {
   Smartphone,
   Phone,
   CheckCircle2,
+  GraduationCap,
+  MapPin,
+  Megaphone,
+  School,
   XCircle,
   UserX,
 } from "lucide-react";
@@ -223,6 +227,39 @@ export default function UserDetailPage({
         </Card>
 
         <Card className="lg:col-span-3">
+          <CardHeader>
+            <CardTitle>Student profile</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              <ProfileField
+                icon={<School />}
+                label="School"
+                value={user.schoolName}
+              />
+              <ProfileField
+                icon={<MapPin />}
+                label="Town / region"
+                value={
+                  [user.townName, user.region].filter(Boolean).join(", ") ||
+                  null
+                }
+              />
+              <ProfileField
+                icon={<GraduationCap />}
+                label="Study stream"
+                value={user.stream}
+              />
+              <ProfileField
+                icon={<Megaphone />}
+                label="Acquisition source"
+                value={user.whereDidYouHearAboutUs}
+              />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="lg:col-span-3">
           <CardHeader className="flex-row items-center justify-between space-y-0">
             <CardTitle>Device binding</CardTitle>
             <ConfirmDialog
@@ -276,6 +313,28 @@ export default function UserDetailPage({
           </CardContent>
         </Card>
       </div>
+    </div>
+  );
+}
+
+function ProfileField({
+  icon,
+  label,
+  value,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value?: string | null;
+}) {
+  return (
+    <div className="border border-line bg-surface p-4">
+      <div className="flex items-center gap-2 text-xs font-semibold uppercase text-muted [&_svg]:size-4">
+        {icon}
+        {label}
+      </div>
+      <p className="mt-2 break-words text-sm font-semibold capitalize text-ink">
+        {value || "Not provided"}
+      </p>
     </div>
   );
 }
