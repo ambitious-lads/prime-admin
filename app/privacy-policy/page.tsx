@@ -40,7 +40,7 @@ const collectedData = [
   },
   {
     title: "Referral information",
-    body: "Referral codes, inviter and invited-account relationships, subscription qualification, reward status, and payout-request information when the referral program is enabled.",
+    body: "Referral codes, inviter and invited-account relationships, subscription qualification, reward status, payout account details, account-holder name, and Telegram username when the referral program is enabled.",
   },
 ];
 

@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   description: "Prime UAT terms for using the mobile app, web app, courses, practice, payments, and AI features.",
 };
 
-const lastUpdated = "July 12, 2026";
+const lastUpdated = "August 3, 2026";
 
 const sections = [
   {
@@ -37,11 +37,15 @@ const sections = [
     body: "Some paid accounts may be limited to approved devices to prevent account sharing. Heavy, automated, abusive, or disruptive use may be rate-limited or blocked.",
   },
   {
-    title: "7. Availability",
+    title: "7. Referral rewards",
+    body: "Referral rewards apply only to eligible, verified accounts and qualifying paid subscriptions. Self-referrals, duplicate accounts, reused payments, coordinated abuse, refunded or reversed payments, and misleading promotion are not eligible. Rewards may be held for review, rejected, reversed before payout, or delayed while fraud and payment checks are completed. Payout details must belong to the requesting student or be authorized by the account holder.",
+  },
+  {
+    title: "8. Availability",
     body: "We work to keep Prime UAT reliable, but the service may be unavailable during maintenance, outages, network problems, provider failures, or updates.",
   },
   {
-    title: "8. Changes",
+    title: "9. Changes",
     body: "We may update these terms as the product changes. Continued use after an update means you accept the revised terms.",
   },
 ];
@@ -84,7 +88,7 @@ export default function TermsPage() {
           ))}
 
           <section>
-            <h2 className="text-lg font-semibold text-ink">9. Privacy</h2>
+            <h2 className="text-lg font-semibold text-ink">10. Privacy</h2>
             <p className="mt-2 text-sm leading-7 text-muted">
               Our{" "}
               <Link href="/privacy-policy" className="font-semibold text-brand">
