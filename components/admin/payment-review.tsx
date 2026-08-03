@@ -13,7 +13,7 @@ import {
   StickyNote,
   ShieldCheck,
 } from "lucide-react";
-import { plansApi } from "@/lib/api/endpoints";
+import { plansApi, referralsApi } from "@/lib/api/endpoints";
 import { qk } from "@/lib/query/keys";
 import { toastApiError } from "@/hooks/use-api-error";
 import { Button } from "@/components/ui/button";
@@ -56,6 +56,8 @@ export function PaymentReview({
   const [approveOpen, setApproveOpen] = useState(false);
   const [reason, setReason] = useState("");
   const [rejectOpen, setRejectOpen] = useState(false);
+  const [reverseOpen, setReverseOpen] = useState(false);
+  const [reverseReason, setReverseReason] = useState("");
   const [lightbox, setLightbox] = useState(false);
 
   function invalidate() {
@@ -92,8 +94,20 @@ export function PaymentReview({
     onError: toastApiError,
   });
 
+  const reverseReferral = useMutation({
+    mutationFn: () =>
+      referralsApi.reversePaymentReferral(payment.id, reverseReason.trim()),
+    onSuccess: () => {
+      toast.success("Referral reward reversed.");
+      setReverseOpen(false);
+      setReverseReason("");
+      qc.invalidateQueries({ queryKey: ["referrals"] });
+    },
+    onError: toastApiError,
+  });
+
   const isPending = payment.status === "pending";
-  const busy = approve.isPending || reject.isPending;
+  const busy = approve.isPending || reject.isPending || reverseReferral.isPending;
   const isOditVerified = payment.verificationMethod === "odit";
   const isOditPending = payment.verificationMethod?.startsWith("odit_") ?? false;
   const isManual =
@@ -357,7 +371,42 @@ export function PaymentReview({
               unoptimized
               className="max-h-[75vh] w-full rounded-xl object-contain"
             />
-          ) : null}
+      ) : payment.status === "approved" ? (
+        <Dialog open={reverseOpen} onOpenChange={setReverseOpen}>
+          <DialogTrigger asChild>
+            <Button variant="outline" className="mt-auto" disabled={busy}>
+              <X /> Reverse referral reward
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Reverse referral reward</DialogTitle>
+              <DialogDescription>
+                Use this only when the approved payment was refunded, reversed,
+                duplicated, or confirmed fraudulent. It does not deactivate the
+                student&apos;s plan.
+              </DialogDescription>
+            </DialogHeader>
+            <Textarea
+              placeholder="Record the refund, reversal, duplicate, or fraud reason"
+              value={reverseReason}
+              onChange={(event) => setReverseReason(event.target.value)}
+            />
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setReverseOpen(false)}>
+                Cancel
+              </Button>
+              <Button
+                variant="destructive"
+                disabled={reverseReason.trim().length < 3 || reverseReferral.isPending}
+                onClick={() => reverseReferral.mutate()}
+              >
+                Reverse reward
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      ) : null}
         </DialogContent>
       </Dialog>
     </div>
