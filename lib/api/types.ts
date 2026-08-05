@@ -419,6 +419,9 @@ export type ExamReport = {
   examId: string;
   examTitle: string;
   score: number;
+  rank: number | null;
+  percentile: number | null;
+  isFirstAttempt: boolean;
   totalQuestions: number;
   correctCount: number;
   accuracy: number;
@@ -428,6 +431,7 @@ export type ExamReport = {
     questionId: string;
     questionText: string;
     passage?: string | null;
+    visual?: QuestionVisual | null;
     options: QuestionOption[];
     selectedOption: string | null;
     correctOption: string;

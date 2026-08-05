@@ -21,29 +21,17 @@ import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { formatClock, formatNumber, initialsOf } from "@/lib/utils/format";
+import { formatNumber } from "@/lib/utils/format";
 import { examsApi } from "@/lib/api/endpoints";
 import { qk } from "@/lib/query/keys";
 import { toastApiError } from "@/hooks/use-api-error";
 import { openSubscriptionPrompt } from "@/components/student/subscription-prompt-modal";
 import { EXAM_UNLOCK_PLAN, planLabel } from "@/lib/utils/plans";
 import type { ExamAttempt } from "@/lib/api/types";
-
-const PAGE_SIZE = 50;
 
 function useExamCountdown(scheduledAt?: string | null, restricted?: boolean) {
   const [label, setLabel] = useState<string | null>(null);
@@ -97,17 +85,10 @@ export default function ExamDetailPage() {
   const params = useParams<{ id: string }>();
   const id = params.id;
   const router = useRouter();
-  const [offset, setOffset] = useState(0);
 
   const examQuery = useQuery({
     queryKey: qk.exam(id),
     queryFn: () => examsApi.detail(id),
-    enabled: Boolean(id),
-  });
-
-  const leaderboardQuery = useQuery({
-    queryKey: [...qk.leaderboard(id), offset],
-    queryFn: () => examsApi.leaderboard(id, { limit: PAGE_SIZE, offset }),
     enabled: Boolean(id),
   });
 
@@ -130,12 +111,6 @@ export default function ExamDetailPage() {
     exam?.scheduledAt,
     exam?.isScheduleRestricted,
   );
-
-  const leaderboard = leaderboardQuery.data;
-  const entries = leaderboard?.entries ?? [];
-  const total = leaderboard?.total ?? 0;
-  const hasPrev = offset > 0;
-  const hasNext = offset + PAGE_SIZE < total;
 
   if (examQuery.isLoading) {
     return (
@@ -279,7 +254,7 @@ export default function ExamDetailPage() {
                       onClick={() => openSubscriptionPrompt({
                         requiredPlan: exam.minPlan === "pro_plus" ? "pro_plus" : "pro",
                         title: `Unlock ${exam.title}`,
-                        description: "Upgrade to start this mock exam and access its leaderboard and full performance report.",
+                        description: "Upgrade to start this mock exam and access your full performance report.",
                       })}
                     >
                       Upgrade to {planLabel(EXAM_UNLOCK_PLAN)}
@@ -301,104 +276,6 @@ export default function ExamDetailPage() {
           </Card>
         </div>
 
-        <div className="lg:col-span-2">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Trophy className="h-5 w-5 text-brand" /> Leaderboard
-              </CardTitle>
-              <CardDescription>
-                Top scores from students who took this exam.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              {leaderboardQuery.isLoading ? (
-                <RowsSkeleton count={8} />
-              ) : entries.length === 0 ? (
-                <EmptyState
-                  icon={<Trophy />}
-                  title="No scores yet"
-                  message="Be the first to set a score on this exam."
-                />
-              ) : (
-                <>
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead className="w-16">Rank</TableHead>
-                        <TableHead>Student</TableHead>
-                        <TableHead className="text-right">Score</TableHead>
-                        <TableHead className="text-right">Time</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {entries.map((entry) => (
-                        <TableRow key={`${entry.userId}-${entry.rank}`}>
-                          <TableCell className="font-display font-bold tabular-nums">
-                            #{entry.rank}
-                          </TableCell>
-                          <TableCell>
-                            <div className="flex items-center gap-3">
-                              <Avatar className="h-8 w-8">
-                                {entry.avatarUrl ? (
-                                  <AvatarImage
-                                    src={entry.avatarUrl}
-                                    alt={entry.fullName}
-                                  />
-                                ) : null}
-                                <AvatarFallback>
-                                  {initialsOf(entry.fullName ?? "?")}
-                                </AvatarFallback>
-                              </Avatar>
-                              <span className="font-medium text-ink">
-                                {entry.fullName ?? "Student"}
-                              </span>
-                            </div>
-                          </TableCell>
-                          <TableCell className="text-right font-semibold tabular-nums">
-                            {formatNumber(entry.score ?? 0)}
-                          </TableCell>
-                          <TableCell className="text-right tabular-nums text-muted">
-                            {formatClock(entry.timeSpentSeconds ?? 0)}
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-
-                  {(hasPrev || hasNext) && (
-                    <div className="mt-4 flex items-center justify-between">
-                      <p className="text-sm text-muted">
-                        {offset + 1}–{offset + entries.length} of{" "}
-                        {formatNumber(total)}
-                      </p>
-                      <div className="flex gap-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          disabled={!hasPrev || leaderboardQuery.isFetching}
-                          onClick={() =>
-                            setOffset((o) => Math.max(0, o - PAGE_SIZE))
-                          }
-                        >
-                          Previous
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          disabled={!hasNext || leaderboardQuery.isFetching}
-                          onClick={() => setOffset((o) => o + PAGE_SIZE)}
-                        >
-                          Next
-                        </Button>
-                      </div>
-                    </div>
-                  )}
-                </>
-              )}
-            </CardContent>
-          </Card>
-        </div>
       </div>
     </div>
   );

@@ -95,6 +95,9 @@ type RawExamReport = Omit<Partial<ExamReport>, "questions"> & {
   attempt?: {
     id?: string;
     score?: number;
+    rank?: number | null;
+    percentile?: number | null;
+    isFirstAttempt?: boolean;
     timeSpentSeconds?: number;
   };
   exam?: {
@@ -196,6 +199,7 @@ function normalizeExamReport(data: RawExamReport): ExamReport {
     questionId: question.questionId ?? question.id ?? "",
     questionText: question.questionText ?? question.text ?? "",
     passage: question.passage ?? null,
+    visual: question.visual ?? null,
     options: question.options ?? [],
     selectedOption: question.selectedOption ?? null,
     correctOption: question.correctOption ?? "",
@@ -212,6 +216,9 @@ function normalizeExamReport(data: RawExamReport): ExamReport {
     examId: data.examId ?? data.exam?.id ?? "",
     examTitle: data.examTitle ?? data.exam?.title ?? "Mock exam",
     score: data.score ?? data.attempt?.score ?? 0,
+    rank: data.rank ?? data.attempt?.rank ?? null,
+    percentile: data.percentile ?? data.attempt?.percentile ?? null,
+    isFirstAttempt: data.isFirstAttempt ?? data.attempt?.isFirstAttempt ?? true,
     totalQuestions,
     correctCount,
     accuracy:

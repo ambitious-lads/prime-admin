@@ -44,6 +44,7 @@ import {
 } from "@/lib/utils/format";
 import { examsApi } from "@/lib/api/endpoints";
 import { qk } from "@/lib/query/keys";
+import { QuestionVisualView } from "@/components/student/question-visual-view";
 
 const BRAND = "#0c5bfe";
 const GRID = "#e8ebf3";
@@ -117,12 +118,6 @@ export default function ExamReportPage() {
                 Retake
               </Link>
             </Button>
-            <Button variant="outline" asChild>
-              <Link href={`/exams/${report.examId}`}>
-                <Trophy className="h-4 w-4" />
-                View leaderboard
-              </Link>
-            </Button>
           </div>
         }
       />
@@ -163,7 +158,7 @@ export default function ExamReportPage() {
           </CardContent>
         </Card>
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:col-span-2 lg:grid-rows-2">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:col-span-2">
           <StatCard
             label="Correct"
             value={`${formatNumber(correctCount)} / ${formatNumber(totalQuestions)}`}
@@ -183,6 +178,20 @@ export default function ExamReportPage() {
             label="Questions"
             value={formatNumber(totalQuestions)}
             icon={<Trophy />}
+          />
+          <StatCard
+            label="Rank"
+            value={report.rank == null ? "—" : `#${formatNumber(report.rank)}`}
+            icon={<Trophy />}
+          />
+          <StatCard
+            label="Percentile"
+            value={
+              report.percentile == null
+                ? "—"
+                : formatPercent(report.percentile)
+            }
+            icon={<Target />}
           />
         </div>
       </div>
@@ -287,6 +296,7 @@ export default function ExamReportPage() {
                       <p className="whitespace-pre-wrap break-words font-medium leading-relaxed text-ink">
                         {question.questionText}
                       </p>
+                      <QuestionVisualView visual={question.visual} />
                     </div>
                   </div>
 

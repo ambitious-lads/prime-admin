@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { type ColumnDef } from "@tanstack/react-table";
-import { Edit3, FileQuestion, Plus, Save, Trash2 } from "lucide-react";
+import { Edit3, Eye, FileQuestion, Plus, Save, Trash2 } from "lucide-react";
 import { adminExamsApi, examsApi } from "@/lib/api/endpoints";
 import { qk } from "@/lib/query/keys";
 import { toastApiError } from "@/hooks/use-api-error";
@@ -32,7 +32,7 @@ const emptyExam: ExamEditorInput = {
   minPlan: "free",
   scheduledAt: null,
   primaryColor: "#0C5BFE",
-  icon: "clipboard-check",
+  icon: "school",
 };
 
 const emptyQuestion: ExamQuestionEditorInput = {
@@ -80,6 +80,14 @@ export default function AdminExamsPage() {
       header: "",
       cell: ({ row }) => <div className="flex justify-end gap-1">
         <CommunityShareActions kind="mock" id={row.original.id} title={row.original.title} compact />
+        <Button
+          variant="ghost"
+          size="icon"
+          title="Preview the student page"
+          onClick={() => window.open(`/exams/${row.original.id}`, "_blank", "noopener,noreferrer")}
+        >
+          <Eye />
+        </Button>
         <Button variant="ghost" size="icon" title="Manage questions" onClick={() => setQuestionExam(row.original)}><FileQuestion /></Button>
         <Button variant="ghost" size="icon" title="Edit exam" onClick={() => setEditingExam(row.original)}><Edit3 /></Button>
         <Button variant="ghost" size="icon" title="Delete exam" disabled={removeExam.isPending} onClick={() => { if (window.confirm(`Delete ${row.original.title}? This is only allowed before students attempt it.`)) removeExam.mutate(row.original.id); }}><Trash2 className="text-red-500" /></Button>
@@ -117,7 +125,7 @@ function ExamDialog({ exam, onClose }: { exam: Exam | null | undefined; onClose:
       minPlan: exam.minPlan ?? (exam.isPremium ? "pro" : "free"),
       scheduledAt: exam.scheduledAt ? new Date(exam.scheduledAt).toISOString().slice(0, 16) : null,
       primaryColor: exam.primaryColor ?? "#0C5BFE",
-      icon: exam.icon ?? "clipboard-check",
+      icon: exam.icon ?? "school",
     } : emptyExam);
   }, [formKey]);
 
