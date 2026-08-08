@@ -249,6 +249,13 @@ export const authApi = {
     api.public.post<AuthSession>("/auth/verify-otp", b),
   resendOtp: (b: { phone: string }) =>
     api.public.post<{ message: string }>("/auth/resend-otp", b),
+  forgotPassword: (b: { phone: string }) =>
+    api.public.post<{ message: string }>("/auth/forgot-password", b),
+  resetPassword: (b: {
+    phone: string;
+    otpCode: string;
+    newPassword: string;
+  }) => api.public.post<{ message: string }>("/auth/reset-password", b),
   me: () => api.get<AuthMe>("/auth/me"),
   logout: () => api.post<null>("/auth/logout"),
   deleteAccount: () =>
