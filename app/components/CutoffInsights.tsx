@@ -1,12 +1,38 @@
 "use client";
 
 import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Legend,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
+import {
   ArrowUpRight,
+  BarChart3,
   Calculator,
   GraduationCap,
   Landmark,
   Target,
 } from "lucide-react";
+
+const trendData = [
+  { program: "Medicine", y2024: 79, y2025: 79, y2026: 81 },
+  { program: "Software Eng", y2024: 78, y2025: 79, y2026: 80 },
+  { program: "Computer Science", y2024: 77, y2025: 77, y2026: 79 },
+  { program: "Dental Medicine", y2024: 75, y2025: 78, y2026: 80 },
+  { program: "Business Admin & IS", y2024: 69, y2025: 76, y2026: 78 },
+  { program: "Information Systems", y2024: 63, y2025: 74, y2026: 76 },
+  { program: "Architecture", y2024: 63, y2025: 73, y2026: 75 },
+  { program: "Law (LL.B.)", y2024: 70, y2025: 73, y2026: 75 },
+  { program: "Pharmacy", y2024: 68, y2025: 72, y2026: 74 },
+  { program: "Psychology", y2024: 60, y2025: 70, y2026: 72 },
+  { program: "Economics", y2024: 61, y2025: 69, y2026: 71 },
+  { program: "Logistics & SCM", y2024: 56, y2025: 69, y2026: 71 },
+];
 
 const govBands = [
   {
@@ -188,6 +214,55 @@ export function CutoffByDepartment() {
               </div>
             </div>
           ))}
+        </div>
+      </div>
+
+      <div className="mt-6 rounded-2xl border border-line bg-white p-5 sm:p-7">
+        <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+          <p className="flex items-center gap-2 text-sm font-bold text-ink">
+            <BarChart3 className="h-4 w-4 text-brand" />
+            How cutoffs changed — 2024 → 2025/26 → 2026/27
+          </p>
+          <p className="text-xs text-muted">
+            2026/27 bars are the midpoint of the predicted range
+          </p>
+        </div>
+        <div className="h-80">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={trendData} margin={{ top: 8, right: 8, bottom: 8, left: -14 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#e8ebf3" vertical={false} />
+              <XAxis
+                dataKey="program"
+                tickLine={false}
+                axisLine={false}
+                fontSize={11}
+                stroke="#5a647a"
+                interval={0}
+                angle={-22}
+                textAnchor="end"
+                height={64}
+              />
+              <YAxis
+                domain={[0, 85]}
+                tickLine={false}
+                axisLine={false}
+                fontSize={12}
+                stroke="#5a647a"
+                width={40}
+              />
+              <Tooltip cursor={{ fill: "#f6f8ff" }} />
+              <Legend
+                verticalAlign="top"
+                align="right"
+                iconType="circle"
+                iconSize={9}
+                wrapperStyle={{ fontSize: 12, color: "#5a647a" }}
+              />
+              <Bar dataKey="y2024" name="2024" fill="#cdddff" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="y2025" name="2025/26" fill="#0c5bfe" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="y2026" name="2026/27 proj" fill="#0a49cb" radius={[4, 4, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
         </div>
       </div>
     </section>
