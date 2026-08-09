@@ -4,7 +4,6 @@ import {
   Bar,
   BarChart,
   CartesianGrid,
-  Legend,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -53,34 +52,25 @@ const selfHealthEng = [
 ];
 
 type TrendPoint = { program: string; [key: string]: number | string };
-type TrendBar = { dataKey: string; name: string; fill: string };
 
-const bars2024_2025: TrendBar[] = [
-  { dataKey: "y2024", name: "2024", fill: "#cdddff" },
-  { dataKey: "y2025", name: "2025/26", fill: "#0c5bfe" },
-];
-
-function CutoffBarChart({
+function SingleYearBarChart({
   data,
-  bars,
-  title,
-  note,
-  height = 300,
+  label,
+  color,
   maxDomain,
+  height = 260,
 }: {
-  data: TrendPoint[];
-  bars: TrendBar[];
-  title: string;
-  note?: string;
+  data: { program: string; value: number }[];
+  label: string;
+  color: string;
+  maxDomain: number;
   height?: number;
-  maxDomain?: number;
 }) {
   return (
-    <div className="rounded-2xl border border-line bg-white p-5 sm:p-6">
-      <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
-        <p className="text-sm font-bold text-ink">{title}</p>
-        {note ? <p className="text-xs text-muted">{note}</p> : null}
-      </div>
+    <div>
+      <p className="mb-3 text-center text-xs font-bold uppercase tracking-wide text-muted">
+        {label}
+      </p>
       <div style={{ height }} className="w-full">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data} margin={{ top: 8, right: 8, bottom: 8, left: -14 }}>
@@ -89,15 +79,15 @@ function CutoffBarChart({
               dataKey="program"
               tickLine={false}
               axisLine={false}
-              fontSize={11}
+              fontSize={10}
               stroke="#5a647a"
               interval={0}
-              angle={-18}
+              angle={-20}
               textAnchor="end"
               height={48}
             />
             <YAxis
-              domain={[0, maxDomain ?? 85]}
+              domain={[0, maxDomain]}
               tickLine={false}
               axisLine={false}
               fontSize={12}
@@ -105,24 +95,31 @@ function CutoffBarChart({
               width={40}
             />
             <Tooltip cursor={{ fill: "#f6f8ff" }} />
-            <Legend
-              verticalAlign="top"
-              align="right"
-              iconType="circle"
-              iconSize={9}
-              wrapperStyle={{ fontSize: 12, color: "#5a647a" }}
-            />
-            {bars.map((bar) => (
-              <Bar
-                key={bar.dataKey}
-                dataKey={bar.dataKey}
-                name={bar.name}
-                fill={bar.fill}
-                radius={[4, 4, 0, 0]}
-              />
-            ))}
+            <Bar dataKey="value" name={label} fill={color} radius={[4, 4, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
+      </div>
+    </div>
+  );
+}
+
+function YearPair({
+  title,
+  data,
+  maxDomain,
+}: {
+  title: string;
+  data: TrendPoint[];
+  maxDomain: number;
+}) {
+  const y2024 = data.map((d) => ({ program: d.program, value: d.y2024 as number }));
+  const y2025 = data.map((d) => ({ program: d.program, value: d.y2025 as number }));
+  return (
+    <div className="rounded-2xl border border-line bg-white p-5 sm:p-6">
+      <p className="mb-4 text-sm font-bold text-ink">{title}</p>
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+        <SingleYearBarChart data={y2024} label="2024" color="#cdddff" maxDomain={maxDomain} />
+        <SingleYearBarChart data={y2025} label="2025/26" color="#0c5bfe" maxDomain={maxDomain} />
       </div>
     </div>
   );
@@ -140,7 +137,7 @@ export function CutoffBarCharts() {
         </h2>
         <p className="mt-4 text-base leading-7 text-muted">
           Government bands rose sharply, while self-sponsored programs climbed
-          department by department.
+          department by department. Each bar graph shows one year on its own.
         </p>
       </div>
 
@@ -148,35 +145,11 @@ export function CutoffBarCharts() {
         <p className="text-xs font-bold uppercase tracking-[0.14em] text-muted">
           Government-sponsored
         </p>
-        <div className="mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2">
-          <CutoffBarChart
-            data={govNaturalGeneral}
-            bars={bars2024_2025}
-            title="Natural Science — General"
-            height={220}
-            maxDomain={90}
-          />
-          <CutoffBarChart
-            data={govNaturalFemale}
-            bars={bars2024_2025}
-            title="Natural Science — Female"
-            height={220}
-            maxDomain={90}
-          />
-          <CutoffBarChart
-            data={govSocialGeneral}
-            bars={bars2024_2025}
-            title="Social Science — General"
-            height={220}
-            maxDomain={80}
-          />
-          <CutoffBarChart
-            data={govSocialFemale}
-            bars={bars2024_2025}
-            title="Social Science — Female"
-            height={220}
-            maxDomain={80}
-          />
+        <div className="mt-4 grid grid-cols-1 gap-6 lg:grid-cols-2">
+          <YearPair title="Natural Science — General" data={govNaturalGeneral} maxDomain={90} />
+          <YearPair title="Natural Science — Female" data={govNaturalFemale} maxDomain={90} />
+          <YearPair title="Social Science — General" data={govSocialGeneral} maxDomain={80} />
+          <YearPair title="Social Science — Female" data={govSocialFemale} maxDomain={80} />
         </div>
       </div>
 
@@ -185,18 +158,8 @@ export function CutoffBarCharts() {
           Self-sponsored — by department
         </p>
         <div className="mt-4 grid grid-cols-1 gap-6">
-          <CutoffBarChart
-            data={selfSocialBusiness}
-            bars={bars2024_2025}
-            title="Business, law & social sciences"
-            height={340}
-          />
-          <CutoffBarChart
-            data={selfHealthEng}
-            bars={bars2024_2025}
-            title="Health, engineering & natural sciences"
-            height={340}
-          />
+          <YearPair title="Business, law & social sciences" data={selfSocialBusiness} maxDomain={85} />
+          <YearPair title="Health, engineering & natural sciences" data={selfHealthEng} maxDomain={85} />
         </div>
       </div>
     </section>
