@@ -8,6 +8,8 @@ import type {
   AnalyticsOverview,
   AuthMe,
   AuthSession,
+  BroadcastAudienceStats,
+  BroadcastCreateInput,
   Category,
   Course,
   CourseMaterial,
@@ -23,6 +25,8 @@ import type {
   Leaderboard,
   LeaderboardEntry,
   Note,
+  NotificationBroadcast,
+  NotificationBroadcastList,
   PlanCatalogItem,
   PlanKey,
   PlanMe,
@@ -469,6 +473,20 @@ export const notificationsApi = {
   unreadCount: () => api.get<{ count: number }>("/notifications/unread-count"),
   markAsRead: (id: string) => api.patch<AppNotification>(`/notifications/${id}/read`),
   markAllAsRead: () => api.patch<{ updatedCount: number }>("/notifications/read-all"),
+};
+
+export const adminBroadcastsApi = {
+  create: (body: BroadcastCreateInput) =>
+    api.post<NotificationBroadcast>("/notifications/broadcasts", body),
+  list: (q?: { limit?: number; offset?: number }) =>
+    api.get<NotificationBroadcastList>(
+      "/notifications/broadcasts",
+      q ?? undefined,
+    ),
+  stats: () =>
+    api.get<BroadcastAudienceStats>("/notifications/broadcasts/stats"),
+  cancel: (id: string) =>
+    api.del<NotificationBroadcast>(`/notifications/broadcasts/${id}`),
 };
 
 export const savedApi = {

@@ -64,7 +64,7 @@ export default async function Hero() {
               </div>
             </div>
             <div className="relative hidden min-w-0 justify-center animate-fade-in-up lg:col-span-6 lg:flex lg:justify-end" style={{ animationDelay: "150ms" }}>
-              <svg viewBox="0 0 500 200" preserveAspectRatio="none" aria-hidden="true" className="pointer-events-none absolute -bottom-28 left-0 z-10 hidden h-[75%] w-[160%] select-none fill-brand lg:block"><path d="M0,198 C60,160 120,170 180,150 C250,128 290,150 350,100 C400,60 450,72 500,14 L500,200 L0,200 Z" /></svg>
+              <svg viewBox="0 0 500 200" preserveAspectRatio="none" aria-hidden="true" className="pointer-events-none absolute -bottom-28 left-0 z-10 hidden h-[75%] w-[160%] select-none fill-brand lg:block min-[1920px]:left-16 min-[1920px]:w-[145%]"><path d="M0,198 C60,160 120,170 180,150 C250,128 290,150 350,100 C400,60 450,72 500,14 L500,200 L0,200 Z" /></svg>
               <div className="pointer-events-none relative h-[300px] w-full max-w-[430px] translate-y-10 select-none overflow-hidden sm:h-[500px] sm:max-w-[560px] sm:translate-y-0 sm:overflow-visible lg:h-auto lg:max-w-none lg:translate-x-12 lg:scale-125 lg:origin-right lg:aspect-square"><Image src="/images/hero.png" alt="Student preparing for the Addis Ababa University UAT" fill priority sizes="(max-width: 1024px) 100vw, 1000px" className="pointer-events-none translate-y-12 scale-110 select-none object-contain object-bottom mix-blend-multiply sm:translate-y-0 sm:scale-100" /></div>
             </div>
           </div>

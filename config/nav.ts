@@ -42,6 +42,7 @@ export const adminNav: NavItem[] = [
   { label: "Overview", href: "/admin", icon: LayoutDashboard },
   { label: "Payments", href: "/admin/payments", icon: CreditCard },
   { label: "Referral Payouts", href: "/admin/referrals", icon: HandCoins },
+  { label: "Notifications", href: "/admin/notifications", icon: Bell },
   { label: "Users", href: "/admin/users", icon: Users },
   { label: "Devices", href: "/admin/devices", icon: Smartphone },
   { label: "Categories", href: "/admin/content/categories", icon: FolderTree },

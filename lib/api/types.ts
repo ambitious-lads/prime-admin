@@ -698,6 +698,57 @@ export type AppNotification = {
   updatedAt: string;
 };
 
+export type BroadcastAction = {
+  id: string;
+  label: string;
+  path: string;
+};
+
+export type BroadcastStatus =
+  | "scheduled"
+  | "sending"
+  | "sent"
+  | "failed"
+  | "cancelled";
+
+export type NotificationBroadcast = {
+  id: string;
+  title: string;
+  body: string;
+  type: string;
+  path: string;
+  actions: BroadcastAction[];
+  sendPush: boolean;
+  scheduledFor: string | null;
+  status: BroadcastStatus;
+  targetCount: number;
+  sentCount: number;
+  error: string | null;
+  sentAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type NotificationBroadcastList = {
+  total: number;
+  broadcasts: NotificationBroadcast[];
+};
+
+export type BroadcastAudienceStats = {
+  optedInUsers: number;
+  activePushTokens: number;
+};
+
+export type BroadcastCreateInput = {
+  title: string;
+  body: string;
+  type?: string;
+  path?: string;
+  actions?: BroadcastAction[];
+  sendPush?: boolean;
+  scheduledFor?: string;
+};
+
 export type SavedQuestion = {
   id: string;
   questionId: string;
