@@ -5,6 +5,11 @@ import Link from "next/link";
 import { Search, SlidersHorizontal } from "lucide-react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import {
+  CompetitionGrowth,
+  CutoffPrediction,
+  NetScoreExplained,
+} from "../components/CutoffInsights";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -36,6 +41,10 @@ export default function CutoffPointsPage() {
             </div>
           </div>
         </header>
+
+        <CompetitionGrowth />
+        <CutoffPrediction />
+        <NetScoreExplained />
 
         <section className="mx-auto max-w-7xl px-5 py-12 sm:px-8 lg:px-12 lg:py-16">
           <div className="mb-8 grid gap-4 border-b border-line pb-8 md:grid-cols-[1fr_auto] md:items-end">
