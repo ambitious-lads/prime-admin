@@ -1,40 +1,92 @@
 "use client";
 
 import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  Legend,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
-import {
   ArrowUpRight,
-  BarChart3,
   Calculator,
-  Flame,
   GraduationCap,
+  Landmark,
   Target,
-  TrendingUp,
 } from "lucide-react";
 
-const growthData = [
-  { program: "Logistics & SCM", y2024: 56, y2025: 69 },
-  { program: "Information Systems", y2024: 63, y2025: 74 },
-  { program: "Management", y2024: 56, y2025: 67 },
-  { program: "Architecture", y2024: 63, y2025: 73 },
-  { program: "Psychology", y2024: 60, y2025: 70 },
-  { program: "Accounting & Finance", y2024: 56, y2025: 65 },
-  { program: "Economics", y2024: 61, y2025: 69 },
-  { program: "Political Science", y2024: 61, y2025: 69 },
+const govBands = [
+  {
+    label: "Natural Science",
+    tier: "General",
+    value: 83,
+    note: "The highest threshold AAU asks for",
+  },
+  {
+    label: "Natural Science",
+    tier: "Female",
+    value: 78,
+    note: "Female quota is still very competitive",
+  },
+  {
+    label: "Social Science",
+    tier: "General",
+    value: 63,
+    note: "Matches the self-sponsored band",
+  },
+  {
+    label: "Social Science",
+    tier: "Female",
+    value: 57,
+    note: "Female quota eases the bar",
+  },
 ];
 
-const growthStats = [
-  { value: "+13 pts", label: "Largest single-year jump — Logistics & Supply Chain" },
-  { value: "5.9 pts", label: "Average rise across the 14 flagship programs we track" },
-  { value: "12 of 14", label: "Flagship programs that climbed in 2025/26" },
+const govDepartments = [
+  {
+    faculty: "Health sciences & medicine",
+    rows: [
+      { program: "Doctor of Medicine", point: 79 },
+      { program: "Dental Medicine (DMD)", point: 78 },
+      { program: "Pharmacy", point: 72 },
+      { program: "Medical Laboratory Sciences", point: 61 },
+      { program: "Anesthesia", point: 58 },
+      { program: "Nursing (Child Health)", point: 55 },
+      { program: "Medical Radiologic Technology", point: 52 },
+    ],
+  },
+  {
+    faculty: "Engineering & computing",
+    rows: [
+      { program: "Software Engineering", point: 79 },
+      { program: "Computer Science", point: 77 },
+      { program: "Information Systems", point: 74 },
+      { program: "Architecture", point: 73 },
+      { program: "Electrical & Computer Engineering", point: 70 },
+      { program: "Biomedical Engineering", point: 65 },
+      { program: "Mechanical Engineering", point: 62 },
+      { program: "Urban Planning & Design", point: 56 },
+      { program: "Chemical Engineering", point: 55 },
+      { program: "Civil Engineering", point: 53 },
+      { program: "Construction Technology & Management", point: 52 },
+    ],
+  },
+  {
+    faculty: "Natural sciences",
+    rows: [
+      { program: "Chemistry", point: 63 },
+      { program: "Biology", point: 58 },
+      { program: "Physics", point: 55 },
+    ],
+  },
+  {
+    faculty: "Business, law & social sciences",
+    rows: [
+      { program: "Law (LL.B.)", point: 73 },
+      { program: "Accounting & Finance", point: 65 },
+      { program: "Political Science", point: 60 },
+      { program: "Economics", point: 58 },
+      { program: "Psychology", point: 56 },
+      { program: "Social Work", point: 56 },
+      { program: "Sociology & Anthropology", point: 56 },
+      { program: "Management", point: 55 },
+      { program: "Public Relations & Strategic Communication", point: 55 },
+      { program: "Fine Arts", point: 55 },
+    ],
+  },
 ];
 
 const predictions = [
@@ -52,83 +104,90 @@ const predictions = [
   { program: "Logistics & Supply Chain", y2025: 69, y2026: "70 – 73" },
 ];
 
-export function CompetitionGrowth() {
+export function CutoffByDepartment() {
   return (
     <section className="mx-auto max-w-7xl px-5 pt-12 sm:px-8 lg:px-12">
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div className="max-w-2xl">
-          <span className="inline-flex items-center gap-1.5 text-sm font-bold uppercase tracking-[0.18em] text-brand">
-            <Flame className="h-4 w-4" /> Competition is climbing
-          </span>
-          <h2 className="font-accent mt-3 text-3xl font-black leading-tight text-ink sm:text-4xl">
-            Cutoff points are rising — fast.
-          </h2>
-          <p className="mt-4 text-base leading-7 text-muted">
-            Compare 2024/25 against 2025/26 for the same programs. Scores that
-            cleared a program last year may no longer be enough this cycle.
-          </p>
-        </div>
-        <div className="rounded-xl border border-line bg-surface px-5 py-4">
+      <div className="max-w-3xl">
+        <span className="inline-flex items-center gap-1.5 text-sm font-bold uppercase tracking-[0.18em] text-brand">
+          <Landmark className="h-4 w-4" /> By department & sponsorship
+        </span>
+        <h2 className="font-accent mt-3 text-3xl font-black leading-tight text-ink sm:text-4xl">
+          Cutoffs for every department — government &amp; self-sponsored
+        </h2>
+        <p className="mt-4 text-base leading-7 text-muted">
+          Government-sponsored places are free and come with a stipend, so they
+          are the most sought after. See where each department&apos;s bar sits
+          for both routes.
+        </p>
+      </div>
+
+      <div className="mt-8 rounded-2xl border border-line bg-white p-5 sm:p-7">
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <p className="flex items-center gap-2 text-sm font-bold text-ink">
-            <TrendingUp className="h-4 w-4 text-brand" /> 2024/25 → 2025/26
+            <GraduationCap className="h-4 w-4 text-brand" />
+            Government-sponsored thresholds — 2025/26
           </p>
-          <p className="mt-1 text-sm text-muted">Most competitive programs</p>
+          <span className="rounded-full bg-brand-50 px-3 py-1 text-xs font-bold text-brand">
+            Free tuition + stipend
+          </span>
+        </div>
+
+        <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {govBands.map((band) => (
+            <div
+              key={`${band.label}-${band.tier}`}
+              className="rounded-xl border border-line bg-surface p-4"
+            >
+              <div className="flex items-center justify-between">
+                <p className="text-xs font-bold uppercase tracking-wide text-muted">
+                  {band.label}
+                </p>
+                <span className="rounded-md bg-white px-2 py-0.5 text-[11px] font-bold text-brand ring-1 ring-line">
+                  {band.tier}
+                </span>
+              </div>
+              <p className="font-accent mt-3 text-4xl font-black tracking-tight text-brand">
+                {band.value}
+              </p>
+              <p className="mt-2 text-xs leading-5 text-muted">{band.note}</p>
+            </div>
+          ))}
         </div>
       </div>
 
-      <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
-        {growthStats.map((stat) => (
-          <div key={stat.label} className="rounded-2xl border border-line bg-white p-5">
-            <p className="font-accent text-3xl font-black tracking-tight text-brand">
-              {stat.value}
-            </p>
-            <p className="mt-2 text-sm leading-6 text-muted">{stat.label}</p>
-          </div>
-        ))}
-      </div>
-
-      <div className="mt-6 rounded-2xl border border-line bg-white p-5 sm:p-7">
-        <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+      <div className="mt-6 overflow-hidden rounded-2xl border border-line bg-white">
+        <div className="border-b border-line bg-surface px-5 py-4 sm:px-7">
           <p className="text-sm font-bold text-ink">
-            Where the biggest jumps happened
+            Government cutoffs by department
           </p>
-          <p className="text-xs text-muted">Cutoff point, by admission year</p>
+          <p className="mt-1 text-xs leading-5 text-muted">
+            Most recent department-level release. If a department is not listed
+            below, check the general bands above.
+          </p>
         </div>
-        <div className="h-80">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={growthData} margin={{ top: 8, right: 8, bottom: 8, left: -14 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#e8ebf3" vertical={false} />
-              <XAxis
-                dataKey="program"
-                tickLine={false}
-                axisLine={false}
-                fontSize={11}
-                stroke="#5a647a"
-                interval={0}
-                angle={-22}
-                textAnchor="end"
-                height={64}
-              />
-              <YAxis
-                domain={[0, 80]}
-                tickLine={false}
-                axisLine={false}
-                fontSize={12}
-                stroke="#5a647a"
-                width={40}
-              />
-              <Tooltip cursor={{ fill: "#f6f8ff" }} />
-              <Legend
-                verticalAlign="top"
-                align="right"
-                iconType="circle"
-                iconSize={9}
-                wrapperStyle={{ fontSize: 12, color: "#5a647a" }}
-              />
-              <Bar dataKey="y2024" name="2024/25" fill="#cdddff" radius={[4, 4, 0, 0]} />
-              <Bar dataKey="y2025" name="2025/26" fill="#0c5bfe" radius={[4, 4, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
+        <div className="grid gap-8 p-5 sm:p-7 lg:grid-cols-2">
+          {govDepartments.map((group) => (
+            <div key={group.faculty}>
+              <p className="text-xs font-bold uppercase tracking-[0.14em] text-muted">
+                {group.faculty}
+              </p>
+              <div className="mt-3 divide-y divide-line border-t border-line">
+                {group.rows.map((row) => (
+                  <div
+                    key={row.program}
+                    className="flex items-center justify-between gap-3 py-2.5"
+                  >
+                    <span className="pr-3 text-sm font-medium text-ink">
+                      {row.program}
+                    </span>
+                    <span className="text-lg font-black tabular-nums text-brand">
+                      {row.point}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>
@@ -152,7 +211,7 @@ export function CutoffPrediction() {
       </div>
 
       <div className="mt-8 overflow-hidden rounded-xl border border-line">
-        <div className="grid grid-cols-[1fr_88px_110px] gap-2 bg-ink px-5 py-3 text-xs font-bold uppercase tracking-wide text-white sm:grid-cols-[1fr_120px_140px] sm:px-6">
+        <div className="grid grid-cols-[1fr_88px_110px] gap-2 border-b border-line bg-surface px-5 py-3 text-xs font-bold uppercase tracking-wide text-ink sm:grid-cols-[1fr_120px_140px] sm:px-6">
           <span>Program</span>
           <span className="text-right">2025/26</span>
           <span className="text-right">2026/27 projected</span>
@@ -207,33 +266,34 @@ export function NetScoreExplained() {
 
   return (
     <section className="mx-auto max-w-7xl px-5 pt-14 sm:px-8 lg:px-12">
-      <div className="rounded-3xl bg-ink p-6 text-white sm:p-10">
+      <div className="rounded-3xl border border-line bg-white p-6 sm:p-10">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="max-w-2xl">
-            <span className="inline-flex items-center gap-1.5 text-sm font-bold uppercase tracking-[0.18em] text-white/60">
+            <span className="inline-flex items-center gap-1.5 text-sm font-bold uppercase tracking-[0.18em] text-brand">
               <Calculator className="h-4 w-4" /> How it&apos;s calculated
             </span>
-            <h2 className="font-accent mt-3 text-3xl font-black leading-tight sm:text-4xl">
+            <h2 className="font-accent mt-3 text-3xl font-black leading-tight text-ink sm:text-4xl">
               Your net score in three steps
             </h2>
-            <p className="mt-4 text-base leading-7 text-white/70">
+            <p className="mt-4 text-base leading-7 text-muted">
               Every cutoff on this page is a net score out of 100. It is the
               same formula used in the app&apos;s score calculator — no
               calculator needed.
             </p>
           </div>
-          <div className="w-full max-w-sm rounded-2xl bg-white p-5 text-ink">
+          <div className="w-full max-w-sm rounded-2xl border border-line bg-surface p-5">
             <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-muted">
               <GraduationCap className="h-4 w-4 text-brand" /> The formula
             </p>
-            <p className="font-accent mt-3 text-2xl font-black leading-snug">
+            <p className="font-accent mt-3 text-2xl font-black leading-snug text-ink">
               Net = ESSLCE <span className="text-brand">(50%)</span>
               <br />
-              <span className="text-muted">+</span> UAT <span className="text-brand">(50%)</span>
+              <span className="text-muted">+</span> UAT{" "}
+              <span className="text-brand">(50%)</span>
             </p>
             <div className="mt-4 flex h-3 w-full overflow-hidden rounded-full">
               <div className="h-full w-1/2 bg-brand" title="ESSLCE 50%" />
-              <div className="h-full w-1/2 bg-ink" title="UAT 50%" />
+              <div className="h-full w-1/2 bg-ink/70" title="UAT 50%" />
             </div>
             <div className="mt-2 flex justify-between text-xs font-semibold text-muted">
               <span>ESSLCE / EUEE — 50%</span>
@@ -244,26 +304,29 @@ export function NetScoreExplained() {
 
         <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-3">
           {steps.map((step, index) => (
-            <div key={step.title} className="rounded-2xl bg-white/5 p-5 ring-1 ring-white/10">
+            <div
+              key={step.title}
+              className="rounded-2xl border border-line bg-surface p-5"
+            >
               <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-brand text-sm font-black text-white">
                 {index + 1}
               </span>
-              <h3 className="mt-4 text-base font-bold">{step.title}</h3>
-              <p className="mt-2 text-sm leading-6 text-white/70">{step.body}</p>
-              <p className="mt-3 rounded-lg bg-black/25 px-3 py-2 font-mono text-sm font-semibold tabular-nums text-white">
+              <h3 className="mt-4 text-base font-bold text-ink">{step.title}</h3>
+              <p className="mt-2 text-sm leading-6 text-muted">{step.body}</p>
+              <p className="mt-3 rounded-lg bg-brand-50 px-3 py-2 font-mono text-sm font-semibold tabular-nums text-ink">
                 {step.example}
               </p>
             </div>
           ))}
         </div>
 
-        <div className="mt-6 flex flex-wrap items-center gap-3 rounded-2xl bg-white/5 p-5 ring-1 ring-white/10">
-          <BarChart3 className="h-5 w-5 shrink-0 text-brand" />
-          <p className="text-sm leading-6 text-white/80">
-            <strong className="text-white">Worked example:</strong> ESSLCE 500/700
-            (71.4%) and UAT 80/100 (80%) → net score of{" "}
-            <strong className="font-accent text-xl text-brand">75.7</strong>.
-            If your ESSLCE was out of 600, normalize using 600 instead of 700.
+        <div className="mt-6 flex flex-wrap items-center gap-3 rounded-2xl border border-brand/20 bg-brand-50 p-5">
+          <GraduationCap className="h-5 w-5 shrink-0 text-brand" />
+          <p className="text-sm leading-6 text-ink">
+            <strong>Worked example:</strong> ESSLCE 500/700 (71.4%) and UAT
+            80/100 (80%) → net score of{" "}
+            <strong className="font-accent text-xl text-brand">75.7</strong>. If
+            your ESSLCE was out of 600, normalize using 600 instead of 700.
           </p>
         </div>
       </div>

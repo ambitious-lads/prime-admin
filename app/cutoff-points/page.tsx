@@ -6,7 +6,7 @@ import { Search, SlidersHorizontal } from "lucide-react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import {
-  CompetitionGrowth,
+  CutoffByDepartment,
   CutoffPrediction,
   NetScoreExplained,
 } from "../components/CutoffInsights";
@@ -42,7 +42,7 @@ export default function CutoffPointsPage() {
           </div>
         </header>
 
-        <CompetitionGrowth />
+        <CutoffByDepartment />
         <CutoffPrediction />
         <NetScoreExplained />
 
@@ -147,7 +147,7 @@ function CutoffTable({ entries, query }: { entries: CutoffEntry[]; query: string
 
   return (
     <div className="overflow-hidden rounded-md border border-line">
-      <div className="grid grid-cols-[52px_1fr_72px] bg-ink px-4 py-3 text-xs font-bold uppercase tracking-wide text-white">
+      <div className="grid grid-cols-[52px_1fr_72px] border-b border-line bg-surface px-4 py-3 text-xs font-bold uppercase tracking-wide text-ink">
         <span>No.</span>
         <span>Program</span>
         <span className="text-right">Point</span>
