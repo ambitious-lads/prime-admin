@@ -57,12 +57,14 @@ function SingleYearBarChart({
   data,
   label,
   color,
+  hoverColor,
   maxDomain,
   height = 260,
 }: {
   data: { program: string; value: number }[];
   label: string;
   color: string;
+  hoverColor: string;
   maxDomain: number;
   height?: number;
 }) {
@@ -73,7 +75,7 @@ function SingleYearBarChart({
       </p>
       <div style={{ height }} className="w-full">
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={data} margin={{ top: 8, right: 8, bottom: 8, left: -14 }}>
+          <BarChart data={data} margin={{ top: 8, right: 8, bottom: 8, left: -14 }} barCategoryGap="25%">
             <CartesianGrid strokeDasharray="3 3" stroke="#e8ebf3" vertical={false} />
             <XAxis
               dataKey="program"
@@ -94,8 +96,25 @@ function SingleYearBarChart({
               stroke="#5a647a"
               width={40}
             />
-            <Tooltip cursor={{ fill: "#f6f8ff" }} />
-            <Bar dataKey="value" name={label} fill={color} radius={[4, 4, 0, 0]} />
+            <Tooltip
+              cursor={false}
+              contentStyle={{
+                borderRadius: 12,
+                border: "1px solid #e8ebf3",
+                boxShadow: "0 8px 24px rgba(15, 23, 42, 0.08)",
+                fontSize: 13,
+                fontWeight: 600,
+                color: "#0f172a",
+              }}
+              labelStyle={{ color: "#5a647a", fontWeight: 700, marginBottom: 4 }}
+            />
+            <Bar
+              dataKey="value"
+              name={label}
+              fill={color}
+              radius={[4, 4, 0, 0]}
+              activeBar={{ fill: hoverColor }}
+            />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -118,8 +137,8 @@ function YearPair({
     <div className="rounded-2xl border border-line bg-white p-5 sm:p-6">
       <p className="mb-4 text-sm font-bold text-ink">{title}</p>
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-        <SingleYearBarChart data={y2024} label="2024" color="#cdddff" maxDomain={maxDomain} />
-        <SingleYearBarChart data={y2025} label="2025/26" color="#0c5bfe" maxDomain={maxDomain} />
+        <SingleYearBarChart data={y2024} label="2024" color="#cdddff" hoverColor="#9db9f5" maxDomain={maxDomain} />
+        <SingleYearBarChart data={y2025} label="2025/26" color="#0c5bfe" hoverColor="#0a4ad4" maxDomain={maxDomain} />
       </div>
     </div>
   );
