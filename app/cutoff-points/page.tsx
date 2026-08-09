@@ -6,7 +6,7 @@ import { Search, SlidersHorizontal } from "lucide-react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import {
-  CutoffByDepartment,
+  CutoffBarCharts,
   CutoffPrediction,
   NetScoreExplained,
 } from "../components/CutoffInsights";
@@ -42,7 +42,7 @@ export default function CutoffPointsPage() {
           </div>
         </header>
 
-        <CutoffByDepartment />
+        <CutoffBarCharts />
         <CutoffPrediction />
         <NetScoreExplained />
 

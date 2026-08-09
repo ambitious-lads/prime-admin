@@ -12,12 +12,87 @@ import {
 } from "recharts";
 import {
   ArrowUpRight,
-  BarChart3,
   Calculator,
   GraduationCap,
-  Landmark,
   Target,
 } from "lucide-react";
+
+const govNatural2024 = [
+  { program: "Medicine", y2024: 79, y2025: 83 },
+  { program: "Software Engineering", y2024: 79, y2025: 83 },
+  { program: "Computer Science", y2024: 77, y2025: 83 },
+  { program: "Dental Medicine (DMD)", y2024: 78, y2025: 83 },
+  { program: "Information Systems", y2024: 74, y2025: 83 },
+  { program: "Architecture", y2024: 73, y2025: 83 },
+  { program: "Pharmacy", y2024: 72, y2025: 83 },
+  { program: "Electrical & Computer Eng", y2024: 70, y2025: 83 },
+  { program: "Biomedical Engineering", y2024: 65, y2025: 83 },
+  { program: "Chemistry", y2024: 63, y2025: 83 },
+  { program: "Mechanical Engineering", y2024: 62, y2025: 83 },
+  { program: "Medical Laboratory Sciences", y2024: 61, y2025: 83 },
+  { program: "Biology", y2024: 58, y2025: 83 },
+  { program: "Anesthesia", y2024: 58, y2025: 83 },
+  { program: "Urban Planning & Design", y2024: 56, y2025: 83 },
+  { program: "Nursing (Child Health)", y2024: 55, y2025: 83 },
+  { program: "Chemical Engineering", y2024: 55, y2025: 83 },
+  { program: "Physics", y2024: 55, y2025: 83 },
+  { program: "Civil Engineering", y2024: 53, y2025: 83 },
+  { program: "Medical Radiologic Technology", y2024: 52, y2025: 83 },
+  { program: "Construction Technology", y2024: 52, y2025: 83 },
+];
+
+const govSocial2024 = [
+  { program: "Law (LL.B.)", y2024: 73, y2025: 63 },
+  { program: "Accounting & Finance", y2024: 65, y2025: 63 },
+  { program: "Political Science", y2024: 60, y2025: 63 },
+  { program: "Economics", y2024: 58, y2025: 63 },
+  { program: "Psychology", y2024: 56, y2025: 63 },
+  { program: "Social Work", y2024: 56, y2025: 63 },
+  { program: "Sociology & Anthropology", y2024: 56, y2025: 63 },
+  { program: "Management", y2024: 55, y2025: 63 },
+  { program: "Public Relations", y2024: 55, y2025: 63 },
+  { program: "Fine Arts", y2024: 55, y2025: 63 },
+];
+
+const govFemale = [
+  { program: "Natural Science Freshman", y2024: 78, y2025: 78 },
+  { program: "Social Science Freshman", y2024: 57, y2025: 57 },
+];
+
+const selfSocialBusiness = [
+  { program: "Business Admin & IS", y2024: 69, y2025: 76 },
+  { program: "Law (LL.B.)", y2024: 70, y2025: 73 },
+  { program: "Marketing", y2024: 65, y2025: 70 },
+  { program: "Psychology", y2024: 60, y2025: 70 },
+  { program: "Economics", y2024: 61, y2025: 69 },
+  { program: "Logistics & Supply Chain", y2024: 56, y2025: 69 },
+  { program: "Political Science", y2024: 61, y2025: 69 },
+  { program: "Management", y2024: 56, y2025: 67 },
+  { program: "Accounting & Finance", y2024: 56, y2025: 65 },
+  { program: "Broadcast & Multimedia", y2024: 56, y2025: 59 },
+  { program: "Public Relations", y2024: 54, y2025: 56 },
+  { program: "Sociology & Anthropology", y2024: 54, y2025: 56 },
+  { program: "Social Work", y2024: 54, y2025: 56 },
+  { program: "Fine Arts", y2024: 54, y2025: 55 },
+];
+
+const selfHealthEng = [
+  { program: "Medicine", y2024: 79, y2025: 79 },
+  { program: "Software Engineering", y2024: 78, y2025: 79 },
+  { program: "Computer Science", y2024: 77, y2025: 77 },
+  { program: "Dental Medicine (DMD)", y2024: 75, y2025: 78 },
+  { program: "Pharmacy", y2024: 68, y2025: 72 },
+  { program: "Information Systems", y2024: 63, y2025: 74 },
+  { program: "Architecture", y2024: 63, y2025: 73 },
+  { program: "Electrical & Computer Eng", y2024: 63, y2025: 70 },
+  { program: "Biomedical Engineering", y2024: 63, y2025: 65 },
+  { program: "Mechanical Engineering", y2024: 63, y2025: 62 },
+  { program: "Medical Laboratory Sciences", y2024: 63, y2025: 61 },
+  { program: "Anesthesia", y2024: 63, y2025: 58 },
+  { program: "Chemical Engineering", y2024: 63, y2025: 55 },
+  { program: "Civil Engineering", y2024: 63, y2025: 53 },
+  { program: "Physics", y2024: 63, y2025: 55 },
+];
 
 const trendData = [
   { program: "Medicine", y2024: 79, y2025: 79, y2026: 81 },
@@ -34,236 +109,143 @@ const trendData = [
   { program: "Logistics & SCM", y2024: 56, y2025: 69, y2026: 71 },
 ];
 
-const govBands = [
-  {
-    label: "Natural Science",
-    tier: "General",
-    value: 83,
-    note: "The highest threshold AAU asks for",
-  },
-  {
-    label: "Natural Science",
-    tier: "Female",
-    value: 78,
-    note: "Female quota is still very competitive",
-  },
-  {
-    label: "Social Science",
-    tier: "General",
-    value: 63,
-    note: "Matches the self-sponsored band",
-  },
-  {
-    label: "Social Science",
-    tier: "Female",
-    value: 57,
-    note: "Female quota eases the bar",
-  },
+type TrendPoint = { program: string; [key: string]: number | string };
+type TrendBar = { dataKey: string; name: string; fill: string };
+
+const bars2024_2025: TrendBar[] = [
+  { dataKey: "y2024", name: "2024", fill: "#cdddff" },
+  { dataKey: "y2025", name: "2025/26", fill: "#0c5bfe" },
 ];
 
-const govDepartments = [
-  {
-    faculty: "Health sciences & medicine",
-    rows: [
-      { program: "Doctor of Medicine", point: 79 },
-      { program: "Dental Medicine (DMD)", point: 78 },
-      { program: "Pharmacy", point: 72 },
-      { program: "Medical Laboratory Sciences", point: 61 },
-      { program: "Anesthesia", point: 58 },
-      { program: "Nursing (Child Health)", point: 55 },
-      { program: "Medical Radiologic Technology", point: 52 },
-    ],
-  },
-  {
-    faculty: "Engineering & computing",
-    rows: [
-      { program: "Software Engineering", point: 79 },
-      { program: "Computer Science", point: 77 },
-      { program: "Information Systems", point: 74 },
-      { program: "Architecture", point: 73 },
-      { program: "Electrical & Computer Engineering", point: 70 },
-      { program: "Biomedical Engineering", point: 65 },
-      { program: "Mechanical Engineering", point: 62 },
-      { program: "Urban Planning & Design", point: 56 },
-      { program: "Chemical Engineering", point: 55 },
-      { program: "Civil Engineering", point: 53 },
-      { program: "Construction Technology & Management", point: 52 },
-    ],
-  },
-  {
-    faculty: "Natural sciences",
-    rows: [
-      { program: "Chemistry", point: 63 },
-      { program: "Biology", point: 58 },
-      { program: "Physics", point: 55 },
-    ],
-  },
-  {
-    faculty: "Business, law & social sciences",
-    rows: [
-      { program: "Law (LL.B.)", point: 73 },
-      { program: "Accounting & Finance", point: 65 },
-      { program: "Political Science", point: 60 },
-      { program: "Economics", point: 58 },
-      { program: "Psychology", point: 56 },
-      { program: "Social Work", point: 56 },
-      { program: "Sociology & Anthropology", point: 56 },
-      { program: "Management", point: 55 },
-      { program: "Public Relations & Strategic Communication", point: 55 },
-      { program: "Fine Arts", point: 55 },
-    ],
-  },
-];
+function CutoffBarChart({
+  data,
+  bars,
+  title,
+  note,
+  height = 300,
+}: {
+  data: TrendPoint[];
+  bars: TrendBar[];
+  title: string;
+  note?: string;
+  height?: number;
+}) {
+  return (
+    <div className="rounded-2xl border border-line bg-white p-5 sm:p-6">
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+        <p className="text-sm font-bold text-ink">{title}</p>
+        {note ? <p className="text-xs text-muted">{note}</p> : null}
+      </div>
+      <div style={{ height }} className="w-full">
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={data} margin={{ top: 8, right: 8, bottom: 8, left: -14 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke="#e8ebf3" vertical={false} />
+            <XAxis
+              dataKey="program"
+              tickLine={false}
+              axisLine={false}
+              fontSize={10}
+              stroke="#5a647a"
+              interval={0}
+              angle={-28}
+              textAnchor="end"
+              height={70}
+            />
+            <YAxis
+              domain={[0, 85]}
+              tickLine={false}
+              axisLine={false}
+              fontSize={12}
+              stroke="#5a647a"
+              width={40}
+            />
+            <Tooltip cursor={{ fill: "#f6f8ff" }} />
+            <Legend
+              verticalAlign="top"
+              align="right"
+              iconType="circle"
+              iconSize={9}
+              wrapperStyle={{ fontSize: 12, color: "#5a647a" }}
+            />
+            {bars.map((bar) => (
+              <Bar
+                key={bar.dataKey}
+                dataKey={bar.dataKey}
+                name={bar.name}
+                fill={bar.fill}
+                radius={[4, 4, 0, 0]}
+              />
+            ))}
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+    </div>
+  );
+}
 
-const predictions = [
-  { program: "Doctor of Medicine", y2025: 79, y2026: "80 – 82" },
-  { program: "Software Engineering", y2025: 79, y2026: "80 – 81" },
-  { program: "Computer Science", y2025: 77, y2026: "78 – 80" },
-  { program: "Dental Medicine (DMD)", y2025: 78, y2026: "79 – 81" },
-  { program: "Business Admin & IS", y2025: 76, y2026: "77 – 79" },
-  { program: "Information Systems", y2025: 74, y2026: "75 – 78" },
-  { program: "Architecture", y2025: 73, y2026: "74 – 77" },
-  { program: "Law (LL.B.)", y2025: 73, y2026: "74 – 76" },
-  { program: "Pharmacy", y2025: 72, y2026: "73 – 75" },
-  { program: "Psychology", y2025: 70, y2026: "71 – 74" },
-  { program: "Economics", y2025: 69, y2026: "70 – 73" },
-  { program: "Logistics & Supply Chain", y2025: 69, y2026: "70 – 73" },
-];
-
-export function CutoffByDepartment() {
+export function CutoffBarCharts() {
   return (
     <section className="mx-auto max-w-7xl px-5 pt-12 sm:px-8 lg:px-12">
       <div className="max-w-3xl">
-        <span className="inline-flex items-center gap-1.5 text-sm font-bold uppercase tracking-[0.18em] text-brand">
-          <Landmark className="h-4 w-4" /> By department & sponsorship
+        <span className="inline-block text-sm font-bold uppercase tracking-[0.18em] text-brand">
+          Cutoff trends
         </span>
         <h2 className="font-accent mt-3 text-3xl font-black leading-tight text-ink sm:text-4xl">
-          Cutoffs for every department — government &amp; self-sponsored
+          2024 vs 2025/26 — how every cutoff moved
         </h2>
         <p className="mt-4 text-base leading-7 text-muted">
-          Government-sponsored places are free and come with a stipend, so they
-          are the most sought after. See where each department&apos;s bar sits
-          for both routes.
+          Department by department, side by side. Government natural science
+          jumped to a single 2025/26 band, while self-sponsored programs kept
+          climbing.
         </p>
       </div>
 
-      <div className="mt-8 rounded-2xl border border-line bg-white p-5 sm:p-7">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <p className="flex items-center gap-2 text-sm font-bold text-ink">
-            <GraduationCap className="h-4 w-4 text-brand" />
-            Government-sponsored thresholds — 2025/26
-          </p>
-          <span className="rounded-full bg-brand-50 px-3 py-1 text-xs font-bold text-brand">
-            Free tuition + stipend
-          </span>
+      <div className="mt-8 grid grid-cols-1 gap-6">
+        <CutoffBarChart
+          data={govNatural2024}
+          bars={bars2024_2025}
+          title="Government natural science"
+          note="2025/26 is published as a single general band (83), not per department"
+          height={340}
+        />
+        <CutoffBarChart
+          data={govSocial2024}
+          bars={bars2024_2025}
+          title="Government social science"
+          note="2025/26 is published as a single general band (63), not per department"
+          height={300}
+        />
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+          <CutoffBarChart
+            data={govFemale}
+            bars={bars2024_2025}
+            title="Government female quotas"
+            height={220}
+          />
+          <CutoffBarChart
+            data={selfSocialBusiness}
+            bars={bars2024_2025}
+            title="Self-sponsored — business, law & social sciences"
+            height={340}
+          />
         </div>
-
-        <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {govBands.map((band) => (
-            <div
-              key={`${band.label}-${band.tier}`}
-              className="rounded-xl border border-line bg-surface p-4"
-            >
-              <div className="flex items-center justify-between">
-                <p className="text-xs font-bold uppercase tracking-wide text-muted">
-                  {band.label}
-                </p>
-                <span className="rounded-md bg-white px-2 py-0.5 text-[11px] font-bold text-brand ring-1 ring-line">
-                  {band.tier}
-                </span>
-              </div>
-              <p className="font-accent mt-3 text-4xl font-black tracking-tight text-brand">
-                {band.value}
-              </p>
-              <p className="mt-2 text-xs leading-5 text-muted">{band.note}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="mt-6 overflow-hidden rounded-2xl border border-line bg-white">
-        <div className="border-b border-line bg-surface px-5 py-4 sm:px-7">
-          <p className="text-sm font-bold text-ink">
-            Government cutoffs by department
-          </p>
-          <p className="mt-1 text-xs leading-5 text-muted">
-            Most recent department-level release. If a department is not listed
-            below, check the general bands above.
-          </p>
-        </div>
-        <div className="grid gap-8 p-5 sm:p-7 lg:grid-cols-2">
-          {govDepartments.map((group) => (
-            <div key={group.faculty}>
-              <p className="text-xs font-bold uppercase tracking-[0.14em] text-muted">
-                {group.faculty}
-              </p>
-              <div className="mt-3 divide-y divide-line border-t border-line">
-                {group.rows.map((row) => (
-                  <div
-                    key={row.program}
-                    className="flex items-center justify-between gap-3 py-2.5"
-                  >
-                    <span className="pr-3 text-sm font-medium text-ink">
-                      {row.program}
-                    </span>
-                    <span className="text-lg font-black tabular-nums text-brand">
-                      {row.point}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="mt-6 rounded-2xl border border-line bg-white p-5 sm:p-7">
-        <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-          <p className="flex items-center gap-2 text-sm font-bold text-ink">
-            <BarChart3 className="h-4 w-4 text-brand" />
-            How cutoffs changed — 2024 → 2025/26 → 2026/27
-          </p>
-          <p className="text-xs text-muted">
-            2026/27 bars are the midpoint of the predicted range
-          </p>
-        </div>
-        <div className="h-80">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={trendData} margin={{ top: 8, right: 8, bottom: 8, left: -14 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#e8ebf3" vertical={false} />
-              <XAxis
-                dataKey="program"
-                tickLine={false}
-                axisLine={false}
-                fontSize={11}
-                stroke="#5a647a"
-                interval={0}
-                angle={-22}
-                textAnchor="end"
-                height={64}
-              />
-              <YAxis
-                domain={[0, 85]}
-                tickLine={false}
-                axisLine={false}
-                fontSize={12}
-                stroke="#5a647a"
-                width={40}
-              />
-              <Tooltip cursor={{ fill: "#f6f8ff" }} />
-              <Legend
-                verticalAlign="top"
-                align="right"
-                iconType="circle"
-                iconSize={9}
-                wrapperStyle={{ fontSize: 12, color: "#5a647a" }}
-              />
-              <Bar dataKey="y2024" name="2024" fill="#cdddff" radius={[4, 4, 0, 0]} />
-              <Bar dataKey="y2025" name="2025/26" fill="#0c5bfe" radius={[4, 4, 0, 0]} />
-              <Bar dataKey="y2026" name="2026/27 proj" fill="#0a49cb" radius={[4, 4, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
+        <CutoffBarChart
+          data={selfHealthEng}
+          bars={bars2024_2025}
+          title="Self-sponsored — health, engineering & natural sciences"
+          height={340}
+        />
+        <CutoffBarChart
+          data={trendData}
+          bars={[
+            { dataKey: "y2024", name: "2024", fill: "#cdddff" },
+            { dataKey: "y2025", name: "2025/26", fill: "#0c5bfe" },
+            { dataKey: "y2026", name: "2026/27 proj", fill: "#0a49cb" },
+          ]}
+          title="Flagship programs — 2024 → 2025/26 → 2026/27 projected"
+          note="2026/27 bars are the midpoint of the predicted range"
+          height={340}
+        />
       </div>
     </section>
   );
@@ -319,6 +301,21 @@ export function CutoffPrediction() {
     </section>
   );
 }
+
+const predictions = [
+  { program: "Doctor of Medicine", y2025: 79, y2026: "80 – 82" },
+  { program: "Software Engineering", y2025: 79, y2026: "80 – 81" },
+  { program: "Computer Science", y2025: 77, y2026: "78 – 80" },
+  { program: "Dental Medicine (DMD)", y2025: 78, y2026: "79 – 81" },
+  { program: "Business Admin & IS", y2025: 76, y2026: "77 – 79" },
+  { program: "Information Systems", y2025: 74, y2026: "75 – 78" },
+  { program: "Architecture", y2025: 73, y2026: "74 – 77" },
+  { program: "Law (LL.B.)", y2025: 73, y2026: "74 – 76" },
+  { program: "Pharmacy", y2025: 72, y2026: "73 – 75" },
+  { program: "Psychology", y2025: 70, y2026: "71 – 74" },
+  { program: "Economics", y2025: 69, y2026: "70 – 73" },
+  { program: "Logistics & Supply Chain", y2025: 69, y2026: "70 – 73" },
+];
 
 export function NetScoreExplained() {
   const steps = [
