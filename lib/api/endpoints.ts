@@ -18,6 +18,7 @@ import type {
   ExamAttempt,
   ExamAttemptQuestions,
   ExamAnswer,
+  ExamParticipantList,
   ExamReport,
   Leaderboard,
   LeaderboardEntry,
@@ -356,6 +357,8 @@ export const adminExamsApi = {
     api.patch<ExamAdminQuestion>(`/exams/questions/${questionId}`, body),
   removeQuestion: (questionId: string) =>
     api.del<{ id: string; examId: string }>(`/exams/questions/${questionId}`),
+  participants: (examId: string) =>
+    api.get<ExamParticipantList>(`/exams/${examId}/participants`),
 };
 export const practiceApi = {
   categories: () => api.get<Category[]>("/practice/categories"),

@@ -1,14 +1,17 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { type ColumnDef } from "@tanstack/react-table";
-import { Edit3, Eye, FileQuestion, Plus, Save, Trash2 } from "lucide-react";
+import { Edit3, Eye, FileQuestion, Plus, Save, Trash2, Users } from "lucide-react";
 import { adminExamsApi, examsApi } from "@/lib/api/endpoints";
 import { qk } from "@/lib/query/keys";
 import { toastApiError } from "@/hooks/use-api-error";
 import { DataTable } from "@/components/shared/data-table";
 import { Spinner } from "@/components/shared/loading";
+import { UserCell } from "@/components/admin/user-cell";
+import { DateText } from "@/components/shared/formatting";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,7 +21,7 @@ import { Switch } from "@/components/ui/switch";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import type { Exam, ExamAdminQuestion, ExamEditorInput, ExamQuestionEditorInput, PlanKey, QuestionOption } from "@/lib/api/types";
+import type { Exam, ExamAdminQuestion, ExamEditorInput, ExamParticipant, ExamQuestionEditorInput, PlanKey, QuestionOption } from "@/lib/api/types";
 import { CommunityShareActions } from "@/components/admin/community-share-actions";
 
 const emptyExam: ExamEditorInput = {
@@ -51,6 +54,7 @@ export default function AdminExamsPage() {
   const qc = useQueryClient();
   const [editingExam, setEditingExam] = useState<Exam | null | undefined>();
   const [questionExam, setQuestionExam] = useState<Exam | null>(null);
+  const [participantsExam, setParticipantsExam] = useState<Exam | null>(null);
   const { data: exams = [], isLoading } = useQuery({
     queryKey: qk.exams({ tab: "latest" }),
     queryFn: () => examsApi.list({ tab: "latest" }),
@@ -89,6 +93,7 @@ export default function AdminExamsPage() {
           <Eye />
         </Button>
         <Button variant="ghost" size="icon" title="Manage questions" onClick={() => setQuestionExam(row.original)}><FileQuestion /></Button>
+        <Button variant="ghost" size="icon" title="Who took this test" onClick={() => setParticipantsExam(row.original)}><Users /></Button>
         <Button variant="ghost" size="icon" title="Edit exam" onClick={() => setEditingExam(row.original)}><Edit3 /></Button>
         <Button variant="ghost" size="icon" title="Delete exam" disabled={removeExam.isPending} onClick={() => { if (window.confirm(`Delete ${row.original.title}? This is only allowed before students attempt it.`)) removeExam.mutate(row.original.id); }}><Trash2 className="text-red-500" /></Button>
       </div>,
@@ -103,6 +108,7 @@ export default function AdminExamsPage() {
     <DataTable columns={columns} data={exams} loading={isLoading} emptyMessage="No exams found." />
     <ExamDialog exam={editingExam} onClose={() => setEditingExam(undefined)} />
     <QuestionManager exam={questionExam} onClose={() => setQuestionExam(null)} />
+    <ParticipantsDialog exam={participantsExam} onClose={() => setParticipantsExam(null)} />
   </div>;
 }
 
@@ -209,6 +215,79 @@ function QuestionManager({ exam, onClose }: { exam: Exam | null; onClose: () => 
       </div>
     </DialogContent>
   </Dialog>;
+}
+
+function ParticipantsDialog({ exam, onClose }: { exam: Exam | null; onClose: () => void }) {
+  const router = useRouter();
+  const { data, isLoading } = useQuery({
+    queryKey: ["admin", "exam-participants", exam?.id],
+    queryFn: () => adminExamsApi.participants(exam!.id),
+    enabled: Boolean(exam),
+  });
+
+  const columns = useMemo<ColumnDef<ExamParticipant>[]>(() => [
+    {
+      accessorKey: "fullName",
+      header: "Student",
+      cell: ({ row }) => (
+        <UserCell
+          name={row.original.fullName}
+          phone={row.original.phone}
+          avatarUrl={row.original.avatarUrl}
+        />
+      ),
+    },
+    {
+      accessorKey: "attemptsCount",
+      header: "Attempts",
+      cell: ({ row }) => <span className="tabular-nums">{row.original.attemptsCount}</span>,
+    },
+    {
+      accessorKey: "bestScore",
+      header: "Best score",
+      cell: ({ row }) => (
+        <span className="tabular-nums">
+          {Math.round(row.original.bestScore * 10) / 10}
+          {row.original.bestRank != null ? (
+            <span className="ml-1 text-xs text-muted">· #{row.original.bestRank}</span>
+          ) : null}
+        </span>
+      ),
+    },
+    {
+      accessorKey: "lastSubmittedAt",
+      header: "Last attempt",
+      cell: ({ row }) =>
+        row.original.lastSubmittedAt ? (
+          <span className="text-sm text-muted">
+            <DateText value={row.original.lastSubmittedAt} withTime />
+          </span>
+        ) : (
+          <span className="text-sm text-muted">—</span>
+        ),
+    },
+  ], []);
+
+  return (
+    <Dialog open={Boolean(exam)} onOpenChange={(value) => !value && onClose()}>
+      <DialogContent className="max-h-[85vh] max-w-4xl overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle>{exam?.title} — participants</DialogTitle>
+          <DialogDescription>
+            {data?.total ?? 0} student{data?.total === 1 ? "" : "s"} submitted this mock test.
+          </DialogDescription>
+        </DialogHeader>
+        <DataTable
+          columns={columns}
+          data={data?.participants ?? []}
+          loading={isLoading}
+          emptyMessage="No students have taken this mock test yet."
+          pageSize={10}
+          onRowClick={(participant) => router.push(`/admin/users/${participant.userId}`)}
+        />
+      </DialogContent>
+    </Dialog>
+  );
 }
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {

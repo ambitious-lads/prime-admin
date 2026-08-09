@@ -374,6 +374,28 @@ export type ExamQuestionEditorInput = {
   marks: number;
   orderIndex: number;
 };
+export type ExamParticipant = {
+  userId: string;
+  fullName: string;
+  phone: string;
+  plan: PlanKey;
+  isPhoneVerified: boolean;
+  schoolName: string | null;
+  townName: string | null;
+  region: string | null;
+  avatarUrl: string | null;
+  attemptsCount: number;
+  bestScore: number;
+  bestRank: number | null;
+  lastSubmittedAt: string | null;
+};
+
+export type ExamParticipantList = {
+  examId: string;
+  total: number;
+  participants: ExamParticipant[];
+};
+
 export type LeaderboardEntry = {
   rank: number;
   userId: string;
