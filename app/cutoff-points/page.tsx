@@ -7,7 +7,6 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import {
   CutoffBarCharts,
-  CutoffPrediction,
   NetScoreExplained,
 } from "../components/CutoffInsights";
 import { Input } from "@/components/ui/input";
@@ -43,7 +42,6 @@ export default function CutoffPointsPage() {
         </header>
 
         <CutoffBarCharts />
-        <CutoffPrediction />
         <NetScoreExplained />
 
         <section className="mx-auto max-w-7xl px-5 py-12 sm:px-8 lg:px-12 lg:py-16">
