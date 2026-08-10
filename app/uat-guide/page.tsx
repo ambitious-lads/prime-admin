@@ -33,24 +33,24 @@ const contents = [
 
 
 export const metadata: Metadata = {
-  title: "AAU UAT Guide: Exam Format, Registration and Preparation",
+  title: "AAU UAT Guide: UAT Exam Format, Undergraduate Registration and Preparation",
   description:
-    "Learn how the Addis Ababa University Undergraduate Admission Test works, what it may assess, how registration and test day work, and how to prepare effectively.",
+    "Learn how the UAT (Addis Ababa University Undergraduate Admission Test) works, what it assesses, UAT registration and test day steps, and how to prepare effectively for undergraduate admission.",
   alternates: { canonical: "/uat-guide" },
   openGraph: {
     type: "article",
-    title: "AAU UAT Guide: Exam Format, Registration and Preparation",
+    title: "AAU UAT Guide: UAT Exam Format, Undergraduate Registration and Preparation",
     description:
-      "A clear, independent guide to the AAU Undergraduate Admission Test, including format, test day, scoring, preparation, and official-source checks.",
+      "A clear, independent guide to the UAT (Addis Ababa University Undergraduate Admission Test), including exam format, test day, scoring, preparation, and official-source checks.",
     url: "/uat-guide",
     siteName: seo.siteName,
     images: [{ url: "/images/prime.png", width: 1200, height: 630, alt: "Prime UAT AAU UAT preparation guide" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "AAU UAT Guide: Exam Format, Registration and Preparation",
+    title: "AAU UAT Guide: UAT Exam Format, Undergraduate Registration and Preparation",
     description:
-      "Understand the AAU Undergraduate Admission Test and prepare with a focused plan.",
+      "Understand the UAT (Addis Ababa University Undergraduate Admission Test) and prepare with a focused plan.",
     images: ["/images/prime.png"],
   },
 };
@@ -69,8 +69,8 @@ const structuredData = {
     {
       "@type": "Article",
       "@id": `${absoluteUrl("/uat-guide")}#article`,
-      headline: "AAU UAT Guide: Exam Format, Registration and Preparation",
-      description: "An independent, student-first guide to the Addis Ababa University Undergraduate Admission Test.",
+      headline: "AAU UAT Guide: UAT Exam Format, Undergraduate Registration and Preparation",
+      description: "An independent, student-first guide to the UAT (Addis Ababa University Undergraduate Admission Test).",
       url: absoluteUrl("/uat-guide"),
       datePublished: "2026-07-18",
       dateModified: "2026-07-18",
@@ -171,12 +171,12 @@ export default function UatGuidePage() {
           <div className="mx-auto flex min-h-[420px] max-w-7xl items-center justify-center px-5 py-20 text-center sm:min-h-[500px] sm:px-8 lg:px-12">
             <div className="max-w-4xl">
               <h1 className="font-accent text-4xl font-black leading-[1.04] text-black sm:text-6xl lg:text-7xl">
-                Undergraduate Admission Test
+                AAU UAT: Addis Ababa University Undergraduate Admission Test
               </h1>
               <p className="mx-auto mt-6 max-w-2xl text-base leading-8 text-neutral-600 sm:text-lg">
-                Understand how the AAU UAT works, what it may assess, how
-                admission is considered, and how to prepare with a focused,
-                evidence-based plan.
+                Understand how the UAT works, what it may assess, how
+                undergraduate admission is considered, and how to prepare with
+                a focused, evidence-based plan.
               </p>
               <div className="mx-auto mt-6 flex max-w-2xl flex-wrap items-center justify-center gap-x-4 gap-y-2 text-xs font-semibold text-neutral-500">
                 <span>Reviewed by the Prime UAT Editorial Team</span>
