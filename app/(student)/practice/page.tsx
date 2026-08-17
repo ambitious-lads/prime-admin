@@ -70,13 +70,13 @@ export default function PracticePage() {
           </DialogHeader>
           <div className="grid gap-4 md:grid-cols-2">
             {PLAN_LIST.filter((item) => item.key !== "free").map((item) => (
-              <div key={item.key} className={cn("flex flex-col rounded-xl border p-5", item.key === "pro" ? "border-brand/40 bg-brand-50/40" : "border-line bg-white")}>
+<div key={item.key} className={cn("flex flex-col rounded-xl border p-5", item.key === "pro_plus" ? "border-brand/40 bg-brand-50/40" : "border-line bg-white")}>
                 <div className="flex items-start justify-between gap-3">
                   <div>
                     <h3 className="text-lg font-black text-ink">{item.label}</h3>
                     <p className="mt-2 text-2xl font-black text-ink">{formatMoney(item.price)} <span className="text-xs font-semibold text-muted">one-time</span></p>
                   </div>
-                  {item.key === "pro" ? <span className="rounded-full bg-brand px-2.5 py-1 text-[11px] font-bold text-white">Popular</span> : null}
+                  {item.key === "pro_plus" ? <span className="rounded-full bg-brand px-2.5 py-1 text-[11px] font-bold text-white">Popular</span> : null}
                 </div>
                 <ul className="mt-5 flex-1 space-y-2 text-sm text-ink">
                   {item.features.map((feature) => <li key={feature} className="flex gap-2"><span className="text-brand">✓</span>{feature}</li>)}

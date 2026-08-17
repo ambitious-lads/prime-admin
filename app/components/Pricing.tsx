@@ -23,7 +23,7 @@ const plans: Plan[] = [
     cta: "Start for free",
     href: "/register",
   },
-  {
+{
     name: "Pro",
     price: "299",
     period: "birr",
@@ -31,7 +31,6 @@ const plans: Plan[] = [
     features: [...PLANS.pro.features],
     cta: "Get Pro",
     href: "/register",
-    featured: true,
   },
   {
     name: "Pro Plus",
@@ -41,6 +40,7 @@ const plans: Plan[] = [
     features: [...PLANS.pro_plus.features],
     cta: "Get Pro Plus",
     href: "/register",
+    featured: true,
   },
 ];
 

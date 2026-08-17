@@ -46,7 +46,7 @@ function CheckoutInner() {
   const queryClient = useQueryClient();
   const planParam = searchParams.get("plan");
   const methodParam = searchParams.get("method");
-  const plan: PaidPlan = isPaidPlan(planParam) ? planParam : "pro";
+  const plan: PaidPlan = isPaidPlan(planParam) ? planParam : "pro_plus";
   const planInfo = PLANS[plan];
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethodId>(
     isPaymentMethodId(methodParam) ? methodParam : "telebirr",

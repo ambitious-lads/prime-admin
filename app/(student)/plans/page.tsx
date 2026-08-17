@@ -94,7 +94,7 @@ export default function PlansPage() {
           {PLAN_LIST.map((p) => {
             const isCurrent = p.key === currentPlan;
             const isPaid = p.key !== "free";
-            const highlight = p.key === "pro";
+            const highlight = p.key === "pro_plus";
             const upgrade = data?.availableUpgrades?.find(
               (item) => item.plan === p.key,
             );
