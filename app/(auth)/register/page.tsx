@@ -8,8 +8,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { registerSchema, type RegisterInput } from "@/lib/validation/auth";
 import { authApi } from "@/lib/api/endpoints";
+import { useAuth } from "@/hooks/use-auth";
 import { toastApiError } from "@/hooks/use-api-error";
+import { DeviceConflictError } from "@/lib/api/client";
 import { captureEvent } from "@/lib/observability/posthog";
+import { resolvePostAuthRoute } from "@/lib/auth/post-auth-route";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -22,6 +25,7 @@ function RegisterForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const next = searchParams.get("next");
+  const { setSession } = useAuth();
   const [submitting, setSubmitting] = useState(false);
   const [ethioTelecomDialogOpen, setEthioTelecomDialogOpen] = useState(false);
 
@@ -46,12 +50,24 @@ function RegisterForm() {
       setEthioTelecomDialogOpen(true);
       return;
     }
-    setSubmitting(true);
+setSubmitting(true);
     captureEvent("web_register_attempt");
     try {
-      await authApi.register({ ...values, referralCode: normalizeReferralCode(values.referralCode) || undefined });
+      const result = await authApi.register({ ...values, referralCode: normalizeReferralCode(values.referralCode) || undefined });
       clearPendingReferralCode();
       captureEvent("web_register_success");
+      if (result.isVerified) {
+        setSession(result);
+        toast.success("Account created. You're signed in.");
+        const defaultRoute = await resolvePostAuthRoute(result.user);
+        const validNext = next?.startsWith("/") && !next.startsWith("//") ? next : null;
+        if (validNext && defaultRoute === "/complete-profile") {
+          router.replace(`/complete-profile?next=${encodeURIComponent(validNext)}`);
+        } else {
+          router.replace(validNext || defaultRoute);
+        }
+        return;
+      }
       toast.success("Account created. Verify your phone to continue.");
       const nextParam = next?.startsWith("/") && !next.startsWith("//")
         ? `&next=${encodeURIComponent(next)}`
@@ -59,6 +75,10 @@ function RegisterForm() {
       router.push(`/verify?phone=${encodeURIComponent(values.phone)}${nextParam}`);
     } catch (e) {
       captureEvent("web_register_failure");
+      if (e instanceof DeviceConflictError) {
+        router.push("/device?conflict=1");
+        return;
+      }
       toastApiError(e);
     } finally {
       setSubmitting(false);

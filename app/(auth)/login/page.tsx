@@ -91,16 +91,8 @@ function LoginForm() {
             </p>
           ) : null}
         </div>
-        <div className="space-y-1.5">
-          <div className="flex items-center justify-between gap-3">
-            <Label htmlFor="password">Password</Label>
-            <Link
-              href="/forgot-password"
-              className="text-xs font-semibold text-brand hover:underline"
-            >
-              Forgot password?
-            </Link>
-          </div>
+<div className="space-y-1.5">
+          <Label htmlFor="password">Password</Label>
           <Input
             id="password"
             type="password"

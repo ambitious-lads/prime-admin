@@ -243,11 +243,21 @@ function normalizeExamReport(data: RawExamReport): ExamReport {
 }
 
 export const authApi = {
-  register: (b: { phone: string; password: string; fullName: string; referralCode?: string }) =>
-    api.public.post<{ userId: string; phone: string; message: string }>(
-      "/auth/register",
-      b,
-    ),
+  register: (b: {
+    phone: string;
+    password: string;
+    fullName: string;
+    referralCode?: string;
+  }) =>
+    api.public.post<
+      | {
+          userId: string;
+          phone: string;
+          message: string;
+          isVerified?: false;
+        }
+      | (AuthSession & { userId: string; phone: string; message: string; isVerified: true })
+    >("/auth/register", b),
   login: (b: { phone: string; password: string }) =>
     api.public.post<AuthSession>("/auth/login", b),
   verifyOtp: (b: { phone: string; otpCode: string }) =>
