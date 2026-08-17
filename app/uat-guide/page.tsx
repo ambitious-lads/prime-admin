@@ -57,7 +57,7 @@ export const metadata: Metadata = {
 
 const faqItems = [
   { question: "What is the AAU UAT?", answer: "The Undergraduate Admission Test is an aptitude-focused assessment used as part of Addis Ababa University's undergraduate admission process. It is intended to measure reasoning and readiness, not only memorized school content." },
-  { question: "How many questions and sections does the UAT have?", answer: "The 2024 information booklet describes 100 multiple-choice questions: 55 verbal reasoning items and 45 quantitative reasoning items, with 60 minutes allocated to each section." },
+  { question: "How many questions and sections does the UAT have?", answer: "The August 2026 information booklet describes 100 multiple-choice questions with four options: 55 verbal reasoning items and 45 quantitative reasoning items. Verbal reasoning includes reading, and writing and language; quantitative reasoning includes heart of algebra, problem-solving and data analysis, transition to advanced math, and additional topics in math. The test takes two and a half hours in total (60 minutes for the verbal section, 90 minutes for the quantitative section)." },
   { question: "Is the UAT the same as the Grade 12 entrance examination?", answer: "No. The UAT is a separate university admission assessment. Applicants should follow the current AAU announcement for how the UAT and national examination are considered together." },
   { question: "Where should I confirm dates, fees, and admission decisions?", answer: "Confirm current dates, eligibility, fees, test locations, results, and admission decisions through AAU's official website, applicant portal, and current Testing Center announcements." },
   { question: "How should I prepare for the UAT?", answer: "Build verbal and quantitative foundations, practice by topic, review mistakes, add timed sets, and finish with realistic full-length simulations under quiet test-day conditions." },
@@ -73,7 +73,7 @@ const structuredData = {
       description: "An independent, student-first guide to the UAT (Addis Ababa University Undergraduate Admission Test).",
       url: absoluteUrl("/uat-guide"),
       datePublished: "2026-07-18",
-      dateModified: "2026-07-18",
+      dateModified: "2026-08-17",
       author: { "@type": "Organization", name: seo.author },
       publisher: { "@type": "Organization", name: seo.siteName, logo: { "@type": "ImageObject", url: absoluteUrl("/images/logo.png") } },
       isPartOf: { "@type": "WebSite", name: seo.siteName, url: absoluteUrl("/") },
@@ -111,10 +111,10 @@ const testedAreas = [
       "Tests how accurately you read, interpret, and reason with written English.",
     topics: [
       "Reading comprehension",
+      "Writing and language",
       "Vocabulary and word relationships",
       "Grammar and sentence structure",
       "Sentence completion",
-      "Verbal logic",
     ],
     icon: BookOpen,
     tone: "bg-indigo-600 text-white",
@@ -126,10 +126,10 @@ const testedAreas = [
     description:
       "Measures mathematical reasoning, numerical fluency, and interpretation rather than only memorized formulas.",
     topics: [
-      "Arithmetic and percentages",
-      "Ratios and proportions",
-      "Basic algebra",
-      "Probability and statistics",
+      "Heart of algebra",
+      "Problem-solving and data analysis",
+      "Transition to advanced math",
+      "Additional topics in math",
       "Geometry and graph interpretation",
     ],
     icon: Calculator,
@@ -181,7 +181,7 @@ export default function UatGuidePage() {
               <div className="mx-auto mt-6 flex max-w-2xl flex-wrap items-center justify-center gap-x-4 gap-y-2 text-xs font-semibold text-neutral-500">
                 <span>Reviewed by the Prime UAT Editorial Team</span>
                 <span aria-hidden="true">•</span>
-                <time dateTime="2026-07-18">Updated July 18, 2026</time>
+                <time dateTime="2026-08-17">Updated August 17, 2026</time>
               </div>
               <p className="mx-auto mt-4 max-w-2xl text-xs leading-6 text-neutral-500">Prime UAT is an independent preparation platform and is not affiliated with or operated by Addis Ababa University. Always confirm current admission information through official AAU channels.</p>
             </div>
@@ -215,21 +215,25 @@ export default function UatGuidePage() {
               <div className="mt-6 space-y-5 text-base leading-8 text-neutral-700">
                 <p>
                   The Undergraduate Admission Test, often shortened to UAT, is
-                  used by Addis Ababa University as part of its undergraduate
-                  admission process. It is separate from Ethiopia&apos;s Grade 12
+                  an aptitude test used by Addis Ababa University to assess
+                  candidates who wish to pursue undergraduate studies there. It
+                  gauges verbal and quantitative reasoning, which are considered
+                  crucial indicators of potential for success in AAU&apos;s
+                  undergraduate programs. It is separate from Ethiopia&apos;s Grade 12
                   national entrance examination.
                 </p>
                 <p>
-                  The national examination reflects broader secondary-school
-                  achievement. The UAT is intended to provide AAU with an
-                  additional measure of an applicant&apos;s reasoning ability,
-                  problem solving, language use, and readiness for competitive
-                  university study.
+                  The test is divided into two main sections: verbal reasoning
+                  (55 items) and quantitative reasoning (45 items), covering 100
+                  multiple-choice questions in total. It is administered
+                  digitally by the Addis Ababa University Testing Center
+                  (AAU-TC) in designated computer labs.
                 </p>
                 <p>
-                  The exact format, schedule, eligibility requirements, fees, and
+                  The exact schedule, eligibility requirements, fees, and
                   weighting can change between admission rounds. Applicants
-                  should treat official AAU announcements as the final authority.
+                  should treat official AAU announcements, including the
+                  AAU-TC Telegram channel, as the final authority.
                 </p>
               </div>
               <Note>
@@ -242,7 +246,7 @@ export default function UatGuidePage() {
                   ["100", "multiple-choice questions"],
                   ["55", "verbal reasoning items"],
                   ["45", "quantitative reasoning items"],
-                  ["120", "minutes in total"],
+                  ["150", "minutes in total (2h 30m)"],
                 ].map(([value, label]) => (
                   <div key={label} className="border-b border-line p-5 last:border-b-0 sm:border-r sm:last:border-r-0">
                     <p className="text-3xl font-black tabular-nums">{value}</p>
@@ -337,10 +341,14 @@ export default function UatGuidePage() {
               <SectionNumber value="04" />
               <h2 className="mt-3 text-3xl font-black">What the UAT may test</h2>
               <p className="mt-6 max-w-3xl text-base leading-8 text-neutral-700">
-                Candidate reports and preparation guidance commonly emphasize
-                general aptitude. That means understanding the question,
-                selecting an efficient method, and working accurately under time
-                pressure can matter more than memorizing large amounts of content.
+                Per the August 2026 information booklet, the UAT has 100
+                multiple-choice questions with four options each. The verbal
+                reasoning section (55 items) covers reading, and writing and
+                language. The quantitative reasoning section (45 items) covers
+                heart of algebra, problem-solving and data analysis, transition
+                to advanced math, and additional topics in math. Strong command
+                of the fundamentals matters more than memorizing large amounts
+                of content.
               </p>
               <div className="mt-10 grid gap-4 lg:grid-cols-3">
                 {testedAreas.map(({ number, title, description, topics, icon: Icon, tone, glow }) => (
@@ -374,11 +382,35 @@ export default function UatGuidePage() {
               <SectionNumber value="05" />
               <h2 className="mt-3 text-3xl font-black">Registration and test day</h2>
               <p className="mt-6 text-base leading-8 text-neutral-700">
-                The 2024 information booklet describes a digitally administered
-                exam coordinated by AAU&apos;s Institute of Educational Research
-                Testing Center. Candidates sit in designated computer labs under
+                The August 2026 information booklet describes a digitally
+                administered exam coordinated by the Addis Ababa University
+                Testing Center (AAU-TC) in collaboration with the Office of the
+                ICT and Digitalization, Academic Programs Management, the
+                Registrar's Office, and AAU colleges, institutes, and public
+                universities. Candidates sit in designated computer labs under
                 standardized conditions.
               </p>
+
+              <div className="mt-8 rounded-lg border border-black/15 p-6">
+                <h3 className="font-black">Online registration steps</h3>
+                <div className="mt-4 space-y-3">
+                  {[
+                    "Visit the AAU applicant portal and follow the application procedures outlined by the Office of the Registrar.",
+                    "Select your preferred location for the UAT from the provided options.",
+                    "Click \"Continue to Payment\" then \"Proceed to Payment\" to reach the payment page.",
+                    "Complete your payment of 750 birr (seven hundred and fifty birr) for the test and registration using Telebirr.",
+                    "Download your UAT admission ticket, which is necessary for admission to the exam hall.",
+                    "Keep checking AAU's official website and the AAU-TC Telegram channel for announcements.",
+                  ].map((step, index) => (
+                    <div key={step} className="flex gap-3">
+                      <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-black text-xs font-black text-white">
+                        {index + 1}
+                      </span>
+                      <p className="text-sm leading-7 text-neutral-600">{step}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
 
               <div className="mt-8 grid gap-px overflow-hidden rounded-lg border border-line bg-line sm:grid-cols-2">
                 {[
@@ -390,7 +422,7 @@ export default function UatGuidePage() {
                   {
                     icon: TimerReset,
                     title: "Two timed sections",
-                    text: "Verbal and quantitative reasoning receive 60 minutes each. The system closes a section when its allocated time ends.",
+                    text: "Verbal reasoning receives 60 minutes and quantitative reasoning receives 90 minutes, for a total of two and a half hours. Each section closes automatically when its time ends.",
                   },
                   {
                     icon: Laptop,
@@ -418,9 +450,10 @@ export default function UatGuidePage() {
                     items={[
                       "A valid identification document",
                       "Your downloaded UAT admission ticket",
-                      "A permitted basic four-function calculator",
+                      "An acceptable calculator, such as a four-function calculator",
                       "A pen or pencil for the supplied rough-work sheet",
-                      "Arrival before the reporting time on your ticket",
+                      "Arrive by 8:00 a.m. or earlier for a morning session",
+                      "Arrive by 1:00 p.m. or earlier for an afternoon session",
                     ]}
                   />
                 </div>
@@ -428,30 +461,61 @@ export default function UatGuidePage() {
                   <h3 className="font-black">Do not bring into the room</h3>
                   <BulletList
                     items={[
-                      "Phones, tablets, smart watches, or laptops",
-                      "Headphones, Bluetooth, or communication devices",
-                      "Books, notes, handouts, or personal scratch paper",
-                      "Scientific or programmable calculators",
-                      "Formula sheets or unauthorized measuring aids",
+                      "Phones, tablets, smartwatches, smart glasses, smart pens, fitness trackers, or laptops",
+                      "Headphones, earphones, Bluetooth, or any communication devices",
+                      "Books, notes, handouts, pamphlets, or personal scratch paper",
+                      "Programmable calculators or calculators with CAS, connectivity, or QWERTY keyboards",
+                      "Rulers, protractors, compasses, or formula sheets",
+                      "Routers or portable hotspots; simple non-smartwatches and analog watches are permitted",
+                    ]}
+                  />
+                </div>
+              </div>
+
+              <div className="mt-10 grid gap-8 md:grid-cols-2">
+                <div>
+                  <h3 className="font-black">Test taker responsibilities</h3>
+                  <BulletList
+                    items={[
+                      "Review sample practice tests or mock exams to become familiar with the question types",
+                      "Follow all instructions provided by the test administrators",
+                      "Maintain the highest level of test integrity and avoid unauthorized assistance",
+                      "Use only materials explicitly permitted by the test administrators",
+                      "Present a valid identification document and your UAT admission ticket",
+                    ]}
+                  />
+                </div>
+                <div>
+                  <h3 className="font-black">How scoring works</h3>
+                  <BulletList
+                    items={[
+                      "You receive a raw score, T-score, and percentile rank after the test",
+                      "The passing score is announced separately on AAU's website and Testing Center Telegram channel",
+                      "Your digital result certificate includes a QR code and verification link",
+                      "Scanning the QR code or visiting the link lets parties verify the certificate's authenticity",
                     ]}
                   />
                 </div>
               </div>
 
               <Note>
-                Applicants who need disability accommodations should disclose
-                their needs during the application process and coordinate with
-                the assigned testing center. The booklet states that visually
-                impaired candidates use the JAWS screen reader.
+                Test takers with disabilities are entitled to reasonable
+                accommodations and should disclose their disability during the
+                application process. The booklet states that visually impaired
+                candidates use the JAWS screen reader (individual readers are
+                not permitted), and candidates with other disabilities are
+                assigned to rooms that suit their needs.
               </Note>
 
               <div className="mt-8 border-t border-line pt-8">
-                <h3 className="text-lg font-black">Results and verification</h3>
+                <h3 className="text-lg font-black">Exam schedule and test takers with disabilities</h3>
                 <p className="mt-3 text-sm leading-7 text-muted">
-                  The booklet says candidates may receive a raw score, T-score,
-                  and percentile rank. The passing score is announced separately.
-                  Digital result certificates include a QR code or verification
-                  link so the certificate can be authenticated.
+                  The examination schedule is released on AAU's official website
+                  and the AAU-TC Telegram channel. Applicants should regularly
+                  check both for updates on their designated test center, date,
+                  and time. The test is administered digitally through AAU's
+                  testing portal using the University's private network
+                  infrastructure.
                 </p>
               </div>
             </section>
@@ -541,9 +605,9 @@ export default function UatGuidePage() {
                     items={[
                       "Application opening and closing dates",
                       "Eligibility and required documents",
-                      "Current application and test fees",
-                      "Exam schedule and location",
-                      "Results and admission decisions",
+                      "Current application and test fees (750 birr per the August 2026 booklet)",
+                      "Exam schedule, test center, date, and time",
+                      "Results, passing score, and admission decisions",
                     ]}
                   />
                 </div>
@@ -564,11 +628,11 @@ export default function UatGuidePage() {
               <div className="mt-10 border border-black/15 p-6">
                 <h3 className="text-lg font-black">Current official notes</h3>
                 <p className="mt-3 text-sm leading-7 text-neutral-600">
-                  AAU&apos;s current undergraduate FAQ says applicants pay an
-                  application fee and a separate UAT fee, and that a UAT result
-                  applies to one application round. These details can change, so
-                  confirm the current amount and instructions directly with AAU
-                  before payment or application.
+                  The August 2026 information booklet states that candidates pay
+                  750 birr for the test and registration using Telebirr, and
+                  that a UAT result applies to one application round. These
+                  details can change, so confirm the current amount and
+                  instructions directly with AAU before payment or application.
                 </p>
                 <div className="mt-5 flex flex-wrap gap-3">
                   <Link
@@ -589,7 +653,27 @@ export default function UatGuidePage() {
                     Addis Ababa University
                     <ExternalLink className="h-3.5 w-3.5" />
                   </Link>
+                  <Link
+                    href="https://t.me/aauGAT"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 text-sm font-bold underline underline-offset-4"
+                  >
+                    AAU-TC Telegram channel (t.me/aauGAT)
+                    <ExternalLink className="h-3.5 w-3.5" />
+                  </Link>
                 </div>
+              </div>
+
+              <div className="mt-10 rounded-lg border border-black/15 p-6">
+                <h3 className="text-lg font-black">Addis Ababa University — Testing Center (AAU-TC)</h3>
+                <ul className="mt-3 space-y-2 text-sm leading-7 text-neutral-600">
+                  <li>P. O. Box 1176, Addis Ababa University, Addis Ababa, Ethiopia</li>
+                  <li>Tel: 251-011-1-23-97-14</li>
+                  <li>Fax: 00251-011-1-23-97-44</li>
+                  <li>E-mail: tc@aau.edu.et</li>
+                  <li>Website: aau.edu.et</li>
+                </ul>
               </div>
             </section>
             <section id="faq" className="scroll-mt-28 border-t border-black/10 pt-14">
