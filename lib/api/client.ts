@@ -3,6 +3,7 @@ import {
   clearSession,
   getAccessToken,
   getRefreshToken,
+  saveSession,
   saveTokens,
 } from "@/lib/auth/session";
 import { getDeviceId, getDeviceName } from "@/lib/device/device-id";
@@ -17,6 +18,13 @@ export class ApiError extends Error {
     this.status = status;
     this.code = code;
     this.retryAfter = retryAfter;
+  }
+}
+
+export class SessionExpiredError extends ApiError {
+  constructor() {
+    super(401, "Session expired. Please log in again.", "SESSION_EXPIRED");
+    this.name = "SessionExpiredError";
   }
 }
 
@@ -63,7 +71,19 @@ function deviceHeaders() {
   return headers;
 }
 
-async function refreshTokens() {
+let refreshInFlight: Promise<boolean> | null = null;
+
+async function refreshTokens(): Promise<boolean> {
+  if (refreshInFlight) return refreshInFlight;
+  refreshInFlight = doRefreshTokens();
+  try {
+    return await refreshInFlight;
+  } finally {
+    refreshInFlight = null;
+  }
+}
+
+async function doRefreshTokens(): Promise<boolean> {
   const refreshToken = getRefreshToken();
   if (!refreshToken) return false;
   const res = await fetch(buildUrl("/auth/refresh"), {
@@ -74,7 +94,12 @@ async function refreshTokens() {
   if (!res.ok) return false;
   const json = await res.json().catch(() => null);
   if (!json?.data?.accessToken) return false;
-  saveTokens(json.data.accessToken, json.data.refreshToken);
+  const { accessToken, refreshToken: newRefresh, user } = json.data;
+  if (user) {
+    saveSession({ accessToken, refreshToken: newRefresh, user });
+  } else {
+    saveTokens(accessToken, newRefresh);
+  }
   return true;
 }
 
@@ -115,6 +140,7 @@ async function raw<T>(path: string, opts: Options, retry = true): Promise<T> {
     const ok = await refreshTokens();
     if (ok) return raw<T>(path, opts, false);
     clearSession();
+    throw new SessionExpiredError();
   }
 
   const retryAfter = Number(res.headers.get("Retry-After")) || undefined;
