@@ -79,7 +79,28 @@ export default function PracticePage() {
                   {item.key === "pro_plus" ? <span className="rounded-full bg-brand px-2.5 py-1 text-[11px] font-bold text-white">Popular</span> : null}
                 </div>
                 <ul className="mt-5 flex-1 space-y-2 text-sm text-ink">
-                  {item.features.map((feature) => <li key={feature} className="flex gap-2"><span className="text-brand">✓</span>{feature}</li>)}
+                  {item.features.map((feature) => {
+                    const isHighlight = feature.includes("7 Days UAT Sprint");
+                    return (
+                      <li key={feature} className="flex gap-2">
+                        {isHighlight ? (
+                          <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[#22c55e] text-white">
+                            <span className="text-[9px]">🚀</span>
+                          </span>
+                        ) : (
+                          <span className="text-brand">✓</span>
+                        )}
+                        <span className={isHighlight ? "font-bold text-[#15803d]" : ""}>
+                          {feature}
+                        </span>
+                        {isHighlight && (
+                          <span className="self-start rounded-md bg-[#22c55e] px-1.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wider text-white">
+                            New
+                          </span>
+                        )}
+                      </li>
+                    );
+                  })}
                 </ul>
                 <Button asChild className="mt-5 w-full">
                   <Link href={`/plans/checkout?plan=${item.key}`} onClick={() => setSubscriptionOpen(false)}>Choose {item.label}</Link>
@@ -152,7 +173,14 @@ export default function PracticePage() {
                   ) : null}
                 </div>
                 <div className="p-3">
-                  <h2 className="line-clamp-2 min-h-10 text-[15px] font-extrabold leading-5 text-ink">{topic.name}</h2>
+                  <h2 className="line-clamp-2 min-h-10 text-[15px] font-extrabold leading-5 text-ink">
+                    {topic.name === "7 Days Challenge" && (
+                      <span className="mr-1.5 inline-flex translate-y-[-1px] items-center rounded-md bg-[#22c55e] px-1.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wider text-white align-middle">
+                        New
+                      </span>
+                    )}
+                    {topic.name}
+                  </h2>
                   <div className="mt-2 flex items-center justify-between gap-2">
                     <span className="flex min-w-0 items-center gap-2 text-xs font-bold text-muted">
                       <span className="h-3 w-3 shrink-0 rounded-full" style={{ backgroundColor: topic.isLocked ? "#9CA3AF" : accent }} />
@@ -203,7 +231,14 @@ export default function PracticePage() {
                     <div className="flex items-start justify-between gap-4">
                       <div className="min-w-0">
                         <p className="text-xs font-bold uppercase tracking-[0.12em]" style={{ color: accent }}>{activeGroup.label}</p>
-                        <h3 className="mt-2 text-lg font-black leading-6 text-ink">{topic.name}</h3>
+                        <h3 className="mt-2 flex items-center text-lg font-black leading-6 text-ink">
+                          {topic.name === "7 Days Challenge" && (
+                            <span className="mr-2 inline-flex items-center rounded-md bg-[#22c55e] px-1.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wider text-white">
+                              New
+                            </span>
+                          )}
+                          {topic.name}
+                        </h3>
                       </div>
                       {topic.isLocked ? (
                         <span className="flex shrink-0 items-center gap-1.5 rounded-full border border-line bg-surface px-2.5 py-1 text-[11px] font-bold text-muted"><LockKeyhole className="h-3 w-3" />{topic.minPlanLabel ?? "Upgrade"}</span>

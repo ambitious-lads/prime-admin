@@ -136,15 +136,35 @@ export default function PlansPage() {
                 </CardHeader>
                 <CardContent className="flex flex-1 flex-col gap-5">
                   <ul className="flex-1 space-y-2.5">
-                    {p.features.map((f) => (
-                      <li
-                        key={f}
-                        className="flex items-start gap-2 text-sm text-ink"
-                      >
-                        <Check className="mt-0.5 h-4 w-4 shrink-0 text-brand" />
-                        {f}
-                      </li>
-                    ))}
+                    {p.features.map((f) => {
+                      const isHighlight = f.includes("7 Days UAT Sprint");
+                      return (
+                        <li
+                          key={f}
+                          className="flex items-start gap-2 text-sm text-ink"
+                        >
+                          {isHighlight ? (
+                            <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#22c55e] text-white">
+                              <svg className="h-3 w-3" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M2.5 13.5l2.75-7.5a.75.75 0 01.7-.5H11a.75.75 0 01.72.53l2.34 6.72H17a.75.75 0 01.73.58l.9 4.5c.04.2-.01.4-.14.56a.75.75 0 01-.99.11l-1.8-1.35-1.9 2.35a.75.75 0 01-.6.3h-7.1a.75.75 0 01-.74-.9l.7-5.9a.75.75 0 01.14-.34zm3 4.25l.7-5.1a.75.75 0 011.48.25l-.4 3.1 2.2-2.35.7-.75 2.5 4.4h4.7l.15.9-2.4-1.8.5.05H8.5l-.25-1 .75.7-3 1.9z" />
+                              </svg>
+                            </span>
+                          ) : (
+                            <Check className="mt-0.5 h-4 w-4 shrink-0 text-brand" />
+                          )}
+                          <span className="flex items-start gap-1.5">
+                            <span className={isHighlight ? "font-bold text-[#15803d]" : ""}>
+                              {f}
+                            </span>
+                            {isHighlight && (
+                              <span className="mt-0.5 shrink-0 rounded-md bg-[#22c55e] px-1.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wider text-white">
+                                New
+                              </span>
+                            )}
+                          </span>
+                        </li>
+                      );
+                    })}
                   </ul>
                   {isCurrent ? (
                     <Button variant="outline" disabled>

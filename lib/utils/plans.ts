@@ -23,6 +23,7 @@ export const PLANS = {
       "All realistic mock exams",
       "Leaderboards and detailed exam reports",
       "Limited course lessons and selected resources",
+      "7 Days UAT Sprint — practice only",
     ],
   },
   pro_plus: {
@@ -36,6 +37,7 @@ export const PLANS = {
       "AI tutor and smart study tools",
       "Advanced analytics and UAT score calculator",
       "The complete Prime UAT preparation experience",
+      "7 Days UAT Sprint — videos, notes & PDF",
     ],
   },
 } as const satisfies Record<
