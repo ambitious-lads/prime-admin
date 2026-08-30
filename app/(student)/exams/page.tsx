@@ -30,6 +30,7 @@ import { cn } from "@/lib/utils/cn";
 import { examsApi } from "@/lib/api/endpoints";
 import { qk } from "@/lib/query/keys";
 import { toastApiError } from "@/hooks/use-api-error";
+import { useAuth } from "@/hooks/use-auth";
 import type { Exam, ExamAttempt } from "@/lib/api/types";
 
 const TABS = [
@@ -56,7 +57,7 @@ function useExamCountdown(exam: Exam) {
   const [label, setLabel] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!exam.scheduledAt || !exam.isScheduleRestricted) return;
+    if (!exam.scheduledAt) return;
 
     function update() {
       const remaining = new Date(exam.scheduledAt as string).getTime() - Date.now();
@@ -74,7 +75,7 @@ function useExamCountdown(exam: Exam) {
     if (!update()) return;
     const timer = window.setInterval(update, 1000);
     return () => window.clearInterval(timer);
-  }, [exam.isScheduleRestricted, exam.scheduledAt]);
+  }, [exam.scheduledAt]);
 
   return label;
 }
@@ -82,6 +83,7 @@ function useExamCountdown(exam: Exam) {
 export default function ExamsPage() {
   const router = useRouter();
   const queryClient = useQueryClient();
+  const { isAdmin } = useAuth();
   const [tab, setTab] = useState("latest");
   const [selectedExam, setSelectedExam] = useState<Exam | null>(null);
 
@@ -166,6 +168,7 @@ export default function ExamsPage() {
             <ExamCard
               key={exam.id}
               exam={exam}
+              isAdmin={isAdmin}
               saving={saveMutation.isPending && saveMutation.variables?.id === exam.id}
               onSave={() => saveMutation.mutate({ id: exam.id, saved: Boolean(exam.isSaved) })}
               onStart={() => chooseExam(exam)}
@@ -201,7 +204,7 @@ export default function ExamsPage() {
   );
 }
 
-function ExamCard({ exam, saving, onSave, onStart }: { exam: Exam; saving: boolean; onSave: () => void; onStart: () => void }) {
+function ExamCard({ exam, isAdmin, saving, onSave, onStart }: { exam: Exam; isAdmin: boolean; saving: boolean; onSave: () => void; onStart: () => void }) {
   const color = exam.primaryColor || "#2D5BFF";
   const background = hexToRgba(color, 0.055);
   const border = hexToRgba(color, 0.18);
@@ -232,7 +235,7 @@ function ExamCard({ exam, saving, onSave, onStart }: { exam: Exam; saving: boole
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
             <span className="text-[10px] font-black uppercase tracking-[0.1em]" style={{ color }}>{exam.type || exam.category || "Mock exam"}</span>
-            {exam.isPremium ? <Badge color={color} icon={<Diamond />}>Pro</Badge> : exam.isRecommended ? <Badge color={color} icon={<Sparkles />}>Recommended</Badge> : null}
+            {exam.isPremium ? <Badge color={color} icon={<Diamond />}>Pro</Badge> : exam.isRecommended ? <Badge color={color} icon={<Sparkles />}>Free</Badge> : null}
           </div>
           <h2 className="mt-1 text-base font-black leading-6 text-ink sm:text-lg">{exam.title}</h2>
         </div>
@@ -255,7 +258,14 @@ function ExamCard({ exam, saving, onSave, onStart }: { exam: Exam; saving: boole
       <div className="mt-4 flex items-center justify-between gap-3">
         {solved && exam.userProgress?.firstTrialRank != null ? <p className="inline-flex items-center gap-1.5 text-xs font-bold text-muted"><Trophy className="h-4 w-4" style={{ color }} />Best rank <span style={{ color }}>#{exam.userProgress.firstTrialRank}</span></p> : <span />}
         {countdown ? (
-          <div className="text-right"><p className="text-[10px] font-bold text-muted">Starts in</p><p className="font-black tabular-nums" style={{ color }}>{countdown}</p></div>
+          isAdmin ? (
+            <button type="button" onClick={onStart} className="w-full cursor-pointer rounded-xl text-right transition hover:opacity-80 focus:outline-none">
+              <p className="text-[10px] font-bold text-muted">Starts in</p>
+              <p className="font-black tabular-nums" style={{ color }}>{countdown}</p>
+            </button>
+          ) : (
+            <div className="text-right"><p className="text-[10px] font-bold text-muted">Starts in</p><p className="font-black tabular-nums" style={{ color }}>{countdown}</p></div>
+          )
         ) : (
           <Button type="button" onClick={onStart} style={{ backgroundColor: color }}>
             {locked ? <LockKeyhole /> : solved ? <RefreshCw /> : <Play />}

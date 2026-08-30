@@ -29,15 +29,16 @@ import { formatNumber } from "@/lib/utils/format";
 import { examsApi } from "@/lib/api/endpoints";
 import { qk } from "@/lib/query/keys";
 import { toastApiError } from "@/hooks/use-api-error";
+import { useAuth } from "@/hooks/use-auth";
 import { openSubscriptionPrompt } from "@/components/student/subscription-prompt-modal";
 import { EXAM_UNLOCK_PLAN, planLabel } from "@/lib/utils/plans";
 import type { ExamAttempt } from "@/lib/api/types";
 
-function useExamCountdown(scheduledAt?: string | null, restricted?: boolean) {
+function useExamCountdown(scheduledAt?: string | null) {
   const [label, setLabel] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!scheduledAt || !restricted) {
+    if (!scheduledAt) {
       setLabel(null);
       return;
     }
@@ -58,7 +59,7 @@ function useExamCountdown(scheduledAt?: string | null, restricted?: boolean) {
     if (!update()) return;
     const timer = window.setInterval(update, 1_000);
     return () => window.clearInterval(timer);
-  }, [restricted, scheduledAt]);
+  }, [scheduledAt]);
 
   return label;
 }
@@ -85,6 +86,7 @@ export default function ExamDetailPage() {
   const params = useParams<{ id: string }>();
   const id = params.id;
   const router = useRouter();
+  const { isAdmin } = useAuth();
 
   const examQuery = useQuery({
     queryKey: qk.exam(id),
@@ -107,10 +109,7 @@ export default function ExamDetailPage() {
 
   const exam = examQuery.data;
   const locked = Boolean(exam?.isLocked);
-  const countdown = useExamCountdown(
-    exam?.scheduledAt,
-    exam?.isScheduleRestricted,
-  );
+  const countdown = useExamCountdown(exam?.scheduledAt);
 
   if (examQuery.isLoading) {
     return (
@@ -228,12 +227,26 @@ export default function ExamDetailPage() {
               ) : null}
 
               {countdown ? (
-                <div className="rounded-xl border border-line bg-surface p-4 text-center">
-                  <p className="text-xs font-semibold text-muted">Starts in</p>
-                  <p className="mt-1 text-xl font-black tabular-nums text-brand">
-                    {countdown}
-                  </p>
-                </div>
+                isAdmin ? (
+                  <button
+                    type="button"
+                    onClick={() => startMutation.mutate()}
+                    disabled={startMutation.isPending}
+                    className="w-full cursor-pointer rounded-xl border border-line bg-surface p-4 text-center transition hover:opacity-80 focus:outline-none disabled:opacity-60"
+                  >
+                    <p className="text-xs font-semibold text-muted">Starts in</p>
+                    <p className="mt-1 text-xl font-black tabular-nums text-brand">
+                      {countdown}
+                    </p>
+                  </button>
+                ) : (
+                  <div className="rounded-xl border border-line bg-surface p-4 text-center">
+                    <p className="text-xs font-semibold text-muted">Starts in</p>
+                    <p className="mt-1 text-xl font-black tabular-nums text-brand">
+                      {countdown}
+                    </p>
+                  </div>
+                )
               ) : locked ? (
                 <Card className="border-brand-100 bg-brand-50/60">
                   <CardContent className="space-y-3 p-4 text-center">
