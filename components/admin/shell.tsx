@@ -65,18 +65,18 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "flex items-center justify-between gap-3 rounded-[9px] px-3 py-2 text-sm font-medium transition-colors",
+                  "flex items-center justify-between gap-2 rounded-[9px] px-3 py-2 text-sm font-medium transition-colors",
                   active
                     ? "bg-brand-50 text-brand"
                     : "text-muted hover:bg-surface hover:text-ink",
                 )}
               >
-                <span className="flex items-center gap-3">
+                <span className="flex min-w-0 items-center gap-2">
                   <Icon className="size-4 shrink-0" />
-                  {item.label}
+                  <span className="truncate">{item.label}</span>
                 </span>
                 {showBadge ? (
-                  <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-brand px-1.5 text-xs font-bold text-white tabular-nums">
+                  <span className="inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full bg-brand px-1.5 text-xs font-bold text-white tabular-nums">
                     {openReportCount}
                   </span>
                 ) : null}
