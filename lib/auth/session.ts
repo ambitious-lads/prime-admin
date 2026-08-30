@@ -5,6 +5,7 @@ const REFRESH_KEY = "prime.refresh";
 const USER_KEY = "prime.user";
 const ROLE_COOKIE = "prime.role";
 export const SESSION_CLEARED_EVENT = "prime:session-cleared";
+export const SESSION_EXPIRED_EVENT = "prime:session-expired";
 
 export type { SessionUser };
 
