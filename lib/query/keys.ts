@@ -34,6 +34,7 @@ export const qk = {
   adminDashboardInsights: ["admin", "analytics", "dashboard"] as const,
   streak: ["streak", "me"] as const,
   weekly: ["streak", "weekly"] as const,
+  uatDeadline: ["uat-exam", "deadline"] as const,
   profile: ["profile", "me"] as const,
   settings: ["profile", "settings"] as const,
 };

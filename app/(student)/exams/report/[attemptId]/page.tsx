@@ -45,6 +45,7 @@ import {
 import { examsApi } from "@/lib/api/endpoints";
 import { qk } from "@/lib/query/keys";
 import { QuestionVisualView } from "@/components/student/question-visual-view";
+import { PostExamUpsell } from "@/components/student/post-exam-upsell";
 
 const BRAND = "#0c5bfe";
 const GRID = "#e8ebf3";
@@ -366,6 +367,8 @@ export default function ExamReportPage() {
           )}
         </CardContent>
       </Card>
+
+      <PostExamUpsell />
 
       <div className="flex justify-center pt-2">
         <Button variant="outline" asChild>

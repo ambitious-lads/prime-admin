@@ -303,6 +303,17 @@ export const plansApi = {
     api.post<{ payment: PlanPayment }>(`/plans/payments/${id}/reject`, { reason }),
 };
 
+export type UatExamDeadline = {
+  deadline: string;
+  label: string;
+  active: boolean;
+};
+
+export const uatExamApi = {
+  deadline: () =>
+    api.public.get<UatExamDeadline>("/public/uat-exam/deadline"),
+};
+
 export const referralsApi = {
   payouts: (status?: string) =>
     api.get<ReferralPayout[]>(

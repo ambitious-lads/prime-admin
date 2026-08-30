@@ -5,6 +5,7 @@ import {
   getRefreshToken,
   saveSession,
   saveTokens,
+  SESSION_EXPIRED_EVENT,
 } from "@/lib/auth/session";
 import { getDeviceId, getDeviceName } from "@/lib/device/device-id";
 
@@ -140,6 +141,9 @@ async function raw<T>(path: string, opts: Options, retry = true): Promise<T> {
     const ok = await refreshTokens();
     if (ok) return raw<T>(path, opts, false);
     clearSession();
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new Event(SESSION_EXPIRED_EVENT));
+    }
     throw new SessionExpiredError();
   }
 
@@ -160,6 +164,8 @@ export const api = {
   upload: <T>(path: string, form: FormData, method = "POST") =>
     raw<T>(path, { method, form }),
   public: {
+    get: <T>(path: string, query?: Options["query"]) =>
+      raw<T>(path, { method: "GET", query, auth: false }),
     post: <T>(path: string, body?: unknown) =>
       raw<T>(path, { method: "POST", body, auth: false }),
   },

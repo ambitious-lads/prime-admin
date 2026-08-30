@@ -5,10 +5,13 @@ import { ArrowRight, BookOpen, Brain, ClipboardCheck } from "lucide-react";
 import { StreakCard } from "@/components/student/streak-card";
 import { ContinueStudying } from "@/components/student/continue-studying";
 import { AchievementsCard } from "@/components/student/achievements-card";
+import { CountdownBanner } from "@/components/student/countdown-banner";
 
 export default function DashboardPage() {
   return (
     <div className="space-y-10">
+
+      <CountdownBanner />
 
       <section>
         <div className="mb-4 flex items-center justify-between">
