@@ -168,7 +168,7 @@ export function PaymentReview({
         </p>
         <p className="mt-1 text-sm font-semibold text-ink">
           {isOditVerified
-            ? "Auto-verified by Odit"
+            ? "Auto-verified by links.et"
             : isOditPending
               ? "Automatic verification unavailable"
               : isManual

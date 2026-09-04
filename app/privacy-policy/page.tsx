@@ -68,7 +68,7 @@ const providers = [
     data: "Uploaded profile or learning files and related metadata.",
   },
   {
-    name: "Odit Verify and receipt verification providers",
+    name: "links.et and receipt verification providers",
     purpose: "Verifying mobile-money or bank receipts and preventing duplicate receipts.",
     data: "Receipt link or reference, transaction reference, amount, receiver details, and provider response.",
   },

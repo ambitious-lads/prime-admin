@@ -15,7 +15,8 @@ export const PLANS = {
   pro: {
     key: "pro",
     label: "Pro",
-    price: 299,
+    price: 149,
+    previousPrice: 299,
     rank: 1,
     features: [
       "Full access to every practice set",
@@ -29,7 +30,8 @@ export const PLANS = {
   pro_plus: {
     key: "pro_plus",
     label: "Pro Plus",
-    price: 499,
+    price: 250,
+    previousPrice: 499,
     rank: 2,
     features: [
       "Everything included in Pro",
@@ -42,7 +44,14 @@ export const PLANS = {
   },
 } as const satisfies Record<
   PlanKey,
-  { key: PlanKey; label: string; price: number; rank: number; features: string[] }
+  {
+    key: PlanKey;
+    label: string;
+    price: number;
+    previousPrice?: number;
+    rank: number;
+    features: string[];
+  }
 >;
 
 export const EXAM_UNLOCK_PLAN: PlanKey = "pro";

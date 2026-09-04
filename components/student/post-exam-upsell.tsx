@@ -45,12 +45,19 @@ export function PostExamUpsell() {
                 <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-50 text-brand">
                   <Diamond className="h-4 w-4" />
                 </span>
-                <span>
-                  <span className="block text-sm font-bold text-ink">{PLANS[key].label}</span>
-                  <span className="text-xs text-muted">
-                    {new Intl.NumberFormat("en-ET").format(PLANS[key].price)} birr
+                  <span>
+                    <span className="block text-sm font-bold text-ink">{PLANS[key].label}</span>
+                    <span className="text-xs text-muted">
+                      <span className="font-semibold text-[#16a34a]">
+                        {new Intl.NumberFormat("en-ET").format(PLANS[key].price)} birr
+                      </span>
+                      {PLANS[key].previousPrice != null && (
+                        <span className="ml-1 line-through decoration-muted/60">
+                          {new Intl.NumberFormat("en-ET").format(PLANS[key].previousPrice)} birr
+                        </span>
+                      )}
+                    </span>
                   </span>
-                </span>
               </span>
               <ArrowRight className="h-4 w-4 text-muted transition group-hover:translate-x-0.5 group-hover:text-brand" />
             </Link>

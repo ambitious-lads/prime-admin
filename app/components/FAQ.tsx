@@ -11,7 +11,7 @@ const faqs = [
   },
   {
     q: "How do I pay for Pro or Pro Plus?",
-    a: "Prime UAT is built for how Ethiopians pay. Send the exact amount by mobile money or bank transfer, paste the receipt link or Telebirr reference, and Odit Verify checks the receipt before unlocking your plan.",
+    a: "Prime UAT is built for how Ethiopians pay. Send the exact amount by mobile money or bank transfer, paste the receipt link or Telebirr reference, and links.et checks the receipt before unlocking your plan.",
   },
   {
     q: "What is the single-device lock?",

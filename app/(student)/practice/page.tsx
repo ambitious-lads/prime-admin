@@ -75,8 +75,12 @@ export default function PracticePage() {
                   <div>
                     <h3 className="text-lg font-black text-ink">{item.label}</h3>
                     <p className="mt-2 text-2xl font-black text-ink">{formatMoney(item.price)} <span className="text-xs font-semibold text-muted">one-time</span></p>
+                    {"previousPrice" in item && item.previousPrice != null ? (
+                      <p className="mt-1 text-sm font-medium text-muted line-through decoration-muted/60">{formatMoney(item.previousPrice)} birr</p>
+                    ) : null}
                   </div>
                   {item.key === "pro_plus" ? <span className="rounded-full bg-brand px-2.5 py-1 text-[11px] font-bold text-white">Popular</span> : null}
+                  {"previousPrice" in item && item.previousPrice != null ? <span className="mt-1 self-start rounded-full bg-[#16a34a] px-2.5 py-1 text-[11px] font-extrabold uppercase tracking-wider text-white">50% OFF</span> : null}
                 </div>
                 <ul className="mt-5 flex-1 space-y-2 text-sm text-ink">
                   {item.features.map((feature) => {

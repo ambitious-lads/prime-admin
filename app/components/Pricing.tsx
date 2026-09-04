@@ -5,12 +5,14 @@ import SectionHeading from "./SectionHeading";
 type Plan = {
   name: string;
   price: string;
+  previousPrice?: string;
   period: string;
   tagline: string;
   features: string[];
   cta: string;
   href: string;
   featured?: boolean;
+  discount?: boolean;
 };
 
 const plans: Plan[] = [
@@ -23,26 +25,38 @@ const plans: Plan[] = [
     cta: "Start for free",
     href: "/register",
   },
-{
+  {
     name: "Pro",
-    price: "299",
+    price: String(PLANS.pro.price),
+    previousPrice: PLANS.pro.previousPrice != null ? String(PLANS.pro.previousPrice) : undefined,
     period: "birr",
     tagline: "Practice and mock exams without limits.",
     features: [...PLANS.pro.features],
     cta: "Get Pro",
     href: "/register",
+    discount: true,
   },
   {
     name: "Pro Plus",
-    price: "499",
+    price: String(PLANS.pro_plus.price),
+    previousPrice: PLANS.pro_plus.previousPrice != null ? String(PLANS.pro_plus.previousPrice) : undefined,
     period: "birr",
     tagline: "The complete premium experience.",
     features: [...PLANS.pro_plus.features],
     cta: "Get Pro Plus",
     href: "/register",
     featured: true,
+    discount: true,
   },
 ];
+
+function DiscountBadge() {
+  return (
+    <span className="absolute left-4 top-4 inline-flex items-center rounded-full bg-[#16a34a] px-2.5 py-1 text-[11px] font-extrabold uppercase tracking-wider text-white shadow-sm">
+      50% off
+    </span>
+  );
+}
 
 function Check({ featured }: { featured?: boolean }) {
   return (
@@ -89,6 +103,10 @@ export default function Pricing() {
                 </span>
               )}
 
+              {plan.discount && (
+                <DiscountBadge />
+              )}
+
               <h3
                 className={`text-xl font-bold font-display ${
                   plan.featured ? "text-brand" : "text-ink"
@@ -108,6 +126,11 @@ export default function Pricing() {
                 <span className="text-5xl font-black font-accent tracking-tight">
                   {plan.price}
                 </span>
+                {plan.previousPrice != null && (
+                  <span className="text-lg font-semibold text-muted line-through decoration-muted/60">
+                    {plan.previousPrice}
+                  </span>
+                )}
                 <span
                   className={`text-base font-semibold ${
                     plan.featured ? "text-muted" : "text-muted"

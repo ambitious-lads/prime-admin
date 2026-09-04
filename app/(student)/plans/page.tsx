@@ -124,6 +124,9 @@ export default function PlansPage() {
                     ) : highlight ? (
                       <Badge variant="soft">Popular</Badge>
                     ) : null}
+                    {"previousPrice" in p && p.previousPrice != null ? (
+                      <Badge className="bg-[#16a34a] text-white">50% OFF</Badge>
+                    ) : null}
                   </div>
                   <p className="font-accent text-3xl font-black text-ink">
                     {p.price === 0 ? "Free" : formatMoney(p.price)}
@@ -133,6 +136,11 @@ export default function PlansPage() {
                       </span>
                     ) : null}
                   </p>
+                  {"previousPrice" in p && p.previousPrice != null ? (
+                    <p className="mt-1 text-sm font-medium text-muted line-through decoration-muted/60">
+                      {formatMoney(p.previousPrice)} birr
+                    </p>
+                  ) : null}
                 </CardHeader>
                 <CardContent className="flex flex-1 flex-col gap-5">
                   <ul className="flex-1 space-y-2.5">

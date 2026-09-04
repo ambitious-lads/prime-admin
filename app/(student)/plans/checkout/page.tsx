@@ -164,6 +164,10 @@ function CheckoutInner() {
             <p className="text-xs text-muted line-through">
               {formatMoney(planInfo.price)}
             </p>
+          ) : planInfo.price === amountDue && planInfo.previousPrice != null ? (
+            <p className="text-xs text-muted line-through">
+              {formatMoney(planInfo.previousPrice)}
+            </p>
           ) : null}
         </div>
       </section>
