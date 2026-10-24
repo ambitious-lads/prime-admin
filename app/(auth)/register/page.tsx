@@ -28,6 +28,7 @@ function RegisterForm() {
   const { setSession } = useAuth();
   const [submitting, setSubmitting] = useState(false);
   const [ethioTelecomDialogOpen, setEthioTelecomDialogOpen] = useState(false);
+  const [showReferral, setShowReferral] = useState(false);
 
   const form = useForm<RegisterInput>({
     resolver: zodResolver(registerSchema),
@@ -43,6 +44,7 @@ function RegisterForm() {
       : getPendingReferralCode();
     if (referralCode) {
       form.setValue("referralCode", referralCode, { shouldValidate: true });
+      setShowReferral(true);
     }
   }, [form, searchParams]);
   async function onSubmit(values: RegisterInput) {
@@ -145,25 +147,44 @@ setSubmitting(true);
             </p>
           ) : null}
         </div>
-        <div className="space-y-1.5">
-          <Label htmlFor="referralCode">Invite code <span className="font-normal text-muted">(optional)</span></Label>
-          <Input
-            id="referralCode"
-            placeholder="Enter invite code"
-            autoCapitalize="characters"
-            autoComplete="off"
-            {...form.register("referralCode", {
-              onChange: (event) => {
-                event.target.value = normalizeReferralCode(event.target.value);
-              },
-            })}
-          />
-          {form.formState.errors.referralCode ? (
-            <p className="text-xs text-red-600">
-              {form.formState.errors.referralCode.message}
-            </p>
-          ) : null}
-        </div>        <Button type="submit" className="w-full" size="lg" disabled={submitting}>
+        {!showReferral ? (
+          <button
+            type="button"
+            onClick={() => setShowReferral(true)}
+            className="text-sm font-semibold text-brand hover:underline"
+          >
+            Have a referral code?
+          </button>
+        ) : (
+          <div className="space-y-1.5">
+            <Label htmlFor="referralCode">Invite code <span className="font-normal text-muted">(optional)</span></Label>
+            <Input
+              id="referralCode"
+              placeholder="Leave empty if none"
+              autoCapitalize="characters"
+              autoComplete="off"
+              {...form.register("referralCode", {
+                onChange: (event) => {
+                  event.target.value = normalizeReferralCode(event.target.value);
+                },
+              })}
+            />
+            {form.formState.errors.referralCode ? (
+              <p className="text-xs text-red-600">
+                {form.formState.errors.referralCode.message}
+              </p>
+            ) : null}
+            {!form.watch("referralCode") ? (
+              <button
+                type="button"
+                onClick={() => setShowReferral(false)}
+                className="text-xs text-muted hover:underline"
+              >
+                Hide
+              </button>
+            ) : null}
+          </div>
+        )}        <Button type="submit" className="w-full" size="lg" disabled={submitting}>
           {submitting ? <Spinner /> : null} Create account
         </Button>
       </form>

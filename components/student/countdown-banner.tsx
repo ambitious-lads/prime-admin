@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { AlarmClock, X } from "lucide-react";
@@ -8,9 +7,6 @@ import { usePlan } from "@/hooks/use-plan";
 import { uatExamApi } from "@/lib/api/endpoints";
 import { qk } from "@/lib/query/keys";
 import { Card, CardContent } from "@/components/ui/card";
-
-const STORAGE_KEY = "prime:uat-countdown-dismissed-at";
-const FREQUENCY_MS = 24 * 60 * 60 * 1000;
 
 function getTimeLeft(deadline: string) {
   const diff = new Date(deadline).getTime() - Date.now();
@@ -25,14 +21,7 @@ function getTimeLeft(deadline: string) {
   };
 }
 
-function maybeShow(): boolean {
-  if (typeof window === "undefined") return true;
-  const stored = Number(window.localStorage.getItem(STORAGE_KEY) ?? 0);
-  if (!Number.isFinite(stored) || stored <= 0) return true;
-  return Date.now() - stored >= FREQUENCY_MS;
-}
-
-export function CountdownBanner() {
+export function CountdownBanner({ onDismissed }: { onDismissed?: () => void }) {
   const { plan } = usePlan();
   const deadlineQuery = useQuery({
     queryKey: qk.uatDeadline,
@@ -40,7 +29,6 @@ export function CountdownBanner() {
     staleTime: 60 * 1000,
   });
   const [now, setNow] = useState<number>(() => Date.now());
-  const [dismissed, setDismissed] = useState(false);
 
   useEffect(() => {
     const id = setInterval(() => setNow(Date.now()), 1000);
@@ -48,7 +36,6 @@ export function CountdownBanner() {
   }, []);
 
   if (plan !== "free") return null;
-  if (dismissed || !maybeShow()) return null;
   const deadline = deadlineQuery.data?.deadline;
   if (!deadline || !deadlineQuery.data?.active) return null;
 
@@ -62,15 +49,6 @@ export function CountdownBanner() {
     { value: timeLeft.minutes, label: "min" },
     { value: timeLeft.seconds, label: "sec" },
   ];
-
-  const dismiss = () => {
-    setDismissed(true);
-    try {
-      window.localStorage.setItem(STORAGE_KEY, String(Date.now()));
-    } catch {
-      /* ignore */
-    }
-  };
 
   return (
     <Card className="border-brand-100 bg-gradient-to-br from-brand-600 to-brand-700 text-white shadow-lg">
@@ -101,22 +79,14 @@ export function CountdownBanner() {
               ))}
             </div>
           </div>
-          <div className="flex flex-col items-end gap-2">
-            <Link
-              href="/plans"
-              className="rounded-lg bg-white px-3 py-1.5 text-sm font-bold text-brand-700 transition hover:bg-brand-50"
-            >
-              Upgrade
-            </Link>
-            <button
-              type="button"
-              onClick={dismiss}
-              aria-label="Dismiss"
-              className="rounded p-1 text-white/70 transition hover:bg-white/10 hover:text-white"
-            >
-              <X className="h-4 w-4" />
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={onDismissed}
+            aria-label="Dismiss"
+            className="rounded p-1 text-white/70 transition hover:bg-white/10 hover:text-white"
+          >
+            <X className="h-4 w-4" />
+          </button>
         </div>
       </CardContent>
     </Card>

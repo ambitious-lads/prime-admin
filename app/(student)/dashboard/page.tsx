@@ -2,16 +2,24 @@
 
 import Link from "next/link";
 import { ArrowRight, BookOpen, Brain, ClipboardCheck } from "lucide-react";
+import { useState } from "react";
 import { StreakCard } from "@/components/student/streak-card";
 import { ContinueStudying } from "@/components/student/continue-studying";
 import { AchievementsCard } from "@/components/student/achievements-card";
 import { CountdownBanner } from "@/components/student/countdown-banner";
+import { ReferralBanner } from "@/components/student/referral-banner";
 
 export default function DashboardPage() {
+  const [bannerPhase, setBannerPhase] = useState<"countdown" | "referral" | "done">("countdown");
+
   return (
     <div className="space-y-10">
 
-      <CountdownBanner />
+      {bannerPhase === "countdown" ? (
+        <CountdownBanner onDismissed={() => setBannerPhase("referral")} />
+      ) : bannerPhase === "referral" ? (
+        <ReferralBanner onDismissed={() => setBannerPhase("done")} />
+      ) : null}
 
       <section>
         <div className="mb-4 flex items-center justify-between">

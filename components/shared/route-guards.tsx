@@ -87,10 +87,19 @@ export function RequireGuest({ children }: { children: React.ReactNode }) {
 export function RequireAdmin({ children }: { children: React.ReactNode }) {
   const { user, ready } = useAuth();
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
-    if (ready && user?.role !== "admin") router.replace("/login");
-  }, [ready, user, router]);
+    if (!ready) return;
+    if (!user) {
+      const next = pathname ? `?next=${encodeURIComponent(pathname)}` : "";
+      router.replace(`/login${next}`);
+      return;
+    }
+    if (user.role !== "admin") {
+      void resolvePostAuthRoute(user).then((route) => router.replace(route));
+    }
+  }, [pathname, ready, user, router]);
 
   if (!ready || user?.role !== "admin") return <FullPageSpinner />;
   return <>{children}</>;

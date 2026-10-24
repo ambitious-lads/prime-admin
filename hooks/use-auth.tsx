@@ -15,6 +15,7 @@ import {
   getStoredUser,
   saveSession,
   SESSION_CLEARED_EVENT,
+  SESSION_EXPIRED_EVENT,
   type SessionUser,
 } from "@/lib/auth/session";
 
@@ -45,9 +46,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setReady(true);
 
     const handleSessionCleared = () => setUser(null);
+    const handleSessionExpired = () => {
+      const current = window.location.pathname;
+      const next = current && current !== "/login" ? `?next=${encodeURIComponent(current)}` : "";
+      router.replace(`/login${next}`);
+    };
     window.addEventListener(SESSION_CLEARED_EVENT, handleSessionCleared);
-    return () => window.removeEventListener(SESSION_CLEARED_EVENT, handleSessionCleared);
-  }, []);
+    window.addEventListener(SESSION_EXPIRED_EVENT, handleSessionExpired);
+    return () => {
+      window.removeEventListener(SESSION_CLEARED_EVENT, handleSessionCleared);
+      window.removeEventListener(SESSION_EXPIRED_EVENT, handleSessionExpired);
+    };
+  }, [router]);
 
   const setSession = useCallback(
     (payload: {
